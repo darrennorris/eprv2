@@ -18,6 +18,12 @@ format:
     theme: cosmo
   pdf:
     documentclass: scrreprt
+    geometry:
+      - top=30mm
+      - left=25mm
+      - right=25mm
+      - bottom=30mm
+    fig-pos: "H"
 
 editor: visual
 
