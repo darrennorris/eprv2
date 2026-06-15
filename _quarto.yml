@@ -16,6 +16,8 @@ book:
     - summary.qmd
     - references.qmd
   downloads: [pdf]
+  repo-url: "https://github.com/darrennorris/eprv2"
+  repo-actions: [source]
   cover-image: "cover.jpg"
     
 bibliography: references.bib
