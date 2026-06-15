@@ -36,6 +36,7 @@ format:
           \vspace*{1cm}
           \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{cover.jpg}
           \end{titlepage}
+          \pagenumbering{gobble}
 
 editor: visual
 
