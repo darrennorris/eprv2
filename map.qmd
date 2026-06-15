@@ -32,9 +32,11 @@ mapview(nc,
 
 :::
 
+
 ::: {.content-visible when-format="pdf"}
 
-#Mapa Estático (Exclusivo Impressão/PDF)
+
+## Mapa Estático (Exclusivo Impressão/PDF)
 
 A figura abaixo apresenta a distribuição espacial estática dos dados. 
 (Nota: Uma versão interativa deste mapa está disponível na versão online 
