@@ -27,7 +27,6 @@ jobs:
             any::rmarkdown
             any::tidyverse
             any::sf
-            # Add any other specific packages your book uses below this line
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
