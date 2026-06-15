@@ -6,7 +6,8 @@ lang: pt-BR
 book:
   title: "eprv2"
   author: "Darren Norris"
-  date: "6/15/2026"
+  date: today
+  date-format: long
   chapters:
     - index.qmd
     - intro.qmd
