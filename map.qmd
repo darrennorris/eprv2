@@ -49,16 +49,35 @@ deste livro).
 
 library(sf)
 library(ggplot2)
+library(rnaturalearth)
 
-# Carregando os dados de exemplo do pacote sf
+# Carregando os dados originais
 nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
 
-# Criando o mapa estático otimizado para impressão
-ggplot(data = nc) +
-  geom_sf(aes(fill = SID74), color = "white", linewidth = 0.2) +
+# Baixando os limites dos estados para o plano de fundo
+eua_estados <- ne_states(country = "United States of America", returnclass = "sf")
+
+# Extraindo os limites de visualização exatos dos nossos dados
+limites <- st_bbox(nc)
+
+# Criando o mapa estático otimizado
+ggplot() +
+  # Camada 1: Plano de fundo (Estados vizinhos)
+  geom_sf(data = eua_estados, fill = "gainsboro", color = "white", linewidth = 0.4) +
+  
+  # Camada 2: Nossos dados principais
+  geom_sf(data = nc, aes(fill = SID74), color = "gray20", linewidth = 0.2) +
+  
+  # Recortando a visualização para a mesma área do mapview interativo
+  coord_sf(xlim = c(limites["xmin"], limites["xmax"]),
+           ylim = c(limites["ymin"], limites["ymax"]),
+           expand = FALSE) + # expand = FALSE remove as margens brancas extras
+  
+  # Estética
   scale_fill_viridis_c(name = "Casos (1974)", option = "inferno") +
   theme_minimal() +
   theme(legend.position = "bottom",
+        panel.background = element_rect(fill = "aliceblue"), # Cor do oceano
         panel.grid.major = element_line(color = "transparent")) +
   labs(title = "Distribuição de Casos na Carolina do Norte",
        x = "Longitude", 

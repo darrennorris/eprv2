@@ -29,6 +29,9 @@ jobs:
             any::sf
             any::webshot2
             any::mapview
+            any::rnaturalearth
+            any::rnaturalearthdata
+            ropensci/rnaturalearthhires
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
