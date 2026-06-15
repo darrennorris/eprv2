@@ -14,19 +14,39 @@
     "href": "intro.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. (USA) 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming”. Comput. J. (USA) 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
   },
   {
+    "objectID": "map.html",
+    "href": "map.html",
+    "title": "2  Análise Espacial e Visualização",
+    "section": "",
+    "text": "2.1 Mapa Interativo (Exclusivo Web)\nA visualização de dados espaciais exige abordagens distintas dependendo do formato final de publicação. Para páginas web, mapas interativos oferecem uma experiência rica de exploração. Já para documentos impressos ou arquivos PDF, necessitamos de mapas estáticos com alta resolução e elementos cartográficos claros.\nNeste capítulo, utilizaremos o Quarto para gerar um mapa interativo na versão HTML do nosso livro e uma versão estática otimizada quando o livro for exportado para PDF. Usaremos os dados de exemplo embutidos no pacote sf.\nComo você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada polígono.\nlibrary(sf)\nlibrary(mapview)\n\n# Carregando os dados de exemplo do pacote sf\nnc &lt;- st_read(system.file(\"shape/nc.shp\", package=\"sf\"), quiet = TRUE)\n\n# Criando o mapa interativo\nmapview(nc, \n        zcol = \"SID74\", \n        layer.name = \"Casos (1974)\",\n        col.regions = hcl.colors(10, \"Inferno\"))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
+    ]
+  },
+  {
+    "objectID": "map.html#conclusão-da-análise",
+    "href": "map.html#conclusão-da-análise",
+    "title": "2  Análise Espacial e Visualização",
+    "section": "2.2 Conclusão da Análise",
+    "text": "2.2 Conclusão da Análise\nIndependentemente do formato de visualização (interativo ou estático), a concentração espacial dos dados revela padrões importantes na região analisada. Ao utilizar o recurso de conteúdo condicional do Quarto, garantimos que o leitor sempre tenha a melhor experiência possível de acordo com a mídia que está utilizando.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
+    ]
+  },
+  {
     "objectID": "summary.html",
     "href": "summary.html",
-    "title": "2  Summary",
+    "title": "3  Summary",
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Summary</span>"
     ]
   },
   {
