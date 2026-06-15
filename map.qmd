@@ -1,0 +1,74 @@
+# Análise Espacial e Visualização
+
+A visualização de dados espaciais exige abordagens distintas dependendo do formato final de publicação. Para páginas web, mapas interativos oferecem uma experiência rica de exploração. Já para documentos impressos ou arquivos PDF, necessitamos de mapas estáticos com alta resolução e elementos cartográficos claros.
+
+Neste capítulo, utilizaremos o Quarto para gerar um mapa interativo na versão HTML do nosso livro e uma versão estática otimizada quando o livro for exportado para PDF. Usaremos os dados de exemplo embutidos no pacote `sf`.
+
+::: {.content-visible when-format="html"}
+## Mapa Interativo (Exclusivo Web)
+
+Como você está lendo a versão online deste material, explore o mapa 
+interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar 
+nos condados para visualizar os valores exatos de cada polígono.
+
+```{r}
+#| label: mapa-interativo
+#| message: false
+#| warning: false
+
+library(sf)
+library(mapview)
+
+# Carregando os dados de exemplo do pacote sf
+nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
+
+# Criando o mapa interativo
+mapview(nc, 
+        zcol = "SID74", 
+        layer.name = "Casos (1974)",
+        col.regions = hcl.colors(10, "Inferno"))
+```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+
+#Mapa Estático (Exclusivo Impressão/PDF)
+
+A figura abaixo apresenta a distribuição espacial estática dos dados. 
+(Nota: Uma versão interativa deste mapa está disponível na versão online 
+deste livro).
+
+```{r}
+#| label: fig-mapa-estatico
+#| message: false
+#| warning: false
+#| fig-cap: "Distribuição espacial estática na Carolina do Norte."
+
+library(sf)
+library(ggplot2)
+
+# Carregando os dados de exemplo do pacote sf
+nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
+
+# Criando o mapa estático otimizado para impressão
+ggplot(data = nc) +
+  geom_sf(aes(fill = SID74), color = "white", linewidth = 0.2) +
+  scale_fill_viridis_c(name = "Casos (1974)", option = "inferno") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_line(color = "transparent")) +
+  labs(title = "Distribuição de Casos na Carolina do Norte",
+       x = "Longitude", 
+       y = "Latitude")
+```
+
+:::
+
+## Conclusão da Análise
+
+Independentemente do formato de visualização (interativo ou estático), 
+a concentração espacial dos dados revela padrões importantes na região 
+analisada. Ao utilizar o recurso de conteúdo condicional do Quarto, 
+garantimos que o leitor sempre tenha a melhor experiência possível de 
+acordo com a mídia que está utilizando.
