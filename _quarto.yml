@@ -13,8 +13,8 @@ book:
     - map.qmd
     - summary.qmd
     - references.qmd
+  downloads: [pdf]
     
-downloads: [pdf]
 bibliography: references.bib
 
 format:
