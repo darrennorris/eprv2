@@ -29,14 +29,32 @@ format:
       - right=25mm
       - bottom=30mm
     fig-pos: "H"
-    include-before-body:
+    include-in-header:
       - text: |
-          \begin{titlepage}
-          \centering
-          \vspace*{1cm}
-          \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{cover.jpg}
-          \end{titlepage}
-          \pagenumbering{gobble}
+          \makeatletter
+          \renewcommand{\maketitle}{
+            \begin{titlepage}
+              \centering
+              \vspace*{1cm}
+              % 1. The Title
+              {\Huge\bfseries \@title \par}
+              \vspace{1.5cm}
+              
+              % 2. The Cover Image
+              % Note: Height is restricted to 60% of the page so it doesn't push the author text off the bottom.
+              \includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{cover.jpg} \par
+              \vspace{1.5cm}
+              
+              % 3. The Author and Date
+              {\Large \@author \par}
+              \vspace{0.5cm}
+              {\large \@date \par}
+            \end{titlepage}
+            
+            % Keeps the Table of Contents from having page numbers
+            \pagenumbering{gobble} 
+          }
+          \makeatother
 
 editor: visual
 
