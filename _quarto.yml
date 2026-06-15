@@ -26,6 +26,7 @@ format:
   html:
     theme: cosmo
   pdf:
+    pdf-engine: lualatex
     documentclass: scrreprt
     geometry:
       - top=30mm
