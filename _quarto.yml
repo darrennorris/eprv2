@@ -1,0 +1,23 @@
+project:
+  type: book
+
+book:
+  title: "eprv2"
+  author: "Norah Jones"
+  date: "6/15/2026"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+
