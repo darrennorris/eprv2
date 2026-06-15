@@ -13,6 +13,7 @@ nos condados para visualizar os valores exatos de cada polígono.
 
 ```{r}
 #| label: mapa-interativo
+#| eval: !expr knitr::is_html_output()
 #| message: false
 #| warning: false
 
@@ -41,6 +42,7 @@ deste livro).
 
 ```{r}
 #| label: fig-mapa-estatico
+#| eval: !expr knitr::is_latex_output()
 #| message: false
 #| warning: false
 #| fig-cap: "Distribuição espacial estática na Carolina do Norte."
