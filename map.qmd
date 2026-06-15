@@ -57,8 +57,6 @@ nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
 # Baixando os limites dos estados para o plano de fundo
 eua_estados <- ne_states(country = "United States of America", returnclass = "sf")
 
-# Extraindo os limites de visualização exatos dos nossos dados
-limites <- st_bbox(nc)
 
 # Criando o mapa estático otimizado
 ggplot() +
@@ -68,10 +66,10 @@ ggplot() +
   # Camada 2: Nossos dados principais
   geom_sf(data = nc, aes(fill = SID74), color = "gray20", linewidth = 0.2) +
   
-  # Recortando a visualização para a mesma área do mapview interativo
-  coord_sf(xlim = c(limites["xmin"], limites["xmax"]),
-           ylim = c(limites["ymin"], limites["ymax"]),
-           expand = FALSE) + # expand = FALSE remove as margens brancas extras
+  # Mantendo a visualização para a mesma área do mapview interativo
+  coord_sf(xlim = c(-86, -73), # Expande 2 graus para leste e oeste
+           ylim = c(31, 39),  # Expande 2 graus para norte e sul
+           expand = FALSE) +  # Impede margens automáticas extras do ggplot
   
   # Estética
   scale_fill_viridis_c(name = "Casos (1974)", option = "inferno") +
