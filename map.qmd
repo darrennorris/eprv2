@@ -18,16 +18,16 @@ nos condados para visualizar os valores exatos de cada polígono.
 #| warning: false
 
 library(sf)
+library(eprdados)
 library(mapview)
 
-# Carregando os dados de exemplo do pacote sf
-nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
+# Carregando os dados do pacote eprdados
+fmz <- system.file("vector/marco_zero_2026_31982.gpkg", package="eprdados")
+# load polygon
+campus <- st_read(fmz, layer ="campus")
 
 # Criando o mapa interativo
-mapview(nc, 
-        zcol = "SID74", 
-        layer.name = "Casos (1974)",
-        col.regions = hcl.colors(10, "Inferno"))
+mapview(campus)
 ```
 
 :::

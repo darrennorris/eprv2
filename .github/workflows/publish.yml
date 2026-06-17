@@ -32,6 +32,7 @@ jobs:
             any::rnaturalearth
             any::rnaturalearthdata
             ropensci/rnaturalearthhires
+            darrennorris/eprdados
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
