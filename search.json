@@ -34,7 +34,7 @@
     "href": "map.html#mapa-interativo-exclusivo-web",
     "title": "2  Análise Espacial e Visualização",
     "section": "2.2 Mapa Interativo (Exclusivo Web)",
-    "text": "2.2 Mapa Interativo (Exclusivo Web)\nComo você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada polígono.\n\n# Criando o mapa interativo\nmapview(campus) + mapview(cameras, col.regions = \"yellow\")",
+    "text": "2.2 Mapa Interativo (Exclusivo Web)\nComo você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada polígono.\n\n# Criando o mapa interativo\nmapview(campus) + mapview(cameras, col.regions = \"yellow\")\n\n\n\nLocalização das armadilhas fotográficas (cameras) no Campus Marco Zero.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
     ]
