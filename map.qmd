@@ -47,11 +47,13 @@ cameras <- st_read(fmz, layer = "ep_species_pa")
 if(!dir.exists("images")) dir.create("images", showWarnings = FALSE)
 
 # 2. Create the map
-meu_mapa_campus <- mapview(campus) + mapview(cameras, col.regions = "yellow")
+meu_mapa_campus <- mapview(campus) + mapview(cameras, 
+                                             col.regions = "yellow", 
+                                             cex = 8)
 
 # 3. Save the image silently.
 mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png", 
-         vwidth = 800, vheight = 600, 
+         vwidth = 500, vheight = 400, 
         delay = 5)
 ```
 
