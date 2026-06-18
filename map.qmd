@@ -56,6 +56,7 @@ mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png",
          remove_controls = c("zoomControl", "layersControl", "homeButton", 
                              "drawToolbar", "easyButton", "control"),
          vwidth = 500, vheight = 400, 
+         zoom = 2,
         delay = 5)
 ```
 
