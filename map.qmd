@@ -90,6 +90,7 @@ deste livro).
 #| echo: false
 #| message: false
 #| warning: false
+#| out-width: "100%"
 #| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
 
 # knitr grabs the image that was generated in the previous hidden chunk
