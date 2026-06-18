@@ -53,6 +53,8 @@ meu_mapa_campus <- mapview(campus) + mapview(cameras,
 
 # 3. Save the image silently.
 mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png", 
+         remove_controls = c("zoomControl", "layersControl", "homeButton", 
+                             "drawToolbar", "easyButton", "control"),
          vwidth = 500, vheight = 400, 
         delay = 5)
 ```
@@ -90,7 +92,7 @@ deste livro).
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: "100%"
+#| out-width: "80%"
 #| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
 
 # knitr grabs the image that was generated in the previous hidden chunk
