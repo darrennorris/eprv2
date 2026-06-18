@@ -50,7 +50,8 @@ if(!dir.exists("images")) dir.create("images", showWarnings = FALSE)
 meu_mapa_campus <- mapview(campus) + mapview(cameras, col.regions = "yellow")
 
 # 3. Save the image silently (uses webshot2 so would require Chrome on the server!)
-mapshot(meu_mapa_campus, file = "images/mapa_estatico.png", vwidth = 1200, vheight = 900, 
+mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png", 
+         vwidth = 800, vheight = 600, 
         delay = 5)
 ```
 
@@ -63,6 +64,7 @@ nos condados para visualizar os valores exatos de cada polígono.
 #| eval: !expr knitr::is_html_output()
 #| message: false
 #| warning: false
+#| #| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
 
 # Criando o mapa interativo
 mapview(campus) + mapview(cameras, col.regions = "yellow")
@@ -83,9 +85,10 @@ deste livro).
 ```{r}
 #| label: fig-mapa-estatico
 #| eval: !expr knitr::is_latex_output()
+#| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Distribuição espacial estática na Carolina do Norte."
+#| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
 
 # knitr grabs the image that was generated in the previous hidden chunk
 knitr::include_graphics("images/mapa_estatico.png")
