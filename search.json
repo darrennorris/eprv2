@@ -24,7 +24,17 @@
     "href": "map.html",
     "title": "2  Análise Espacial e Visualização",
     "section": "",
-    "text": "2.1 Mapa Interativo (Exclusivo Web)\nA visualização de dados espaciais exige abordagens distintas dependendo do formato final de publicação. Para páginas web, mapas interativos oferecem uma experiência rica de exploração. Já para documentos impressos ou arquivos PDF, necessitamos de mapas estáticos com alta resolução e elementos cartográficos claros.\nNeste capítulo, utilizaremos o Quarto para gerar um mapa interativo na versão HTML do nosso livro e uma versão estática otimizada quando o livro for exportado para PDF. Usaremos os dados de exemplo embutidos no pacote sf.\nComo você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada polígono.\nlibrary(sf)\nlibrary(eprdados)\nlibrary(mapview)\n\n# Carregando os dados do pacote eprdados\nfmz &lt;- system.file(\"vector/marco_zero_2026_31982.gpkg\", package=\"eprdados\")\n# load polygon\ncampus &lt;- st_read(fmz, layer =\"campus\")\n\nReading layer `campus' from data source \n  `/home/runner/work/_temp/Library/eprdados/vector/marco_zero_2026_31982.gpkg' \n  using driver `GPKG'\nSimple feature collection with 1 feature and 7 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 490095.5 ymin: 9998870 xmax: 490890.4 ymax: 10000190\nProjected CRS: SIRGAS 2000 / UTM zone 22S\n\n# Criando o mapa interativo\nmapview(campus)",
+    "text": "2.1 Pacotes e dados\nA visualização de dados espaciais exige abordagens distintas dependendo do formato final de publicação. Para páginas web, mapas interativos oferecem uma experiência rica de exploração. Já para documentos impressos ou arquivos PDF, necessitamos de mapas estáticos com alta resolução e elementos cartográficos claros.\nNeste capítulo, utilizaremos o Quarto para gerar um mapa interativo na versão HTML do nosso livro e uma versão estática otimizada quando o livro for exportado para PDF. Usaremos os dados de exemplo embutidos no pacote sf.\nPacotes.\nlibrary(sf)\nlibrary(eprdados)\nlibrary(mapview)\nDados.\n# Carregando os dados do pacote eprdados\nfmz &lt;- system.file(\"vector/marco_zero_2026_31982.gpkg\", package=\"eprdados\")\n# load polygon\ncampus &lt;- st_read(fmz, layer =\"campus\")\n\nReading layer `campus' from data source \n  `/home/runner/work/_temp/Library/eprdados/vector/marco_zero_2026_31982.gpkg' \n  using driver `GPKG'\nSimple feature collection with 1 feature and 7 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 490095.5 ymin: 9998870 xmax: 490890.4 ymax: 10000190\nProjected CRS: SIRGAS 2000 / UTM zone 22S\n\ncameras &lt;- st_read(fmz, layer = \"ep_species_pa\")\n\nReading layer `ep_species_pa' from data source \n  `/home/runner/work/_temp/Library/eprdados/vector/marco_zero_2026_31982.gpkg' \n  using driver `GPKG'\nSimple feature collection with 17 features and 13 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 490193.3 ymin: 9998883 xmax: 490793.2 ymax: 9999686\nProjected CRS: SIRGAS 2000 / UTM zone 22S",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
+    ]
+  },
+  {
+    "objectID": "map.html#mapa-interativo-exclusivo-web",
+    "href": "map.html#mapa-interativo-exclusivo-web",
+    "title": "2  Análise Espacial e Visualização",
+    "section": "2.2 Mapa Interativo (Exclusivo Web)",
+    "text": "2.2 Mapa Interativo (Exclusivo Web)\nComo você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada polígono.\n\n# Criando o mapa interativo\nmapview(campus) + mapview(cameras, col.regions = \"yellow\")",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
     ]
@@ -33,8 +43,8 @@
     "objectID": "map.html#conclusão-da-análise",
     "href": "map.html#conclusão-da-análise",
     "title": "2  Análise Espacial e Visualização",
-    "section": "2.2 Conclusão da Análise",
-    "text": "2.2 Conclusão da Análise\nIndependentemente do formato de visualização (interativo ou estático), a concentração espacial dos dados revela padrões importantes na região analisada. Ao utilizar o recurso de conteúdo condicional do Quarto, garantimos que o leitor sempre tenha a melhor experiência possível de acordo com a mídia que está utilizando.",
+    "section": "2.3 Conclusão da Análise",
+    "text": "2.3 Conclusão da Análise\nIndependentemente do formato de visualização (interativo ou estático), a concentração espacial dos dados revela padrões importantes na região analisada. Ao utilizar o recurso de conteúdo condicional do Quarto, garantimos que o leitor sempre tenha a melhor experiência possível de acordo com a mídia que está utilizando.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Análise Espacial e Visualização</span>"
     ]
