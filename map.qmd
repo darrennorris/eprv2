@@ -4,8 +4,55 @@ A visualização de dados espaciais exige abordagens distintas dependendo do for
 
 Neste capítulo, utilizaremos o Quarto para gerar um mapa interativo na versão HTML do nosso livro e uma versão estática otimizada quando o livro for exportado para PDF. Usaremos os dados de exemplo embutidos no pacote `sf`.
 
+## Pacotes e dados
+
+Pacotes.
+```{r}
+#| label: packages-map
+#| message: false
+#| warning: false
+
+library(sf)
+library(eprdados)
+library(mapview)
+```
+
+Dados.
+```{r}
+#| label: dados-map
+#| message: false
+#| warning: false
+
+# Carregando os dados do pacote eprdados
+fmz <- system.file("vector/marco_zero_2026_31982.gpkg", package="eprdados")
+# load polygon
+campus <- st_read(fmz, layer ="campus")
+cameras <- st_read(fmz, layer = "ep_species_pa")
+
+```
+
+
 ::: {.content-visible when-format="html"}
 ## Mapa Interativo (Exclusivo Web)
+
+```{r}
+#| label: gerar-imagem-mapa
+#| eval: FALSE
+#| echo: false
+#| message: false
+#| warning: false
+
+# Make image for .pdf. Need to run manually to avoid chrome in github workflow
+# 1. Create the 'images' folder if it doesn't already exist
+if(!dir.exists("images")) dir.create("images", showWarnings = FALSE)
+
+# 2. Create the map
+meu_mapa_campus <- mapview(campus) + mapview(cameras, col.regions = "yellow")
+
+# 3. Save the image silently (uses webshot2 so would require Chrome on the server!)
+mapshot(meu_mapa_campus, file = "images/mapa_estatico.png", vwidth = 1200, vheight = 900, 
+        delay = 5)
+```
 
 Como você está lendo a versão online deste material, explore o mapa 
 interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar 
@@ -17,17 +64,8 @@ nos condados para visualizar os valores exatos de cada polígono.
 #| message: false
 #| warning: false
 
-library(sf)
-library(eprdados)
-library(mapview)
-
-# Carregando os dados do pacote eprdados
-fmz <- system.file("vector/marco_zero_2026_31982.gpkg", package="eprdados")
-# load polygon
-campus <- st_read(fmz, layer ="campus")
-
 # Criando o mapa interativo
-mapview(campus)
+mapview(campus) + mapview(cameras, col.regions = "yellow")
 ```
 
 :::
@@ -49,39 +87,8 @@ deste livro).
 #| warning: false
 #| fig-cap: "Distribuição espacial estática na Carolina do Norte."
 
-library(sf)
-library(ggplot2)
-library(rnaturalearth)
-
-# Carregando os dados originais
-nc <- st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
-
-# Baixando os limites dos estados para o plano de fundo
-eua_estados <- ne_states(country = "United States of America", returnclass = "sf")
-
-
-# Criando o mapa estático otimizado
-ggplot() +
-  # Camada 1: Plano de fundo (Estados vizinhos)
-  geom_sf(data = eua_estados, fill = "gainsboro", color = "white", linewidth = 0.4) +
-  
-  # Camada 2: Nossos dados principais
-  geom_sf(data = nc, aes(fill = SID74), color = "gray20", linewidth = 0.2) +
-  
-  # Mantendo a visualização para a mesma área do mapview interativo
-  coord_sf(xlim = c(-86, -73), # Expande 2 graus para leste e oeste
-           ylim = c(31, 39),  # Expande 2 graus para norte e sul
-           expand = FALSE) +  # Impede margens automáticas extras do ggplot
-  
-  # Estética
-  scale_fill_viridis_c(name = "Casos (1974)", option = "inferno") +
-  theme_minimal() +
-  theme(legend.position = "bottom",
-        panel.background = element_rect(fill = "aliceblue"), # Cor do oceano
-        panel.grid.major = element_line(color = "transparent")) +
-  labs(title = "Distribuição de Casos na Carolina do Norte",
-       x = "Longitude", 
-       y = "Latitude")
+# knitr grabs the image that was generated in the previous hidden chunk
+knitr::include_graphics("images/mapa_estatico.png")
 ```
 
 :::
