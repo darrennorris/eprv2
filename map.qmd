@@ -42,14 +42,14 @@ cameras <- st_read(fmz, layer = "ep_species_pa")
 #| message: false
 #| warning: false
 
-# Make image for .pdf. Need to run manually to avoid chrome in github workflow
+# Make image for .pdf. Run manually for now.
 # 1. Create the 'images' folder if it doesn't already exist
 if(!dir.exists("images")) dir.create("images", showWarnings = FALSE)
 
 # 2. Create the map
 meu_mapa_campus <- mapview(campus) + mapview(cameras, col.regions = "yellow")
 
-# 3. Save the image silently (uses webshot2 so would require Chrome on the server!)
+# 3. Save the image silently.
 mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png", 
          vwidth = 800, vheight = 600, 
         delay = 5)
