@@ -64,7 +64,7 @@ nos condados para visualizar os valores exatos de cada polígono.
 #| eval: !expr knitr::is_html_output()
 #| message: false
 #| warning: false
-#| #| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
+#| fig-cap: "Localização das armadilhas fotográficas (cameras) no Campus Marco Zero."
 
 # Criando o mapa interativo
 mapview(campus) + mapview(cameras, col.regions = "yellow")
