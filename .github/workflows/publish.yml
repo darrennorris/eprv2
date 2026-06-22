@@ -26,11 +26,15 @@ jobs:
             any::knitr
             any::rmarkdown
             any::tidyverse
+            any::terra
             any::sf
-            any::webshot2
+            any::landscapemetrics
+            any::mgcv
+            any::Hmisc
             any::mapview
             any::rnaturalearth
             any::rnaturalearthdata
+            any::tmap
             ropensci/rnaturalearthhires
             darrennorris/eprdados
 

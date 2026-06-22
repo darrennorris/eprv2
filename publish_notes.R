@@ -10,3 +10,6 @@ system2("quarto", args = c("publish", "gh-pages", "--no-prompt", "--no-browser")
 # OR
 # Move to the Terminal tab in RStudio and type:
 quarto publish gh-pages
+
+# Chapters
+system("quarto render map.qmd --to pdf")
