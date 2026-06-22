@@ -1,0 +1,137 @@
+---
+title: "Escala de Efeito na Ocorrência de Fauna Doméstica"
+---
+
+::: callout-caution
+## Capítulo em Desenvolvimento
+
+⚠️ **Aviso:**
+
+Este capítulo é um trabalho em andamento. Os exemplos de código e o texto ainda estão sendo refinados. Você pode encontrar alguns espaços em branco, rascunhos, erros gramaticais, mas estou trabalhando ativamente para finalizá-lo. Feedbacks e sugestões são sempre bem-vindos!
+:::
+
+
+## Introdução
+
+A ecologia de paisagens urbana investiga como a configuração e a composição do habitat influenciam a biodiversidade. No contexto amazônico, áreas como o Campus Marco Zero da UNIFAP (Macapá, Brasil) representam mosaicos complexos onde a fauna doméstica (*Canis familiaris* e *Felis catus*) interage com fragmentos remanescentes de cerrado.
+
+Um conceito central aqui é a **Escala de Efeito**: a escala espacial na qual a relação entre a estrutura da paisagem e a resposta biológica é mais forte. Este capítulo demonstra como identificar essa escala e analisar a coocorrência dessas espécies usando R.
+
+## Configuração do Ambiente e Dados
+
+Utilizaremos o ecossistema `tidyverse` para manipulação, `sf` para dados espaciais e pacotes de modelagem estatística.
+
+```{r}
+#| label: packages-map
+#| message: false
+#| warning: false
+
+# 1. Spatial Engines
+library(terra)
+library(sf)
+
+# 2. Data Manipulation & Grammar
+library(tidyverse)
+library(broom)
+
+# 3. Analytical Models
+library(AICcmodavg) # Para comparação de modelos
+library(MuMIn)
+
+# 4. Cartography & Visualization
+library(patchwork)   # Para organizar gráficos
+```
+
+Dados
+
+```{r}
+#| label: dados-animais
+#| message: false
+#| warning: false
+
+# Ler o arquivo com metricas
+metricas <- read.csv("data/tabela_metricas_final.csv")
+# Ler o arquivo com presença-ausença
+especies <- read.csv("data/ep_species_pa.csv")
+# Limpeza e padronização de IDs
+especies <- especies |> 
+  rename(plot_id = instal_ponto)
+```
+
+Preparação da Paisagem
+As métricas calculadas via landscapemetrics precisam ser organizadas. Focaremos na métrica pland (porcentagem da classe) para a classe "uso humano", que é frequentemente um preditor forte para espécies domésticas.
+
+```{r}
+#| label: prep-dados
+#| message: false
+#| warning: false
+
+# Filtrando a métrica PLAND para áreas de Uso Humano
+df_pland_humano <- metricas |>
+  tidyr::complete(plot_id, metric, class_3, escala_buffer, fill = list(value = 0)) |>
+  filter(metric == "pland", class_3 == "uso humano") |>
+  select(plot_id, escala_buffer, value) |> 
+  rename(pland_humano = value)
+
+# Preparação: Deixando os dados em formato "longo" (uma coluna para espécie)
+# Isso permite agrupar tudo de uma vez só!
+df_longo <- especies |>
+  select(plot_id, calu, feca) |>
+  pivot_longer(cols = c(calu, feca), names_to = "especie", values_to = "presenca") |>
+  left_join(df_pland_humano, by = "plot_id")
+
+```
+
+
+## Análise da Escala de Efeito
+Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes buffers (12.5m, 25m, 50m, 100m). A escala com o menor AIC (Akaike Information Criterion) é considerada a escala de efeito.
+
+
+
+```{r}
+#| label: scale-effect
+#| message: false
+#| warning: false
+
+# 1. O Fluxo Nest-Map-Unnest (O "Coração" da análise)
+# Imagine isso como: Agrupar -> Criar Gavetas -> Rodar Modelo -> Tirar da Gaveta
+resultados_modelos <- df_longo |>
+  group_by(especie, escala_buffer) |>
+  nest() |> # Cria uma "gaveta" (list-column) para cada combinação
+  mutate(
+    # Aplicamos o GLM dentro de cada gaveta
+    modelo = map(data, ~glm(presenca ~ pland_humano, data = .x, family = binomial)),
+    # Usamos o broom::glance para extrair estatísticas básicas
+    resumo = map(modelo, glance),
+    # Adicionamos o AICc manualmente usando o MuMIn
+    aicc = map_dbl(modelo, MuMIn::AICc)
+  ) |>
+  unnest(resumo) |> # Transforma as estatísticas do broom em colunas
+  group_by(especie) |>
+  mutate(limiar = min(aicc) + 2) |> 
+  ungroup()
+
+```
+
+
+Agora comparação dos resultados. 
+```{r}
+#| label: fig-scale-effect
+#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos. Observa-se que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m)."
+#| message: false
+#| warning: false
+
+resultados_modelos |> 
+  mutate(especie = ifelse(especie == "calu", "Cães", "Gatos")) |>
+  ggplot(aes(x = escala_buffer, y = aicc)) +
+  geom_line(aes(color = especie), linewidth = 1.8) + 
+  geom_point(aes(fill = especie), size = 6, shape = 21) +
+  geom_hline(aes(yintercept = limiar), linetype = "dashed") + 
+  scale_color_manual(values = c("Cães" = "#0072B2", "Gatos" = "#D55E00")) +
+  scale_fill_manual(values = c("Cães" = "#0072B2", "Gatos" = "#D55E00")) +
+  facet_wrap(~ especie, scales = "free_y") +
+  labs(title = "Escala de Efeito", x = "Raio (m)", y = "AICc") +
+  theme_bw() + 
+  theme(legend.position = "none")
+```
+

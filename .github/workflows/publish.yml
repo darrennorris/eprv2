@@ -26,11 +26,15 @@ jobs:
             any::knitr
             any::rmarkdown
             any::tidyverse
+            any::broom
             any::terra
             any::sf
             any::landscapemetrics
             any::mgcv
             any::Hmisc
+            any::AICmodavg
+            any::MuMIn
+            any::patchwork
             any::mapview
             any::rnaturalearth
             any::rnaturalearthdata
