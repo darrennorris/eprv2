@@ -25,6 +25,7 @@ bibliography: references.bib
 format:
   html:
     theme: cosmo
+    link-external-newwindow: true
   pdf:
     pdf-engine: lualatex
     documentclass: scrreprt
