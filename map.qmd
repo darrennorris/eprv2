@@ -37,7 +37,7 @@ Quando usamos a função `purrr::map()` para extrair as métricas das nossas pon
 
 **3. O Encontro na Ecologia da Paisagem** No nosso script, unimos estes dois mundos. Quando corremos o `purrr::map()`, estamos a **mapear matematicamente o nosso mapa espacial**. Pegamos numa localização no espaço real (o *buffer* de 50 metros em redor de uma armadilha fotografica) e transformamo-la num conceito abstrato: um número que representa a caracterisação do espaço (a métrica de paisagem).
 
-Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Tomlin nos anos 1980 \[\@tomlin1990geographic\]), que é o que o pacote `terra` usa por trás dos panos . Quando somamos dois *rasters* ou os recortamos, o computador está simplesmente a "mapear" uma regra matemática sobre cada pequeno píxel da imagem, transformando o uso do solo em dados quantitativos.
+Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Tomlin nos anos 1980 [@tomlin1990geographic]), que é o que o pacote `terra` usa por trás dos panos . Quando somamos dois *rasters* ou os recortamos, o computador está simplesmente a "mapear" uma regra matemática sobre cada pequeno píxel da imagem, transformando o uso do solo em dados quantitativos.
 :::
 
 ## Pacotes e dados
