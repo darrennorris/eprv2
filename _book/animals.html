@@ -192,7 +192,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">3.1</span> Introdução</a></li>
   <li><a href="#configuração-do-ambiente-e-dados" id="toc-configuração-do-ambiente-e-dados" class="nav-link" data-scroll-target="#configuração-do-ambiente-e-dados"><span class="header-section-number">3.2</span> Configuração do Ambiente e Dados</a></li>
-  <li><a href="#análise-da-escala-de-efeito" id="toc-análise-da-escala-de-efeito" class="nav-link" data-scroll-target="#análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</a></li>
+  <li><a href="#análise-da-escala-de-efeito" id="toc-análise-da-escala-de-efeito" class="nav-link" data-scroll-target="#análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</a>
+  <ul class="collapse">
+  <li><a href="#cooccorencias" id="toc-cooccorencias" class="nav-link" data-scroll-target="#cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</a></li>
+  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.2</span> Rumo ao Desenho Quase-Experimental</a></li>
+  </ul></li>
+  <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">3.4</span> Conclusão</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/darrennorris/eprv2/blob/main/animals.qmd" class="toc-action"><i class="bi bi-github"></i>Ver o código fonte</a></li></ul></div></nav>
     </div>
@@ -326,12 +331,87 @@ Capítulo em Desenvolvimento
 <img src="animals_files/figure-html/fig-scale-effect-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scale-effect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.1: Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos. Observa-se que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m).
+Figura&nbsp;3.1: Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Observa-se na <a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.1</span></a> que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m).</p>
+<section id="cooccorencias" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adiciona uma área sombreada para incerteza (opcional, mas estético)</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Formatação para livro</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interação Biótica: Cães vs Gatos"</span>,</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span>,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Se o intervalo cruza a linha vermelha (zero), a interação não é significativa."</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scale-effect-co" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scale-effect-co-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="animals_files/figure-html/fig-scale-effect-co-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scale-effect-co-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.2: Análise multiescalar da interação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de interação).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-scale-effect-co). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.</p>
+<p>Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental</p>
+<ul>
+<li><p>Hotspots de Recursos (Atração Comum):<br>
+A ausência de segregação (intervalos cruzando o zero) sugere que a distribuição de recursos antrópicos (pontos de alimentação voluntária, lixeiras abertas e o entorno do Restaurante Universitário - RU) exerce uma força de atração superior à força de repulsão entre as espécies. Em ecologia urbana, o recurso (comida) frequentemente “força” a sobreposição de nicho espacial, mesmo entre predadores e competidores.</p></li>
+<li><p>Filtragem Ambiental vs.&nbsp;Seleção de Micro-habitat:<br>
+Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas “onde há prédios”, eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.</p></li>
+</ul>
+</section>
+<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.2</span> Rumo ao Desenho Quase-Experimental</h3>
+<p>Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o “quase-experimento” aproveita variações existentes.</p>
+<p>A. Amostragem Estratificada por Gradiente de Recurso.<br>
+Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).</p>
+<p>B. Aproveitamento de “Experimentos Naturais” (BACI - Before-After-Control-Impact).<br>
+O campus passa por mudanças cíclicas que podem ser tratadas como tratamentos experimentais. Período de Férias vs.&nbsp;Período Letivo, onde a drástica redução na produção de resíduos e na circulação de pessoas no RU durante as férias é um “experimento de remoção de recurso”. Se a segregação entre cães e gatos aumentar durante as férias (quando há menos comida), vocês provam que o recurso humano é o mediador da paz (coexistência) entre as espécies. Comparar Amostragem Estratificada por Gradiente de Recurso nas epocas diferentes.</p>
+<p>C. Mapeamento de Pontos de Alimentação como Covariável.<br>
+Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem.</p>
+</section>
+</section>
+<section id="conclusão" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="conclusão"><span class="header-section-number">3.4</span> Conclusão</h2>
+<p>Embora a ocorrência (presença-ausência) não mostre segregação, a análise de abundância relativa (frequência de fotos) poderia revelar padrões diferentes, como uma maior concentração de ambas as espécies em torno de “ilhas de recursos” (ex: Restaurante Universitário).</p>
+<p>Avançar da Ecologia de Paisagens descritiva para o desenho quase-experimental permitera que a UNIFAP não seja apenas o local de estudo, mas um laboratório vivo onde testamos teorias sobre como subsídios humanos alteram as regras básicas das interações bióticas na Amazônia urbana.</p>
 
 
 </section>

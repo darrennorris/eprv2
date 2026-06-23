@@ -113,7 +113,7 @@ Agora comparação dos resultados.
 
 ```{r}
 #| label: fig-scale-effect
-#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos. Observa-se que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m)."
+#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos."
 #| message: false
 #| warning: false
 
@@ -131,11 +131,14 @@ resultados_modelos |>
   theme(legend.position = "none")
 ```
 
-#### Cooccorencias
+Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m).
+Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
+
+### Cooccorencias
 
 ```{r}
 #| label: fig-scale-effect-co
-#| fig-cap: "Análise multiescalar da interação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95% calculados via perfil de verossimilhança. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de interação)."
+#| fig-cap: "Análise multiescalar da interação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de interação)."
 #| message: false
 #| warning: false
 
@@ -157,26 +160,22 @@ cooc_robusto <- df_cooc_pre |>
   filter(term == "calu")
 
 # 3. Visualização 
-ggplot(cooc_robusto, aes(x = as.factor(escala_buffer), y = estimate)) +
-  # Adiciona uma área sombreada para incerteza (opcional, mas estético)
+ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red", size = 1) +
   # geom_errorbar desenha os ICs de 95% robustos
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high), 
                 width = 0.2, size = 0.8, color = "purple") +
   geom_point(size = 4, color = "purple") +
-  # Formatação para livro
   labs(
     title = "Interação Biótica: Cães vs Gatos",
     subtitle = "Intervalos de Confiança (IC) de 95% calculados via verossimilhança",
     x = "Escala de Buffer (m)",
-    y = "Efeito da Presença de Cães (Log-odds)",
-    caption = "Se o intervalo cruza a linha vermelha (zero), a interação não é significativa."
+    y = "Efeito da Presença de Cães (Log-odds)"
   ) +
   theme_light(base_size = 12)
 ```
 
-O gráfico sugere que outras fatores (infraestrutura do campus e/ou a oferta de comida) é uma força mais poderosa na estruturação da comunidade de fauna doméstica do que a competição direta entre as duas espécies.
-Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (linha vermelha tracejada). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos que seja independente da infraestrutura urbana no Campus Marco Zero. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
+O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (\@fig-scale-effect-co). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
 
 Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental
 
