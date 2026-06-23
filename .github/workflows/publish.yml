@@ -32,7 +32,7 @@ jobs:
             any::landscapemetrics
             any::mgcv
             any::Hmisc
-            any::AICmodavg
+            any::AICcmodavg
             any::MuMIn
             any::patchwork
             any::mapview
