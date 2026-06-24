@@ -1,14 +1,5 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
+Foco em como a Ecologia das Paisagens (com R) nos permite transformar 
+pixels e coordenadas em argumentos sólidos para a conservação e o manejo do mundo real.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
-
-```{r}
-1 + 1
-```
-
-```{=latex}
-\clearpage
-\pagenumbering{arabic}
-```
