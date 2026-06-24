@@ -200,7 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#análise-da-escala-de-efeito" id="toc-análise-da-escala-de-efeito" class="nav-link" data-scroll-target="#análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</a>
   <ul class="collapse">
   <li><a href="#cooccorencias" id="toc-cooccorencias" class="nav-link" data-scroll-target="#cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</a></li>
-  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.2</span> Rumo ao Desenho Quase-Experimental</a></li>
+  <li><a href="#escalas-diferentes" id="toc-escalas-diferentes" class="nav-link" data-scroll-target="#escalas-diferentes"><span class="header-section-number">3.3.2</span> Escalas diferentes</a></li>
+  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.3</span> Rumo ao Desenho Quase-Experimental</a></li>
   </ul></li>
   <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">3.4</span> Conclusão</a></li>
   </ul>
@@ -260,11 +261,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Analytical Models</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg) <span class="co"># Para comparação de modelos</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Dados</p>
 <div class="cell">
@@ -295,40 +297,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="análise-da-escala-de-efeito" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</h2>
+<section id="cooccorencias" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</h3>
+<p>Primeiramente vamos verificar padrões entre os pontos usando duas tecnicas complementares. Inicialmente, utilizamos o modelo probabilístico de coocorrência de espécies desenvolvido por Veech (2013), implementado por meio do pacote <em>cooccur</em>. Essa abordagem foi escolhida em detrimento das permutações tradicionais de modelos nulos por fornecer uma solução exata, a qual é mais estável para conjuntos de dados menores (N=17), nos quais a aleatorização pode resultar em alta variância. Aplicamos um limiar de filtragem (<em>thresh</em> = TRUE) para excluir pares de espécies com poder estatístico insuficiente para atingir significância, garantindo que as classificações como “Aleatório” não fossem meros artefatos decorrentes da raridade. Em segundo lugar, para lidar com o “viés de prevalência” inerente a espécies comuns (por exemplo, <em>Canis lupus</em> e <em>Felis catus</em>) e para quantificar a magnitude das associações, utilizamos o pacote <em>CooccurrenceAffinity</em>. Enquanto o modelo de Veech fornece uma classificação categórica (Positiva, Negativa ou Aleatória), o modelo de Afinidade fornece uma métrica da força da associação — a Estimativa de Máxima Verossimilhança (MLE) do parâmetro Alfa — e seus respectivos intervalos de confiança de 95%. Ao contrário de índices de similaridade tradicionais, como Jaccard ou Sørensen, a métrica Alfa é menos sensível à prevalência das espécies, permitindo-nos distinguir entre associações biológicas e altas taxas de coocorrência impulsionadas exclusivamente pela elevada abundância das espécies na área de estudo.</p>
+<p>Preparação e analises de dados.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>species_matrix <span class="ot">&lt;-</span> especies <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu<span class="sc">:</span>hosa) <span class="sc">%&gt;%</span>           <span class="co"># Keep only site names and species</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>plot_id,                   <span class="co"># Turn species columns into a single column</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"presence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> plot_id,        <span class="co"># Turn site rows into columns</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> presence) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"species"</span>) </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># aqui somente gatos e caes</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>domestic <span class="ot">&lt;-</span> species_matrix[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), ]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>domestic</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># cooccur modelo probabalistica Veech 2013</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>cooc_results <span class="ot">&lt;-</span> <span class="fu">cooccur</span>(domestic, <span class="at">type =</span> <span class="st">"spp_site"</span>, </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">spp_names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">thresh =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary and significant pairs</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cooc_results)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#View P-values and probabilities</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>prob_table <span class="ot">&lt;-</span> <span class="fu">prob.table</span>(cooc_results) </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>prob_table</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Affinity</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>affinity_res <span class="ot">&lt;-</span> <span class="fu">affinity</span>(<span class="at">data =</span> domestic, <span class="at">row.or.col =</span> <span class="st">"row"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(affinity_res<span class="sc">$</span>all)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Na ecologia, quando duas espécies são muito comuns, elas coocorrem frequentemente simplesmente porque estão em toda parte, e não necessariamente porque “gostam” uma da outra. Os resultados complementares mostraram que no Campus Marco Zero a presença de cães não prediz a presença de gatos, e vice-versa. No 17 pontos do Campus Marco Zero, gatos e cachorros apresentou um padrão de coocorrência aleatório (Modelo Probabilístico de Veech, p &gt; 0,05). Embora as espécies tenham compartilhado 11 dos 17 locais, a coocorrência observada (11) não diferiu significativamente dos 10,71 locais esperados ao acaso. Apesar dos elevados índices de similaridade (Jaccard = 0,688), a associação (Alpha MLE = 0,567) não foi estatisticamente significativa, uma vez que o intervalo de confiança de 95% incluiu o valor zero (95% IC: -0,268 a 1,401]; isso sugere que a alta taxa de coocorrência decorre de sua elevada prevalência na área de estudo, e não de uma atração biológica ou de uma exigência de habitat compartilhada.</p>
+</section>
+<section id="escalas-diferentes" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="escalas-diferentes"><span class="header-section-number">3.3.2</span> Escalas diferentes</h3>
 <p>Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes buffers (12.5m, 25m, 50m, 100m). A escala com o menor AIC (Akaike Information Criterion) é considerada a escala de efeito.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. O Fluxo Nest-Map-Unnest (O "Coração" da análise)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Imagine isso como: Agrupar -&gt; Criar Gavetas -&gt; Rodar Modelo -&gt; Tirar da Gaveta</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>resultados_modelos <span class="ot">&lt;-</span> df_longo <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie, escala_buffer) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="co"># Cria uma "gaveta" (list-column) para cada combinação</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aplicamos o GLM dentro de cada gaveta</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(presenca <span class="sc">~</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usamos o broom::glance para extrair estatísticas básicas</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">resumo =</span> <span class="fu">map</span>(modelo, glance),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adicionamos o AICc manualmente usando o MuMIn</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">aicc =</span> <span class="fu">map_dbl</span>(modelo, MuMIn<span class="sc">::</span>AICc)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(resumo) <span class="sc">|&gt;</span> <span class="co"># Transforma as estatísticas do broom em colunas</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">|&gt;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">limiar =</span> <span class="fu">min</span>(aicc) <span class="sc">+</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. O Fluxo Nest-Map-Unnest (O "Coração" da análise)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Imagine isso como: Agrupar -&gt; Criar Gavetas -&gt; Rodar Modelo -&gt; Tirar da Gaveta</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>resultados_modelos <span class="ot">&lt;-</span> df_longo <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie, escala_buffer) <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="co"># Cria uma "gaveta" (list-column) para cada combinação</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aplicamos o GLM dentro de cada gaveta</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(presenca <span class="sc">~</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usamos o broom::glance para extrair estatísticas básicas</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">resumo =</span> <span class="fu">map</span>(modelo, glance),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adicionamos o AICc manualmente usando o MuMIn</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">aicc =</span> <span class="fu">map_dbl</span>(modelo, MuMIn<span class="sc">::</span>AICc)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(resumo) <span class="sc">|&gt;</span> <span class="co"># Transforma as estatísticas do broom em colunas</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">limiar =</span> <span class="fu">min</span>(aicc) <span class="sc">+</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Agora comparação dos resultados.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resultados_modelos <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">especie =</span> <span class="fu">ifelse</span>(especie <span class="sc">==</span> <span class="st">"calu"</span>, <span class="st">"Cães"</span>, <span class="st">"Gatos"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> aicc)) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> especie), <span class="at">linewidth =</span> <span class="fl">1.8</span>) <span class="sc">+</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill =</span> especie), <span class="at">size =</span> <span class="dv">6</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> limiar), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="st">"Gatos"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>)) <span class="sc">+</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="st">"Gatos"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>)) <span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> especie, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Escala de Efeito"</span>, <span class="at">x =</span> <span class="st">"Raio (m)"</span>, <span class="at">y =</span> <span class="st">"AICc"</span>) <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>resultados_modelos <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">especie =</span> <span class="fu">ifelse</span>(especie <span class="sc">==</span> <span class="st">"calu"</span>, <span class="st">"Cães"</span>, <span class="st">"Gatos"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> aicc)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> especie), <span class="at">linewidth =</span> <span class="fl">1.8</span>) <span class="sc">+</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill =</span> especie), <span class="at">size =</span> <span class="dv">6</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> limiar), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="st">"Gatos"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>)) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="st">"Gatos"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>)) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> especie, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Escala de Efeito"</span>, <span class="at">x =</span> <span class="st">"Raio (m)"</span>, <span class="at">y =</span> <span class="st">"AICc"</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scale-effect" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -343,40 +380,38 @@ Figura&nbsp;3.1: Identificação da escala de efeito para a ocorrência de cães
 </div>
 </div>
 <p>Observa-se na <a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.1</span></a> que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.</p>
-<section id="cooccorencias" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interação Biótica: Cães vs Gatos"</span>,</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interação Biótica: Cães vs Gatos"</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-effect-co" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -399,8 +434,8 @@ A ausência de segregação (intervalos cruzando o zero) sugere que a distribui�
 Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas “onde há prédios”, eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.</p></li>
 </ul>
 </section>
-<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.2</span> Rumo ao Desenho Quase-Experimental</h3>
+<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.3</span> Rumo ao Desenho Quase-Experimental</h3>
 <p>Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o “quase-experimento” aproveita variações existentes.</p>
 <p>A. Amostragem Estratificada por Gradiente de Recurso.<br>
 Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).</p>
