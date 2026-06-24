@@ -34,6 +34,7 @@ jobs:
             any::Hmisc
             any::AICcmodavg
             any::MuMIn
+            any::CooccurrenceAffinity
             any::patchwork
             any::mapview
             any::rnaturalearth
@@ -41,6 +42,7 @@ jobs:
             any::tmap
             ropensci/rnaturalearthhires
             darrennorris/eprdados
+            griffithdan/cooccur
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2

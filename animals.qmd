@@ -34,8 +34,9 @@ library(tidyverse)
 library(broom)
 
 # 3. Analytical Models
-library(AICcmodavg) # Para comparação de modelos
-library(MuMIn)
+library(MuMIn) # Para comparação de modelos
+library(cooccur) 
+library(CooccurrenceAffinity)
 
 # 4. Cartography & Visualization
 library(patchwork)   # Para organizar gráficos
@@ -81,6 +82,67 @@ df_longo <- especies |>
 ```
 
 ## Análise da Escala de Efeito
+
+
+
+### Cooccorencias
+
+Primeiramente vamos verificar padrões entre os pontos usando duas 
+tecnicas complementares.
+Inicialmente, utilizamos o modelo probabilístico de coocorrência de espécies desenvolvido por Veech (2013), implementado por meio do pacote *cooccur*. Essa abordagem foi escolhida em detrimento das permutações tradicionais de modelos nulos por fornecer uma solução exata, a qual é mais estável para conjuntos de dados menores (N=17), nos quais a aleatorização pode resultar em alta variância. Aplicamos um limiar de filtragem (*thresh* = TRUE) para excluir pares de espécies com poder estatístico insuficiente para atingir significância, garantindo que as classificações como "Aleatório" não fossem meros artefatos decorrentes da raridade.
+Em segundo lugar, para lidar com o "viés de prevalência" inerente a espécies comuns (por exemplo, *Canis lupus* e *Felis catus*) e para quantificar a magnitude das associações, utilizamos o pacote *CooccurrenceAffinity*. Enquanto o modelo de Veech fornece uma classificação categórica (Positiva, Negativa ou Aleatória), o modelo de Afinidade fornece uma métrica da força da associação — a Estimativa de Máxima Verossimilhança (MLE) do parâmetro Alfa — e seus respectivos intervalos de confiança de 95%. Ao contrário de índices de similaridade tradicionais, como Jaccard ou Sørensen, a métrica Alfa é menos sensível à prevalência das espécies, permitindo-nos distinguir entre associações biológicas e altas taxas de coocorrência impulsionadas exclusivamente pela elevada abundância das espécies na área de estudo.
+
+
+Preparação e analises de dados.
+```{r}
+#| label: prep-co
+#| eval: false
+#| message: false
+#| warning: false
+
+species_matrix <- especies %>%
+  select(plot_id, calu:hosa) %>%           # Keep only site names and species
+  pivot_longer(-plot_id,                   # Turn species columns into a single column
+               names_to = "species", 
+               values_to = "presence") %>%
+  pivot_wider(names_from = plot_id,        # Turn site rows into columns
+              values_from = presence) %>%
+  column_to_rownames("species") 
+# aqui somente gatos e caes
+domestic <- species_matrix[c(1,2), ]
+domestic
+
+# cooccur modelo probabalistica Veech 2013
+cooc_results <- cooccur(domestic, type = "spp_site", 
+                        spp_names = TRUE, 
+                        thresh = TRUE)
+# Summary and significant pairs
+summary(cooc_results)
+#View P-values and probabilities
+prob_table <- prob.table(cooc_results) 
+prob_table
+
+# Affinity
+affinity_res <- affinity(data = domestic, row.or.col = "row")
+head(affinity_res$all)
+
+```
+
+Na ecologia, quando duas espécies são muito comuns, elas coocorrem frequentemente simplesmente porque estão em toda parte, e não necessariamente porque "gostam" uma da outra.
+Os resultados complementares mostraram que no Campus Marco Zero a presença de cães não prediz a presença de gatos, e vice-versa.
+No 17 pontos do Campus Marco Zero, gatos e cachorros apresentou um padrão de 
+coocorrência aleatório (Modelo Probabilístico de Veech, p > 0,05). 
+Embora as espécies tenham compartilhado 11 dos 17 locais, 
+a coocorrência observada (11) não diferiu significativamente dos 10,71 
+locais esperados ao acaso. Apesar dos elevados índices de similaridade
+(Jaccard = 0,688), a associação (Alpha MLE = 0,567) não foi estatisticamente 
+significativa, uma vez que o intervalo de confiança de 95% incluiu o 
+valor zero (95% IC: -0,268 a 1,401]; 
+isso sugere que a alta taxa de coocorrência decorre de sua elevada 
+prevalência na área de estudo, e não de uma atração biológica ou de 
+uma exigência de habitat compartilhada.
+
+### Escalas diferentes
 
 Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes buffers (12.5m, 25m, 50m, 100m). A escala com o menor AIC (Akaike Information Criterion) é considerada a escala de efeito.
 
@@ -133,7 +195,8 @@ resultados_modelos |>
 
 Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
 
-### Cooccorencias
+
+
 
 ```{r}
 #| label: fig-effect-co
