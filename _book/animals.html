@@ -196,7 +196,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#cooccorencias" id="toc-cooccorencias" class="nav-link" data-scroll-target="#cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</a></li>
   <li><a href="#escalas-diferentes" id="toc-escalas-diferentes" class="nav-link" data-scroll-target="#escalas-diferentes"><span class="header-section-number">3.3.2</span> Escalas diferentes</a></li>
-  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.3</span> Rumo ao Desenho Quase-Experimental</a></li>
+  <li><a href="#spatial-autorcorrelation" id="toc-spatial-autorcorrelation" class="nav-link" data-scroll-target="#spatial-autorcorrelation"><span class="header-section-number">3.3.3</span> Spatial autorcorrelation</a></li>
+  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.4</span> Rumo ao Desenho Quase-Experimental</a></li>
   </ul></li>
   <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">3.4</span> Conclusão</a></li>
   </ul>
@@ -250,18 +251,19 @@ Capítulo em Desenvolvimento
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Spatial Engines</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Data Manipulation &amp; Grammar</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Analytical Models</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Data Manipulation &amp; Grammar</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Analytical Models</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dados</p>
 <div class="cell">
@@ -294,7 +296,7 @@ Capítulo em Desenvolvimento
 <h2 data-number="3.3" class="anchored" data-anchor-id="análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</h2>
 <section id="cooccorencias" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="cooccorencias"><span class="header-section-number">3.3.1</span> Cooccorencias</h3>
-<p>Primeiramente vamos verificar padrões entre os pontos usando duas tecnicas complementares. Primeiramente, utilizamos o modelo probabilístico de coocorrência de espécies desenvolvido por Veech (2013), implementado por meio do pacote <em>cooccur</em>. Essa abordagem foi escolhida em detrimento das permutações tradicionais de modelos nulos por fornecer uma solução exata, a qual é mais estável para conjuntos de dados menores (N=17), nos quais a aleatorização pode resultar em alta variância. Aplicamos um limiar de filtragem (<em>thresh</em> = TRUE) para excluir pares de espécies com poder estatístico insuficiente para atingir significância, garantindo que as classificações como “Aleatório” não fossem meros artefatos decorrentes da raridade. Em segundo lugar, para lidar com o “viés de prevalência” inerente a espécies comuns (por exemplo, <em>Canis lupus</em> e <em>Felis catus</em>) e para quantificar a magnitude das associações, utilizamos o pacote <em>CooccurrenceAffinity</em>. Enquanto o modelo de Veech fornece uma classificação categórica (Positiva, Negativa ou Aleatória), o modelo de Afinidade fornece uma métrica da força da associação — a Estimativa de Máxima Verossimilhança (MLE) do parâmetro Alfa — e seus respectivos intervalos de confiança de 95%. Ao contrário de índices de similaridade tradicionais, como Jaccard ou Sørensen, a métrica Alfa é menos sensível à prevalência das espécies, permitindo-nos distinguir entre associações biológicas e altas taxas de coocorrência impulsionadas exclusivamente pela elevada abundância das espécies na área de estudo.</p>
+<p>Primeiramente vamos verificar padrões entre os pontos usando duas tecnicas complementares. Inicialmente, utilizamos o modelo probabilístico de coocorrência de espécies desenvolvido por Veech (2013), implementado por meio do pacote <em>cooccur</em>. Essa abordagem foi escolhida em detrimento das permutações tradicionais de modelos nulos por fornecer uma solução exata, a qual é mais estável para conjuntos de dados menores (N=17), nos quais a aleatorização pode resultar em alta variância. Aplicamos um limiar de filtragem (<em>thresh</em> = TRUE) para excluir pares de espécies com poder estatístico insuficiente para atingir significância, garantindo que as classificações como “Aleatório” não fossem meros artefatos decorrentes da raridade. Em segundo lugar, para lidar com o “viés de prevalência” inerente a espécies comuns (por exemplo, <em>Canis lupus</em> e <em>Felis catus</em>) e para quantificar a magnitude das associações, utilizamos o pacote <em>CooccurrenceAffinity</em>. Enquanto o modelo de Veech fornece uma classificação categórica (Positiva, Negativa ou Aleatória), o modelo de Afinidade fornece uma métrica da força da associação — a Estimativa de Máxima Verossimilhança (MLE) do parâmetro Alfa — e seus respectivos intervalos de confiança de 95%. Ao contrário de índices de similaridade tradicionais, como Jaccard ou Sørensen, a métrica Alfa é menos sensível à prevalência das espécies, permitindo-nos distinguir entre associações biológicas e altas taxas de coocorrência impulsionadas exclusivamente pela elevada abundância das espécies na área de estudo.</p>
 <p>Preparação e analises de dados.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>species_matrix <span class="ot">&lt;-</span> especies <span class="sc">%&gt;%</span></span>
@@ -327,6 +329,7 @@ Capítulo em Desenvolvimento
 </section>
 <section id="escalas-diferentes" class="level3" data-number="3.3.2">
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="escalas-diferentes"><span class="header-section-number">3.3.2</span> Escalas diferentes</h3>
+<p>Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar ‘brigando por espaço’ ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a interação biótica direta (espécie-espécie) é fraca, o foco do ecólogo deve mudar para a interação espécie-ambiente. Mas aqui surge um novo desafio: um gato percebe o ambiente da mesma forma que um cão? Um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar ‘quem está com quem’ para perguntar ‘em qual distância o ambiente urbano realmente dita a regra’ para cada espécie.</p>
 <p>Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes buffers (12.5m, 25m, 50m, 100m). A escala com o menor AIC (Akaike Information Criterion) é considerada a escala de efeito.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. O Fluxo Nest-Map-Unnest (O "Coração" da análise)</span></span>
@@ -429,8 +432,154 @@ A ausência de segregação (intervalos cruzando o zero) sugere que a distribui�
 Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas “onde há prédios”, eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.</p></li>
 </ul>
 </section>
-<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.3</span> Rumo ao Desenho Quase-Experimental</h3>
+<section id="spatial-autorcorrelation" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="spatial-autorcorrelation"><span class="header-section-number">3.3.3</span> Spatial autorcorrelation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converter para objeto espacial (sf) e projetar para UTM 22S (Macapá)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Usamos EPSG:31982 (SIRGAS 2000 / UTM zone 22S) para distâncias em metros</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>dados_sf <span class="ot">&lt;-</span> especies <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon_x"</span>, <span class="st">"lat_y"</span>), <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">31982</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir a matriz de vizinhança</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Para N pequeno (17), KNN (K-Nearest Neighbors) é mais robusto.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Vamos usar k=3 (cada ponto é comparado aos 3 vizinhos mais próximos)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>vizinhos <span class="ot">&lt;-</span> <span class="fu">knearneigh</span>(<span class="fu">st_coordinates</span>(dados_sf), <span class="at">k =</span> <span class="dv">3</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="fu">knn2nb</span>(vizinhos)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>pesos <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(nb, <span class="at">style =</span> <span class="st">"W"</span>) <span class="co"># Estilo 'W' é padronizado por linha</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Executar o Teste de I de Moran para Cães (calu) e Gatos (feca)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>moran_caes <span class="ot">&lt;-</span> <span class="fu">moran.test</span>(especies<span class="sc">$</span>calu, pesos)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>moran_gatos <span class="ot">&lt;-</span> <span class="fu">moran.test</span>(especies<span class="sc">$</span>feca, pesos)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver os resultados</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(moran_caes)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  especies$calu  
+weights: pesos    
+
+Moran I statistic standard deviate = 0.35438, p-value = 0.3615
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     -0.007936508      -0.062500000       0.023706184 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(moran_gatos)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  especies$feca  
+weights: pesos    
+
+Moran I statistic standard deviate = 1.0157, p-value = 0.1549
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+       0.10256410       -0.06250000        0.02640892 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulação de Monte Carlo (999 permutações)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>mc_caes <span class="ot">&lt;-</span> <span class="fu">moran.mc</span>(dados_sf<span class="sc">$</span>calu, pesos, <span class="at">nsim =</span> <span class="dv">999</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mc_gatos <span class="ot">&lt;-</span> <span class="fu">moran.mc</span>(dados_sf<span class="sc">$</span>feca, pesos, <span class="at">nsim =</span> <span class="dv">999</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>res_caes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">moran_i =</span> mc_caes<span class="sc">$</span>res,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs_i =</span> mc_caes<span class="sc">$</span>statistic,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_val =</span> mc_caes<span class="sc">$</span>p.value</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a> ) </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>res_gatos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">moran_i =</span> mc_gatos<span class="sc">$</span>res,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs_i =</span> mc_gatos<span class="sc">$</span>statistic,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_val =</span> mc_gatos<span class="sc">$</span>p.value</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a> ) </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>expectativa <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> (<span class="dv">17</span> <span class="sc">-</span> <span class="dv">1</span>)   </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>fig_m_cao <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(res_caes, <span class="fu">aes</span>(<span class="at">x =</span> moran_i)) <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Linha do valor observado</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> obs_i), <span class="at">color =</span> <span class="st">"#0072B2"</span>, </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Linha da expectativa (acaso)</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> expectativa), </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> res_caes<span class="sc">$</span>obs_i, <span class="at">y =</span> <span class="fl">1.5</span>, </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Observed I:"</span>, <span class="fu">round</span>(res_caes<span class="sc">$</span>obs_i, <span class="dv">3</span>)), </span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> <span class="st">"white"</span>,        <span class="co"># Cor do fundo do box</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>,           <span class="co"># Transparência do box (0 a 1)</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="fl">0.5</span>,      <span class="co"># Espessura da borda do box</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="dv">2</span>, </span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#0072B2"</span>, </span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulação Monte Carlo - Cães"</span>,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Permutações: 999 | p-valor:"</span>, <span class="fu">round</span>(res_caes<span class="sc">$</span>p_val, <span class="dv">3</span>)),</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Índice de Moran (I)"</span>,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Densidade"</span>) <span class="sc">+</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>fig_m_gato <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(res_gatos, <span class="fu">aes</span>(<span class="at">x =</span> moran_i)) <span class="sc">+</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Linha do valor observado</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> obs_i), <span class="at">color =</span> <span class="st">"#0072B2"</span>, </span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>               <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Linha da expectativa (acaso)</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> expectativa), </span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> res_gatos<span class="sc">$</span>obs_i, <span class="at">y =</span> <span class="fl">1.5</span>, </span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Observed I:"</span>, <span class="fu">round</span>(res_gatos<span class="sc">$</span>obs_i, <span class="dv">3</span>)), </span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> <span class="st">"white"</span>,        <span class="co"># Cor do fundo do box</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>,           <span class="co"># Transparência do box (0 a 1)</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>             <span class="at">label.size =</span> <span class="fl">0.5</span>,      <span class="co"># Espessura da borda do box</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>             <span class="at">vjust =</span> <span class="dv">2</span>, </span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#0072B2"</span>, </span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>             <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulação Monte Carlo - Gatos"</span>,</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Permutações: 999 | p-valor:"</span>, <span class="fu">round</span>(res_gatos<span class="sc">$</span>p_val, <span class="dv">3</span>)),</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Índice de Moran (I)"</span>,</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Densidade"</span>) <span class="sc">+</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>fig_m_cao <span class="sc">+</span> fig_m_gato</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-spat-auto" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spat-auto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="animals_files/figure-html/fig-spat-auto-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spat-auto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.3: Gráfico de dispersão de Moran (Moran Plot) para a ocorrência de cães (A) e gatos (B) no Campus Marco Zero. O eixo horizontal representa os valores observados de presença (1) ou ausência (0) em cada estação de monitoramento. O eixo vertical representa o lag espacial, que corresponde à média ponderada da ocorrência nos três vizinhos mais próximos (k=3). A linha sólida representa a inclinação da regressão, cujo coeficiente equivale ao Índice de Moran (I). As linhas tracejadas indicam as médias aritméticas da variável e do seu respectivo lag espacial. Pontos numerados ou destacados com losangos indicam observações com maior influência na inclinação da reta
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Para verificar se a proximidade das armadilhas fotográficas (distância média de 160 m) influenciava os registros, aplicamos o teste de Autocorrelação Espacial de Moran. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na Figura 3.5A pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (Figura 3.5B), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Ecólogo: Por que um resultado ‘não significativo’ é valioso?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Você pode estar pensando: “Tanto código e análise para descobrir que a relação entre cães e gatos é aleatória?”. Na ciência aplicada, encontrar um <strong>resultado não significativo</strong> em múltiplas escalas é uma descoberta valiosa por dois motivos principais:</p>
+<ol type="1">
+<li><p><strong>A Independência das Espécies:</strong> O fato de a coocorrência ser aleatória de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.</p></li>
+<li><p><strong>A Força da Matriz Urbana:</strong> Quando a estatística aponta para a aleatoriedade biótica em várias escalas, ela está, na verdade, destacando que o <strong>ambiente (a matriz urbana)</strong> é uma força muito mais poderosa. Em vez de as espécies “negociarem” o espaço entre si, ambas estão respondendo de forma individual aos subsídios humanos (lixo, oferta de comida e abrigo).</p></li>
+<li><p><strong>Saturação da Paisagem:</strong> Em ecologia, quando duas espécies generalistas apresentam alta prevalência e coocorrência aleatória em múltiplas escalas, isso sugere que a paisagem está <strong>saturada</strong>. Não há barreiras ambientais ou bióticas eficazes que limitem a ocupação de cães ou gatos no campus. Ambos utilizam a matriz urbana de forma tão eficiente que a presença de um não interfere na “liberdade” de ocupação do outro.</p></li>
+<li><p><strong>Necessidade de Gestão Proativa e Integrada:</strong> O fato de operarem de forma independente e generalizada significa que ações isoladas (focadas em apenas uma espécie ou em pontos específicos) serão paliativas. Como não há segregação, uma <strong>gestão proativa</strong> é mandatória.</p></li>
+<li><p><strong>O Valor da Evidência Multiescalar:</strong> Confirmar que essa independência se mantém de 12,5m até 100m prova que o coocorrência não é um artefato de amostragem local, mas uma característica estrutural do Campus Marco Zero. Para o gestor ambiental, isso fornece o embasamento científico para tratar a fauna doméstica não como casos isolados, mas como um componente onipresente da paisagem que exige manejo do ambiente como um todo, e não apenas o controle individual de animais.</p></li>
+</ol>
+<p>Portanto, o “não” da estatística redireciona seu olhar: o questão não é como os animais interagem, mas sim como a paisagem urbana e ações antropicos está facilitando a presença de ambos de forma indiscriminada. Entender que o processo é <strong>independente da escala</strong> nos poupa de tentar resolver um problema biológico quando o desafio é, na verdade, o planejamento do ambiente.</p>
+</div>
+</div>
+</section>
+<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.4</span> Rumo ao Desenho Quase-Experimental</h3>
 <p>Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o “quase-experimento” aproveita variações existentes.</p>
 <p>A. Amostragem Estratificada por Gradiente de Recurso.<br>
 Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).</p>
@@ -442,7 +591,9 @@ Adicionem uma camada de distância euclidiana até o ponto de recurso mais próx
 </section>
 <section id="conclusão" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="conclusão"><span class="header-section-number">3.4</span> Conclusão</h2>
-<p>Embora a ocorrência (presença-ausência) não mostre segregação, a análise de abundância relativa (frequência de fotos) poderia revelar padrões diferentes, como uma maior concentração de ambas as espécies em torno de “ilhas de recursos” (ex: Restaurante Universitário).</p>
+<p>Ao longo das análises, não confiamos em apenas uma fonte, mas sim, um conjunto de evidencias cientificas. Usamos o pacote cooccur para testar interações bióticas, o landscapemetrics para quantificar a estrutura da paisagem e modelos lineares generalizados (GLM) para avaliar a escala de efeito. Por que isso é importante?</p>
+<p>Rigor contra o subjetivismo: O que parece óbvio ao olhar para o mapa (ex: ‘tem cachorros perto dos gatos’) só se torna evidência científica quando resiste a testes estatísticos de diferentes naturezas. Alem disso, conclusões baseadas em múltiplas análises protegem o gestor ambiental. Se você precisar propor uma política de getão de fauna doméstica, terá em mãos não apenas um ‘acho que’, mas um corpo de evidências cientificas robustas que mostra exatamente em qual escala o problema ocorre e quais fatores (bióticos ou abióticos) são irrelevantes.</p>
+<p>Embora a ocorrência (presença-ausência) não mostre segregação, uma análise nova usando abundância relativa (frequência de fotos) poderia revelar padrões diferentes, como uma maior concentração de ambas as espécies em torno de “ilhas de recursos” (ex: Restaurante Universitário).</p>
 <p>Avançar da Ecologia de Paisagens descritiva para o desenho quase-experimental permitera que a UNIFAP não seja apenas o local de estudo, mas um laboratório vivo onde testamos teorias sobre como subsídios humanos alteram as regras básicas das interações bióticas na Amazônia urbana.</p>
 
 

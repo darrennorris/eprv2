@@ -28,6 +28,7 @@ Utilizaremos o ecossistema `tidyverse` para manipulação, `sf` para dados espac
 # 1. Spatial Engines
 library(terra)
 library(sf)
+library(spdep)
 
 # 2. Data Manipulation & Grammar
 library(tidyverse)
@@ -229,12 +230,111 @@ Ao interpretarmos os resultados de coocorrência, devemos olhar para dois proces
 - Filtragem Ambiental vs. Seleção de Micro-habitat:\
   Enquanto o "uso humano" (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas "onde há prédios", eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.
 
+### Spatial autorcorrelation
+
+```{r}
+#| label: test-moran
+#| message: false
+#| warning: false
+
+# Converter para objeto espacial (sf) e projetar para UTM 22S (Macapá)
+# Usamos EPSG:31982 (SIRGAS 2000 / UTM zone 22S) para distâncias em metros
+dados_sf <- especies %>%
+  st_as_sf(coords = c("lon_x", "lat_y"), crs = 4326) %>%
+  st_transform(crs = 31982)
+
+# Definir a matriz de vizinhança
+# Para N pequeno (17), KNN (K-Nearest Neighbors) é mais robusto.
+# Vamos usar k=3 (cada ponto é comparado aos 3 vizinhos mais próximos)
+vizinhos <- knearneigh(st_coordinates(dados_sf), k = 3)
+nb <- knn2nb(vizinhos)
+pesos <- nb2listw(nb, style = "W") # Estilo 'W' é padronizado por linha
+
+# Executar o Teste de I de Moran para Cães (calu) e Gatos (feca)
+moran_caes <- moran.test(especies$calu, pesos)
+moran_gatos <- moran.test(especies$feca, pesos)
+
+# Ver os resultados
+print(moran_caes)
+print(moran_gatos)
+
+```
+
+```{r}
+#| label: fig-spat-auto
+#| fig-cap: "Gráfico de dispersão de Moran (Moran Plot) para a ocorrência de cães (A) e gatos (B) no Campus Marco Zero. O eixo horizontal representa os valores observados de presença (1) ou ausência (0) em cada estação de monitoramento. O eixo vertical representa o lag espacial, que corresponde à média ponderada da ocorrência nos três vizinhos mais próximos (k=3). A linha sólida representa a inclinação da regressão, cujo coeficiente equivale ao Índice de Moran (I). As linhas tracejadas indicam as médias aritméticas da variável e do seu respectivo lag espacial. Pontos numerados ou destacados com losangos indicam observações com maior influência na inclinação da reta"
+#| message: false
+#| warning: false
+
+# Simulação de Monte Carlo (999 permutações)
+set.seed(123)
+mc_caes <- moran.mc(dados_sf$calu, pesos, nsim = 999)
+mc_gatos <- moran.mc(dados_sf$feca, pesos, nsim = 999)
+
+res_caes <- data.frame(moran_i = mc_caes$res,
+  obs_i = mc_caes$statistic,
+  p_val = mc_caes$p.value
+ ) 
+res_gatos <- data.frame(moran_i = mc_gatos$res,
+  obs_i = mc_gatos$statistic,
+  p_val = mc_gatos$p.value
+ ) 
+expectativa <- -1 / (17 - 1)   
+fig_m_cao <- ggplot(res_caes, aes(x = moran_i)) +
+    geom_density(fill = "grey90", color = "grey40") +
+    # Linha do valor observado
+    geom_vline(aes(xintercept = obs_i), color = "#0072B2", 
+               linetype = "solid", size = 1.2) +
+    # Linha da expectativa (acaso)
+    geom_vline(aes(xintercept = expectativa), 
+               color = "black", linetype = "dashed") +
+    annotate("label", x = res_caes$obs_i, y = 1.5, 
+             label = paste("Observed I:", round(res_caes$obs_i, 3)), 
+             fill = "white",        # Cor do fundo do box
+             alpha = 0.7,           # Transparência do box (0 a 1)
+             label.size = 0.5,      # Espessura da borda do box
+             vjust = 2, 
+             color = "#0072B2", 
+             fontface = "bold", angle = 90, size = 4) +
+    labs(title = "Simulação Monte Carlo - Cães",
+         subtitle = paste("Permutações: 999 | p-valor:", round(res_caes$p_val, 3)),
+         x = "Índice de Moran (I)",
+         y = "Densidade") +
+    theme_bw()
+
+fig_m_gato <- ggplot(res_gatos, aes(x = moran_i)) +
+    geom_density(fill = "grey90", color = "grey40") +
+    # Linha do valor observado
+    geom_vline(aes(xintercept = obs_i), color = "#0072B2", 
+               linetype = "solid", size = 1.2) +
+    # Linha da expectativa (acaso)
+    geom_vline(aes(xintercept = expectativa), 
+               color = "black", linetype = "dashed") +
+    annotate("label", x = res_gatos$obs_i, y = 1.5, 
+             label = paste("Observed I:", round(res_gatos$obs_i, 3)), 
+             fill = "white",        # Cor do fundo do box
+             alpha = 0.7,           # Transparência do box (0 a 1)
+             label.size = 0.5,      # Espessura da borda do box
+             vjust = 2, 
+             color = "#0072B2", 
+             fontface = "bold", angle = 90, size = 4) +
+    labs(title = "Simulação Monte Carlo - Gatos",
+         subtitle = paste("Permutações: 999 | p-valor:", round(res_gatos$p_val, 3)),
+         x = "Índice de Moran (I)",
+         y = "Densidade") +
+    theme_bw()
+
+fig_m_cao + fig_m_gato
+```
+
+Para verificar se a proximidade das armadilhas fotográficas (distância média de 160 m) influenciava os registros, aplicamos o teste de Autocorrelação Espacial de Moran. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na Figura 3.5A pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (Figura 3.5B), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).
+
 ::: callout-tip
 ## Dica do Ecólogo: Por que um resultado 'não significativo' é valioso?
 
 Você pode estar pensando: "Tanto código e análise para descobrir que a relação entre cães e gatos é aleatória?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
 
-1.  **A Independência das Espécies:** O fato de a coocorrência ser aleatória de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.
+1.  **A Independência das Espécies:** O fato de a coocorrência ser aleatória em raios de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.
 
 2.  **A Força da Matriz Urbana:** Quando a estatística aponta para a aleatoriedade biótica em várias escalas, ela está, na verdade, destacando que o **ambiente (a matriz urbana)** é uma força muito mais poderosa. Em vez de as espécies "negociarem" o espaço entre si, ambas estão respondendo de forma individual aos subsídios humanos (lixo, oferta de comida e abrigo).
 
@@ -242,7 +342,7 @@ Você pode estar pensando: "Tanto código e análise para descobrir que a relaç
 
 4.  **Necessidade de Gestão Proativa e Integrada:** O fato de operarem de forma independente e generalizada significa que ações isoladas (focadas em apenas uma espécie ou em pontos específicos) serão paliativas. Como não há segregação, uma **gestão proativa** é mandatória.
 
-5.  **O Valor da Evidência Multiescalar:** Confirmar que essa independência se mantém de 12,5m até 100m prova que o coocorrência não é um artefato de amostragem local, mas uma característica estrutural do Campus Marco Zero. Para o gestor ambiental, isso fornece o embasamento científico para tratar a fauna doméstica não como casos isolados, mas como um componente onipresente da paisagem que exige manejo do ambiente como um todo, e não apenas o controle individual de animais.
+5.  **O Valor da Evidência Multiescalar:** Confirmar que essa independência se mantém em raios de 12,5m até 100m prova que o coocorrência não é um artefato de amostragem local, mas uma característica estrutural do Campus Marco Zero. Para o gestor ambiental, isso fornece o embasamento científico para tratar a fauna doméstica não como casos isolados, mas como um componente onipresente da paisagem que exige manejo do ambiente como um todo, e não apenas o controle individual de animais.
 
 Portanto, o "não" da estatística redireciona seu olhar: o questão não é como os animais interagem, mas sim como a paisagem urbana e ações antropicos está facilitando a presença de ambos de forma indiscriminada. Entender que o processo é **independente da escala** nos poupa de tentar resolver um problema biológico quando o desafio é, na verdade, o planejamento do ambiente.
 :::
