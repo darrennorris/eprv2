@@ -12,6 +12,20 @@ Este capítulo é um trabalho em andamento. Os exemplos de código e o texto ain
 
 ## Introdução
 
+```{r}
+#| label: fig-processo
+#| echo: false
+#| message: false
+#| warning: false
+#| out-width: "100%"
+#| fig-cap: "Fluxo metodológico para análise multiescalar. O processo inicia na validação estatística da distribuição (1), passa pela identificação da escala de efeito do ambiente (2), isola as interações bióticas entre as espécies (3) e culmina na interpretação para tomada de decisão no mundo real (4)."
+
+# knitr grabs the image that was generated in mermaid
+knitr::include_graphics("images/mermaid-diagram-2026-06-25-171851.png")
+```
+
+
+
 A ecologia de paisagens urbana investiga como a configuração e a composição do habitat influenciam a biodiversidade. No contexto amazônico, áreas como o Campus Marco Zero da UNIFAP (Macapá, Brasil) representam mosaicos complexos onde a fauna doméstica (*Canis familiaris* e *Felis catus*) interage com fragmentos remanescentes de cerrado.
 
 Um conceito central aqui é a **Escala de Efeito**: a escala espacial na qual a relação entre a estrutura da paisagem e a resposta biológica é mais forte. Este capítulo demonstra como identificar essa escala e analisar a coocorrência dessas espécies usando R.
