@@ -29,6 +29,7 @@ jobs:
             any::broom
             any::terra
             any::sf
+            any::spdep
             any::landscapemetrics
             any::mgcv
             any::Hmisc
