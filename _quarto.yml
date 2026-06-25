@@ -14,7 +14,6 @@ book:
     - intro.qmd
     - map.qmd
     - animals.qmd
-    - summary.qmd
     - references.qmd
   downloads: [pdf]
   repo-url: "https://github.com/darrennorris/eprv2"
