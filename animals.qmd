@@ -310,11 +310,11 @@ cooc_results <- cooccur(domestic, type = "spp_site",
 summary(cooc_results)
 #View P-values and probabilities
 prob_table <- prob.table(cooc_results) 
-prob_table
+print(prob_table)
 
 # Affinity
 affinity_res <- affinity(data = domestic, row.or.col = "row")
-head(affinity_res$all)
+print(head(affinity_res$all))
 
 ```
 
@@ -355,7 +355,7 @@ Agora comparação dos resultados.
 
 ```{r}
 #| label: fig-scale-effect
-#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente competitivos."
+#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados são considerados estatisticamente equivalentes em termos das informações que contêm."
 #| message: false
 #| warning: false
 #| fig-width: 9
@@ -376,6 +376,10 @@ resultados_modelos |>
 ```
 
 Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
+
+Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (@fig-scale-effect) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação 'indivíduo-paisagem' e passamos a analisar a 'interação biótica multiescalar'. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.
+
+Para gerar a análise de interação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de 'empacotar' os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:
 
 ```{r}
 #| label: fig-effect-co
@@ -416,7 +420,7 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
   theme_light(base_size = 12)
 ```
 
-O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
+Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
 
 Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental
 
