@@ -300,7 +300,6 @@ Preparação e analises de dados.
 
 ```{r}
 #| label: prep-co
-#| eval: false
 #| message: false
 #| warning: false
 
@@ -324,11 +323,11 @@ cooc_results <- cooccur(domestic, type = "spp_site",
 summary(cooc_results)
 #View P-values and probabilities
 prob_table <- prob.table(cooc_results) 
-print(prob_table)
+prob_table
 
 # Affinity
 affinity_res <- affinity(data = domestic, row.or.col = "row")
-print(head(affinity_res$all))
+head(affinity_res$all)
 
 ```
 
