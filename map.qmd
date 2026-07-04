@@ -345,7 +345,7 @@ escala_buffer: O tamanho da paisagem ao redor do ponto (25, 50 ou 100).
 dados_metricas <- read_csv("data/tabela_metricas_final.csv")
 
 # Filtrar os dados
-dados_div <- dados_metricas %>%
+dados_div <- dados_metricas |>
   # Filtrar apenas a métrica de diversidade (shdi)
   filter(metric == "shdi") 
 
@@ -413,9 +413,9 @@ Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não
 
 
 # Limpar e filtrar os dados
-dados_prop <- dados_metricas %>%
+dados_prop <- dados_metricas |>
   # Filtrar apenas a métrica de porcentagem da paisagem (cpland)
-  filter(metric %in% c("cpland", "pland")) %>%
+  filter(metric %in% c("cpland", "pland")) |>
   # Remover linhas que não têm classe definida (ex: métricas de nível de landscape)
   filter(!is.na(class_3)) |> 
   tidyr::complete(plot_id, escala_buffer, metric, class_3, fill = list(value = 0))
@@ -489,9 +489,9 @@ A redução expressiva do pland ao aumentar o raio de amostragem demonstra que a
 
 
 # Limpar e filtrar os dados
-dados_conf <- dados_metricas %>%
+dados_conf <- dados_metricas |>
   # Filtrar apenas a métrica de porcentagem da paisagem (cpland)
-  filter(metric %in% c("ai", "ed")) %>%
+  filter(metric %in% c("ai", "ed")) |>
   # Remover linhas que não têm classe definida
   filter(!is.na(class_3)) 
 
@@ -549,7 +549,182 @@ O indicie de aggregação (AI) mede o quão próximos ou "agrupados" estão os p
 
 O Densidade de Borda (ED) mede a quantidade de bordas (contato entre diferentes classes) em relação à área total (metros por hectare). É um dos principais indicadores de fragmentação. Campo Sujo (O mais fragmentado), apresenta os valores de ED mais altos na escala local (12,5m), chegando a 400-600 m/ha. Isso mostra que as áreas de Campo Sujo são manchas menores ou com formatos muito irregulares, onde quase tudo é "borda". Conforme o raio aumenta para 100m, o ED cai para \~150 m/ha, indicando que essas manchas estão imersas em uma matriz que "dilui" essa borda. Para o classe de Uso Humano (a matriz estável) o ED é o mais baixo e estável (perto de 100 m/ha). Isso ocorre porque as áreas construídas no campus (blocos, estacionamentos) tendem a ter formatos geométricos e contínuos, gerando menos "perímetro de borda" por unidade de área do que a vegetação natural, que é mais irregular.
 
-### Implicações para a Fauna:
+
+### Correlações entre métricas
+
+Para modelos inferenciais (como GLM, GAM ou Modelos de Ocupação), a referência na ecologia é:
+Dormann et al. (2013) - "Collinearity: a review of methods to deal with it and a simulation study evaluating their performance".
+O que diz: Este estudo testou diversos métodos e concluiu que r>0.7 é o ponto onde as estimativas dos coeficientes tornam-se instáveis e o erro do modelo aumenta significativamente.
+
+O bloco de código abaixo calcula correlações aos pares e gera gráficos para facilitar a comparação das correlações entre as diferentes métricas.
+
+```{r}
+#| label: make-correlations
+#| message: false
+#| warning: false
+
+# 1. Prepare data
+# Filtering for landscape level metrics; pivot so metrics are columns
+landscape_wide <- dados_metricas |>
+  filter(level == "landscape") |>
+  select(plot_id, escala_buffer, class_3, metric, value) |>
+  pivot_wider(names_from = metric, values_from = value)
+
+
+# Filtering for class level metrics; pivot so metrics are columns
+class_wide <- dados_metricas |>
+  filter(level == "class") |>
+  select(plot_id, escala_buffer, class_3, metric, value) |>
+  pivot_wider(names_from = metric, values_from = value)
+
+cor_results_l <- landscape_wide |>
+  group_by(escala_buffer) |>
+  nest() |>
+  mutate(cor_mat = map(data, ~ {
+    # Select only numeric columns (metrics)
+    numeric_data <- .x |> select(where(is.numeric))
+    
+    # Calculate correlation matrix using base R
+    # use = "pairwise.complete.obs" handles any NAs safely
+    res_matrix <- cor(numeric_data, use = "pairwise.complete.obs")
+    
+    # Convert matrix to a tidy data frame
+    res_matrix |> 
+      as.data.frame() |> 
+      rownames_to_column(var = "metric_name")
+  })) |>
+  # Remove the raw 'data' column and expand the correlation results
+  select(-data) |> 
+  unnest(cor_mat)
+# View the numeric results
+print(cor_results_l)
+
+cor_results_class <- class_wide |>
+  group_by(escala_buffer) |>
+  nest() |>
+  mutate(cor_mat = map(data, ~ {
+    # Select only numeric columns (metrics)
+    numeric_data <- .x |> select(where(is.numeric))
+    
+    # Calculate correlation matrix using base R
+    # use = "pairwise.complete.obs" handles any NAs safely
+    res_matrix <- cor(numeric_data, use = "pairwise.complete.obs")
+    
+    # Convert matrix to a tidy data frame
+    res_matrix |> 
+      as.data.frame() |> 
+      rownames_to_column(var = "metric_name")
+  })) |>
+  # Remove the raw 'data' column and expand the correlation results
+  select(-data) |> 
+  unnest(cor_mat)
+
+# View the numeric results
+print(cor_results_class)
+
+```
+
+Visualizar em um grafico.
+
+```{r}
+#| label: fig-correlations
+#| fig-cap: "A fazer. "
+#| message: false
+#| warning: false
+
+# 1. Prepare the data for plotting
+# We convert the wide columns into a long 'metric_pair' column
+cor_plot_data <- cor_results_class |>
+  pivot_longer(
+    cols = -c(escala_buffer, metric_name), 
+    names_to = "metric_pair", 
+    values_to = "r"
+  )
+
+# 2. Create the Heatmap Plot
+ggplot(cor_plot_data, aes(x = metric_name, y = metric_pair, fill = r)) +
+  geom_tile(color = "white") + # White borders for tiles
+  # Add numeric labels to each tile for clarity
+  geom_text(aes(label = round(r, 2)), size = 3, color = "black") +
+  # Use a diverging color scale (Red = Positive, Blue = Negative)
+  scale_fill_gradient2(
+    low = "#313695", mid = "white", high = "#a50026", 
+    midpoint = 0, limit = c(-1, 1), 
+    name = "Pearson\nCorrelation"
+  ) +
+  # Create a separate panel for each scale
+  facet_wrap(~escala_buffer, labeller = label_both) +
+  theme_minimal() +
+  labs(
+    title = "Correlações de métricas da paisagem por escala de buffer",
+    subtitle = "Identificação de colinearidade (r > 0,7) para selecionar as métricas finais",
+    x = NULL, y = NULL
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    panel.grid = element_blank() # Clean look for heatmaps
+  ) +
+  coord_fixed() # Makes tiles perfectly square
+
+
+```
+
+Muitas valores. para ajudar podeos fazer um resumo para 
+
+```{r}
+# 1. Create the summary table
+cor_summary <- cor_plot_data |>
+  # Remove self-correlations (e.g., ai vs ai)
+  filter(metric_name != metric_pair) |>
+  # Ensure "Metric A - Metric B" and "Metric B - Metric A" are treated as the same pair
+  mutate(pair = ifelse(metric_name < metric_pair, 
+                       paste(metric_name, metric_pair, sep = " - "), 
+                       paste(metric_pair, metric_name, sep = " - "))) |>
+  # Group by the pair to calculate stats across all scales (escala_buffer)
+  group_by(pair) |>
+  dplyr::summarize(
+    mean_correlation = mean(r, na.rm = TRUE),
+    min_correlation  = min(r, na.rm = TRUE),
+    max_correlation  = max(r, na.rm = TRUE)
+  ) |>
+  # Keep only unique pairs
+  distinct() |> 
+  mutate(flag_co = ifelse((abs(max_correlation)> 0.699|
+                             abs(min_correlation)> 0.699), 
+                          "colinearidade", ""))
+
+print(cor_summary)
+```
+
+
+Com base no gráfico de calor e na tabela cor_summary,  tem um caso claro de redundância métrica. Em ecologia da paisagem, quando duas métricas têm uma correlação acima de 0,90, elas estão medindo essencialmente a mesma coisa.
+Aqui está a interpretação detalhada e quais métricas você deve escolher:
+1. O Grupo Redundante (Área)
+As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Area Percentage of Landscape) estão altíssimamente correlacionadas entre si em todas as escalas (r entre 0,94 e 0,98).
+O que está acontecendo: À medida que a área total da classe aumenta, a porcentagem da paisagem e a área de núcleo aumentam quase perfeitamente juntas.
+Decisão: Escolha apenas UMA destas.
+Recomendação: Fique com a pland. É a métrica padrão na literatura científica por ser normalizada (0-100%) e facilitar a comparação entre áreas de tamanhos diferentes.
+2. A Métrica de Configuração (ai)
+O ai (Aggregation Index) tem correlações moderadas com a área (r≈0,51 a 0,55).
+O que está acontecendo: Isso é bom. Significa que o ai traz uma informação nova que a quantidade de área não explica: se as manchas estão muito próximas/agrupadas ou dispersas.
+Decisão: Mantenha o ai. Ele é importante para explicar a conectividade estrutural.
+3. A Métrica de Borda (ed)
+O ed (Edge Density) apresenta um comportamento interessante de dependência de escala.
+Na escala de 12.5m, ele é fortemente correlacionado negativamente com a área (r=−0.86).
+Na escala de 100m, essa correlação cai para quase zero (r=−0.12).
+O que está acontecendo: Em escalas pequenas, a borda e a área estão ligadas de forma simples. Em escalas maiores, a paisagem se torna mais complexa e a densidade de bordas passa a ser independente da quantidade de área.
+Decisão: Mantenha o ed. Ele será crucial para capturar a fragmentação em escalas maiores que a métrica de área (pland) não percebe.
+Resumo: Quais métricas manter no seu modelo final?
+Para evitar problemas de multicolinearidade em suas análises estatísticas futuras, eu recomendo manter este conjunto de 3 métricas independentes:
+pland (Representa a Quantidade: quanto de habitat existe).
+ai (Representa a Agregação: como esse habitat está agrupado).
+ed (Representa a Borda: quanta interface existe com a matriz).
+O que descartar:
+Descarte ca e cpland (pois a pland já explica quase 100% da variação delas).
+Nota sobre a escala:
+Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra, o que é ótimo para modelos estatísticos.
+
+## Implicações para a Fauna:
 
 - Espécies Especialistas:\
   Provavelmente estão ausentes ou apenas de passagem, pois não encontram "área de núcleo" (cpland) suficiente para estabelecer território ou reprodução segura.

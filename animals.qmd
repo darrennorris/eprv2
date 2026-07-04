@@ -24,8 +24,6 @@ Este capítulo é um trabalho em andamento. Os exemplos de código e o texto ain
 knitr::include_graphics("images/mermaid-diagram-2026-06-25-171851.png")
 ```
 
-
-
 A ecologia de paisagens urbana investiga como a configuração e a composição do habitat influenciam a biodiversidade. No contexto amazônico, áreas como o Campus Marco Zero da UNIFAP (Macapá, Brasil) representam mosaicos complexos onde a fauna doméstica (*Canis familiaris* e *Felis catus*) interage com fragmentos remanescentes de cerrado.
 
 Um conceito central aqui é a **Escala de Efeito**: a escala espacial na qual a relação entre a estrutura da paisagem e a resposta biológica é mais forte. Este capítulo demonstra como identificar essa escala e analisar a coocorrência dessas espécies usando R.
@@ -335,9 +333,9 @@ Na ecologia, quando duas espécies são muito comuns, elas coocorrem frequenteme
 
 ### Escalas diferentes
 
-Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar 'brigando por espaço' ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a interação biótica direta (espécie-espécie) é fraca, o foco do ecólogo deve mudar para a interação espécie-ambiente. Mas aqui surge um novo desafio: um gato percebe o ambiente da mesma forma que um cão? Um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar 'quem está com quem' para perguntar 'em qual distância o ambiente urbano realmente dita a regra' para cada espécie.
+Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar 'brigando por espaço' ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a interação biótica direta (espécie-espécie) é fraca, sera que um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar 'quem está com quem' para perguntar 'em qual distância o ambiente urbano realmente dita a regra' para cada espécie.
 
-Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes buffers (12.5m, 25m, 50m, 100m). A escala com o menor AIC (Akaike Information Criterion) é considerada a escala de efeito.
+Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes raios (buffers: 12.5m, 25m, 50m, 100m).
 
 ```{r}
 #| label: scale-effect
