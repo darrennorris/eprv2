@@ -1,3 +1,6 @@
+# quatro render 
+quarto::quarto_render("map.qmd", output_format = "html")
+
 # steps to publish
 # should automatically update  online book
 # to update .pdf and .html
