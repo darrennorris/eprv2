@@ -7,3 +7,5 @@
 .quarto
 /.quarto/
 publish_notes.R
+
+**/*.quarto_ipynb
