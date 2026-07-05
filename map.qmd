@@ -71,6 +71,15 @@ library(mapview)
 
 Dados.
 
+Os dados utilizados nos exemplos de código provêm dos pacotes. Cópias também estão disponíveis nos seguintes links:
+
+Arquivos espaciais com mapeamento e classificação da paisagem: 
+Camadas vetor marco_zero_2026_31982.gpkg	
+https://drive.google.com/file/d/1nRJg6WzIjWlBN0ARdn3CUuJoLCANv1pa/view?usp=drive_link 
+Camadas raster na pasta marco_zero_rasters  
+https://drive.google.com/drive/folders/1vxEg_MDuo99ysbhQ4AU12sNsvWz1MD8s?usp=drive_link 
+
+
 ```{r}
 #| label: dados-map
 #| message: false
