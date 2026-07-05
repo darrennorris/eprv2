@@ -549,12 +549,9 @@ O indicie de aggregação (AI) mede o quão próximos ou "agrupados" estão os p
 
 O Densidade de Borda (ED) mede a quantidade de bordas (contato entre diferentes classes) em relação à área total (metros por hectare). É um dos principais indicadores de fragmentação. Campo Sujo (O mais fragmentado), apresenta os valores de ED mais altos na escala local (12,5m), chegando a 400-600 m/ha. Isso mostra que as áreas de Campo Sujo são manchas menores ou com formatos muito irregulares, onde quase tudo é "borda". Conforme o raio aumenta para 100m, o ED cai para \~150 m/ha, indicando que essas manchas estão imersas em uma matriz que "dilui" essa borda. Para o classe de Uso Humano (a matriz estável) o ED é o mais baixo e estável (perto de 100 m/ha). Isso ocorre porque as áreas construídas no campus (blocos, estacionamentos) tendem a ter formatos geométricos e contínuos, gerando menos "perímetro de borda" por unidade de área do que a vegetação natural, que é mais irregular.
 
-
 ### Correlações entre métricas
 
-Para modelos inferenciais (como GLM, GAM ou Modelos de Ocupação), a referência na ecologia é:
-Dormann et al. (2013) - "Collinearity: a review of methods to deal with it and a simulation study evaluating their performance".
-O que diz: Este estudo testou diversos métodos e concluiu que r>0.7 é o ponto onde as estimativas dos coeficientes tornam-se instáveis e o erro do modelo aumenta significativamente.
+Para modelos inferenciais (como GLM, GAM etc), a referência na ecologia é: @dormann_collinearity_2013 - "Collinearity: a review of methods to deal with it and a simulation study evaluating their performance". Este estudo testou diversos métodos e concluiu que uma correlação entre variavies de r\>0.7 é o ponto onde as estimativas dos coeficientes tornam-se instáveis e o erro do modelo aumenta significativamente. Assim sendo, correlação entre variavies de r\>0.7 se torno um dos criterios objetivos para identificar varieveis redundantes.
 
 O bloco de código abaixo calcula correlações aos pares e gera gráficos para facilitar a comparação das correlações entre as diferentes métricas.
 
@@ -669,7 +666,15 @@ ggplot(cor_plot_data, aes(x = metric_name, y = metric_pair, fill = r)) +
 
 ```
 
-Muitas valores. para ajudar podeos fazer um resumo para 
+Muitas valores.
+
+::: callout-note
+## Nota sobre escala
+
+Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra.
+:::
+
+Para ajudar podemos fazer um resumo.
 
 ```{r}
 # 1. Create the summary table
@@ -696,33 +701,31 @@ cor_summary <- cor_plot_data |>
 print(cor_summary)
 ```
 
+Com base no gráfico de calor (@fig-correlations) e na tabela cor_summary, tem um caso claro de redundância nas métricas.
 
-Com base no gráfico de calor e na tabela cor_summary,  tem um caso claro de redundância métrica. Em ecologia da paisagem, quando duas métricas têm uma correlação acima de 0,90, elas estão medindo essencialmente a mesma coisa.
-Aqui está a interpretação detalhada e quais métricas você deve escolher:
-1. O Grupo Redundante (Área)
-As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Area Percentage of Landscape) estão altíssimamente correlacionadas entre si em todas as escalas (r entre 0,94 e 0,98).
-O que está acontecendo: À medida que a área total da classe aumenta, a porcentagem da paisagem e a área de núcleo aumentam quase perfeitamente juntas.
-Decisão: Escolha apenas UMA destas.
-Recomendação: Fique com a pland. É a métrica padrão na literatura científica por ser normalizada (0-100%) e facilitar a comparação entre áreas de tamanhos diferentes.
-2. A Métrica de Configuração (ai)
-O ai (Aggregation Index) tem correlações moderadas com a área (r≈0,51 a 0,55).
-O que está acontecendo: Isso é bom. Significa que o ai traz uma informação nova que a quantidade de área não explica: se as manchas estão muito próximas/agrupadas ou dispersas.
-Decisão: Mantenha o ai. Ele é importante para explicar a conectividade estrutural.
-3. A Métrica de Borda (ed)
-O ed (Edge Density) apresenta um comportamento interessante de dependência de escala.
-Na escala de 12.5m, ele é fortemente correlacionado negativamente com a área (r=−0.86).
-Na escala de 100m, essa correlação cai para quase zero (r=−0.12).
-O que está acontecendo: Em escalas pequenas, a borda e a área estão ligadas de forma simples. Em escalas maiores, a paisagem se torna mais complexa e a densidade de bordas passa a ser independente da quantidade de área.
-Decisão: Mantenha o ed. Ele será crucial para capturar a fragmentação em escalas maiores que a métrica de área (pland) não percebe.
-Resumo: Quais métricas manter no seu modelo final?
-Para evitar problemas de multicolinearidade em suas análises estatísticas futuras, eu recomendo manter este conjunto de 3 métricas independentes:
-pland (Representa a Quantidade: quanto de habitat existe).
-ai (Representa a Agregação: como esse habitat está agrupado).
-ed (Representa a Borda: quanta interface existe com a matriz).
-O que descartar:
-Descarte ca e cpland (pois a pland já explica quase 100% da variação delas).
-Nota sobre a escala:
-Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra, o que é ótimo para modelos estatísticos.
+1.  O Grupo Redundante (Área)\
+    As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Area Percentage of Landscape) estão altíssimamente correlacionadas entre si em todas as escalas (r entre 0,94 e 0,98). À medida que a área total da classe aumenta, a porcentagem da paisagem e a área de núcleo aumentam quase perfeitamente juntas.\
+    **Decisão:** Escolha apenas UMA destas. **Recomendação:** Fique com a pland. É a métrica padrão na literatura científica por ser normalizada (0-100%) e facilitar a comparação entre áreas de tamanhos diferentes.
+
+2.  A Métrica de Configuração (ai)\
+    O ai (Aggregation Index) tem correlações moderadas com a área (r≈0,51 a 0,55). Isso é bom. Significa que o ai traz uma informação nova que a quantidade de área não explica: se as manchas estão muito próximas/agrupadas ou dispersas.\
+    **Decisão:** Mantenha o ai. Ele é importante para explicar a conectividade estrutural.
+
+3.  A Métrica de Borda (ed)\
+    O ed (Edge Density) apresenta um comportamento interessante de dependência de escala. Na escala de 12.5m, ele é fortemente correlacionado negativamente com a área (r=−0.86). Na escala de 100m, essa correlação cai para quase zero (r=−0.12). Em escalas pequenas, a borda e a área estão ligadas de forma simples. Em escalas maiores, a paisagem se torna mais complexa e a densidade de bordas passa a ser independente da quantidade de área.\
+    **Decisão:** Mantenha o ed. Ele será crucial para capturar a fragmentação em escalas maiores que a métrica de área (pland) não percebe.
+
+#### Resumo: Quais métricas manter no seu modelo final?
+
+Para evitar problemas de multicolinearidade em análises futuras, eu recomendo manter 3 métricas de class:
+
+- pland (Representa a Quantidade: quanto de habitat existe).
+
+- ai (Representa a Agregação: como esse habitat está agrupado).
+
+- ed (Representa a Borda: quanta interface/ecotone existe com a matriz).
+
+O que descartar? Descarte ca e cpland, pois a pland já explica quase 100% da variação delas. Foram incluidos para gerar resumos, e não precisa incluir-las nas analises.
 
 ## Implicações para a Fauna:
 
@@ -747,6 +750,6 @@ Estatisticamente viavel:\
 Abaixo de 50 metros (nos raios de 12,5m e 25m), a área núcleo de Cerrado (cpland) para muitas câmaras é pura e simplesmente zero. Estatisticamente, é impossível calcular se um animal prefere a vegetação se a sua variável de habitat for apenas uma coluna cheia de zeros. Ao alargar para 50 metros, o cpland atinge o seu pico de representatividade (cerca de 24,8% de média), introduzindo a variabilidade numérica mínima necessária para os modelos funcionarem.
 
 O Comportamento do Animal:\
-Uma escala de 50 a 100 metros reflete a realidade de que um animal \> 1kg dentro do campus precisa de "caminhar mais" ou "olhar mais longe" para encontrar um fragmento seguro. Ele não toma a decisão de forragear com base nos 10 metros ao seu redor (que são puramente borda e perturbação), mas sim avaliando o polígono maior.
+Uma escala de 50 a 100 metros reflete a realidade de que um animal \> 500g dentro do campus precisa de "caminhar mais" ou "olhar mais longe" para encontrar um fragmento seguro. Ele não toma a decisão de forragear com base nos 10 metros ao seu redor (que são puramente borda e perturbação), mas sim avaliando o polígono maior.
 
 Esta escolha de mais de 50 metros é geral e não leva em conta as características dos animais. Se o seu objetivo for modelar a presença de cães errantes, gatos ou pombos (fauna sinantrópica), escalas menores de 25 metros continuam a ser potencialmente explicativas, porque esses animais podem tomam as suas decisões baseados na presença imediata de infraestrutura e calçadas.
