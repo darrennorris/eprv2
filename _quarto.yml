@@ -31,7 +31,7 @@ format:
     link-external-newwindow: true
   pdf:
     pdf-engine: lualatex
-    documentclass: scrreprt
+    documentclass: scrbook
     geometry:
       - top=30mm
       - left=25mm
