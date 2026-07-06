@@ -36,9 +36,8 @@ Para fazer isso de forma eficiente, adotamos a estratégia Split-Apply-Combine (
 
 3.  **Combine:** Unimos os resultados em uma única tabela pronta para visualização.
 
-::: {.callout-note title="O Duplo Sentido de 'Mapear'" icon="false"}
-
-Na programação funcional, map() não significa desenhar um mapa geográfico. Significa **associar** cada elemento de um conjunto a uma regra. Quando usamos purrr::map(), estamos "mapeando" nossas coordenadas geográficas a resultados estatísticos. É o encontro da Álgebra de Mapas de Dana Tomlin [@tomlin1990geographic] com a Ciência da Computação moderna.
+::: {.callout-tip title="O Duplo Sentido de 'Mapear'" icon="false"}
+Na programação funcional, "map" não significa desenhar um mapa geográfico. Significa **associar** cada elemento de um conjunto a uma regra. Quando usamos a função `purrr::map()`, estamos "mapeando" nossas coordenadas geográficas a resultados estatísticos. É o encontro da Álgebra de Mapas de Dana Tomlin [@tomlin1990geographic] com a Ciência da Computação moderna.
 
 **1. O Mapeamento Matemático (A Origem do Código)** Na programação e na matemática, "mapear" (*mapping*) não significa desenhar continentes. Significa **associar rigorosamente cada elemento de um conjunto a um elemento de outro conjunto**. Se tem os números `[1, 2, 3]` e aplica uma regra de "multiplicar por 2", "mapeou" esses valores para um novo conjunto: `[2, 4, 6]`. A função `purrr::map()` faz exatamente isso: pega no nosso conjunto de pontos (conjunto A) e aplica uma função a cada uma delas para gerar um novo conjunto de Métricas (conjunto B).
 
@@ -129,7 +128,7 @@ mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png",
 
 ### Mapa Campus Marco Zero
 
-A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
+A figura abaixo apresenta a distribuição espacial das armadilhas fotográficas. Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
 #| label: mapa-interativo
@@ -146,7 +145,7 @@ mapview(campus) + mapview(cameras, col.regions = "yellow")
 ::: {.content-visible when-format="pdf"}
 ### Mapa Campus Marco Zero
 
-A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}). Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
+A figura abaixo apresenta a distribuição espacial das armadilhas fotográficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}). Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
 #| label: fig-mapa-estatico
@@ -198,14 +197,14 @@ escalas_metros <- c(12.5, 25, 50, 100)
 
 ```
 
-Especificar metricas.
+Especificar métricas.
 
 ```{r}
 #| label: metricas-desejados
 #| message: false
 #| warning: false
 
-# metricas desejados
+# métricas desejados
 # composição - o que e quanto tem
 metrics_comp <- c("lsm_l_ta","lsm_c_cpland", "lsm_c_pland", "lsm_c_ca")
 # configuração - "como" classes são organizados e distribuídos no espaço.
@@ -240,7 +239,7 @@ processar_uma_camera <- function(id_alvo, pontos_totais, raster_cheio,
   
   # 3. Itera sobre as escalas (Apply).
   # Calcula as métricas para as três escalas
-  # Usamos map_dfr internamente para evitar o erro de vetor do landscapemetrics!
+  # Usamos map_dfr internamente!
   resultados <- purrr::map_dfr(escalas_alvo, function(raio) {
     
     temp <- landscapemetrics::sample_lsm(
@@ -268,7 +267,7 @@ processar_uma_camera <- function(id_alvo, pontos_totais, raster_cheio,
 
 
 # O fluxo para rodar 
-# (17 pontos x 7 metricas x 4 escalas):
+# (17 pontos x 7 métricas x 4 escalas):
 tabela_metricas_final <- purrr::map(
   # O 'map' pega cada ID coluna instal_ponto e joga dentro do 1º argumento da função: 'id_alvo'
   .x = cameras$instal_ponto, 
@@ -417,7 +416,7 @@ grafico_escala_div <- ggplot(dados_div,
 print(grafico_escala_div)
 ```
 
-Resultados com o índice de Shannon (metrica SHDI) nos mostra a heterogeneidade da matriz urbana (@fig-escala-div). Existe uma tendencia positiva clara: a diversidade da paisagem aumenta conforme o raio de amostragem se expande de 12,5m para 100m (@fig-escala-div). É importante notar que, neste caso, o aumento da diversidade não é necessariamente positivo do ponto de vista conservacionista. O aumento do Shannon aqui indica a intrusão de elementos antropogênicos (Uso Humano) na vizinhança da vegetação. A "diversidade" aqui é o registro da mudança entre o ambiente natural e o construído.
+Resultados com o índice de Shannon (métrica SHDI) nos mostra a heterogeneidade da matriz urbana (@fig-escala-div). Existe uma tendencia positiva clara: a diversidade da paisagem aumenta conforme o raio de amostragem se expande de 12,5m para 100m (@fig-escala-div). É importante notar que, neste caso, o aumento da diversidade não é necessariamente positivo do ponto de vista conservacionista. O aumento do Shannon aqui indica a intrusão de elementos antropogênicos (Uso Humano) na vizinhança da vegetação. A "diversidade" aqui é o registro da mudança entre o ambiente natural e o construído.
 
 O limite superior do intervalo de confiaça (IC) para 12,5m termina em aproximadamente 0.28. O limite inferior do IC para 100m começa em aproximadamente 0,30. Como não há sobreposição entre os "crossbars" (IC 95%) desses dois grupos, podemos afirmar com confiança estatística (*p*\<0,05) que a diversidade da paisagem no raio de 100m é significativamente maior que no raio de 12,5m (@fig-escala-div). Muitos pontos apresentam SHDI igual a 0 na escala de 12,5m a 50m (@fig-escala-div). Isso ocorre porque, em um raio curto, a armadilha fotográfica está inserida em uma "mancha pura" (ex: apenas Cerrado Antrópico ou apenas Uso Humano). A paisagem é homogênea e monótona. Na escala de 100m O valor médio de Shannon sobe para aproximadamente 0,42, com picos atingindo 0,70 (como nos pontos LO_07_0100 e LO_07_0700). Nesta escala, o círculo de amostragem é grande o suficiente para captar a transição entre diferentes classes (ex: o fragmento de vegetação + a calçada).
 
@@ -689,7 +688,7 @@ ggplot(cor_plot_data, aes(x = metric_name, y = metric_pair, fill = r)) +
 
 ```
 
-Muitas valores.
+Muitas valores nos resultados da Matriz de Correlação (@fig-correlations).
 
 ::: callout-note
 ## Nota sobre escala
@@ -697,7 +696,7 @@ Muitas valores.
 Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra.
 :::
 
-Para ajudar podemos fazer um resumo.
+Para ajudar indentificar valores de correlação mais importantes podemos fazer um resumo.
 
 ```{r}
 # 1. Create the summary table
@@ -763,7 +762,7 @@ O que descartar? Descarte ca e cpland, pois a pland já explica quase 100% da va
 
 ## Conclusão
 
-A paisagem do Campus Marco Zero é escala-dependente. O que parece um "bloco de vegetação" em uma análise de curto alcance (12,5m), revela-se uma paisagem multifacetada em escala de 100m. Para a fauna, isso significa que não existem refúgios isolados da influência urbana; todo animal que transita pelo campus está a poucos metros de uma mudança na composição da paisagem.
+As análises demonstram que a estrutura da paisagem no Campus Marco Zero é dependente da escala. Abaixo de 50 metros, a variabilidade numérica é insuficiente para modelos ecológicos robustos. O que parece um "bloco de vegetação" em uma análise de curto alcance (12,5m), revela-se uma paisagem multifacetada em escala de 100m. Para a fauna, isso significa que não existem refúgios isolados da influência urbana; todo animal que transita pelo campus está a poucos metros de uma mudança na composição da paisagem.
 
 Para entender os processos ecológicos no campus Marco Zero que dependam minimamente de áreas naturais, uma escala de pelo menos 50 metros é o limite mínimo viável.
 
