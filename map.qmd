@@ -10,28 +10,37 @@ Este capítulo é um trabalho em andamento. Os exemplos de código e o texto ain
 
 ## Apresentação
 
-Neste capítulo, nosso foco será a aplicação prática. Utilizaremos o Campus Marco Zero da UNIFAP como laboratório de estudo. Vamos avançar além do cálculo de métricas em pontos isoladas, como fizemos no Capitulo [Métricas da paisagem](https://darrennorris.github.io/epr/cap02.html). Vamos implementar fluxos de trabalho automatizados. Isso permitirá analisar vários pontos em múltiplas escalas simultaneamente.
+Neste capítulo, utilizaremos o Campus Marco Zero da UNIFAP como laboratório de estudo. O foco aqui não é a teoria, mas sim como construir um fluxo de trabalho (workflow) eficiente que permita responder perguntas reais: Qual a escala espacial mais relevante para a caracterização da paisagem que estou estudando? Vamos avançar além do cálculo de métricas em pontos isoladas, como fizemos no Capitulo [Métricas da paisagem](https://darrennorris.github.io/epr/cap02.html). Aqui aprenderemos a automatizar a análise de paisagem em múltiplas escalas. Isso permitirá analisar vários pontos em múltiplas escalas simultaneamente.
 
-Para lidar com a complexidade espacial sem nos perdermos tempo em tarefas repetitivas, adotaremos o fluxo de trabalho do tidyverse aplicado ao espaço. O grande diferencial aqui será o uso da lógica **Split-Apply-Combine** (Dividir-Aplicar-Combinar). Em vez de calcular métricas manualmente para cada ponto e cada raio de monitoramento, criaremos scripts que automatizam esse processo para locais diferentes e em múltiplas escalas espaciais simultaneamente.
-
-O foco aqui não é a teoria, mas sim como construir um fluxo de trabalho (workflow) eficiente que permita responder perguntas biológicas reais: Qual a escala espacial mais relevante para a caracterização da paisagem que estou estudando? Para isso, adotaremos o paradigma Split-Apply-Combine, uma estratégia poderosa para automatizar análises repetitivas, permitindo que você processe dezenas de pontos amostrais com o mesmo esforço que processaria um só.
+Para lidar com a complexidade espacial sem nos perdermos tempo em tarefas repetitivas, adotaremos o uso da lógica **Split-Apply-Combine** (Dividir-Aplicar-Combinar) - uma estratégia poderosa para automatizar análises repetitivas. Em vez de calcular métricas manualmente para cada ponto e cada raio de monitoramento, criaremos scripts que automatizam esse processo para locais diferentes e em múltiplas escalas espaciais simultaneamente.
 
 ### Objetivos do Capítulo
 
-Nesta etapa da nossa jornada, você aprenderá a:
+O objetivo é superar o cálculo manual de métricas e implementar fluxos de trabalho automatizados que permitam analisar múltiplos pontos e escalas simultaneamente. Especificamente você aprenderá a:
 
-1.  **Dominar o conceito de "Mapeamento"**: Entender a transição da álgebra de mapas para a programação funcional (usando o pacote purrr).
+1.  **Quantificar a Paisagem**: Calcular métricas de **Diversidade, Composição e Configuração** através do pacote landscapemetrics.
 
-2.  **Quantificar a Paisagem**: Calcular métricas essenciais de **Diversidade, Composição e Configuração** através do pacote landscapemetrics.
+2.  **Analisar o Efeito de Escala**: Construir visualizações que revelam como a caracterização da paisagem muda conforme aumentamos o raio de observação ao redor de um ponto.
 
-3.  **Analisar o Efeito de Escala**: Construir visualizações que revelam como a caracterização da paisagem muda conforme aumentamos o raio de observação ao redor de um ponto.
+3.  **Interpretar Dados para a Fauna**: Traduzir gráficos de métricas espaciais em conclusões biológicas sobre conectividade e qualidade de habitat para espécies especialistas e generalistas.
 
-4.  **Interpretar Dados para a Fauna**: Traduzir gráficos de métricas espaciais em conclusões biológicas sobre conectividade e qualidade de habitat para espécies especialistas e generalistas.
+## O Conceito: Iteração e Escala
 
-::: {.callout-note title="Box Didático: O Duplo Sentido de 'Mapear'" icon="false"}
-Quando usamos a função `purrr::map()` para extrair as métricas das nossas pontos, estamos a deparar-nos com um encontro entre a Ciência da Computação a Ecologia Espacial e a Cartografia. Porque é que a função de iteração se chama "map"?
+Um dos maiores desafios na ecologia de paisagens é decidir a "escala de efeito". Em vez de escolhermos um raio arbitrário (ex: 50m), calcularemos métricas em múltiplos raios (12.5m a 100m) para observar como a percepção da paisagem muda.
 
-**1. O Mapeamento Matemático (A Origem do Código)** Na programação e na matemática, "mapear" (*mapping*) não significa desenhar continentes. Significa **associar rigorosamente cada elemento de um conjunto a um elemento de outro conjunto**. Se tem os números `[1, 2, 3]` e aplica uma regra de "multiplicar por 2", "mapeou" esses valores para um novo conjunto: `[2, 4, 6]`. A função `purrr::map()` faz exatamente isso: pega no nosso conjunto de pontos (conjunto A) e aplica uma função matemática a cada uma delas para gerar um novo conjunto de Métricas (conjunto B).
+Para fazer isso de forma eficiente, adotamos a estratégia Split-Apply-Combine (Dividir-Aplicar-Combinar):
+
+1.  **Split:** Dividimos nossa área de estudo em 17 pontos (armadilhas fotográficas).
+
+2.  **Apply:** Aplicamos a função de cálculo de métricas (`sample_lsm`) a cada ponto em cada escala.
+
+3.  **Combine:** Unimos os resultados em uma única tabela pronta para visualização.
+
+::: {.callout-note title="O Duplo Sentido de 'Mapear'" icon="false"}
+
+Na programação funcional, map() não significa desenhar um mapa geográfico. Significa **associar** cada elemento de um conjunto a uma regra. Quando usamos purrr::map(), estamos "mapeando" nossas coordenadas geográficas a resultados estatísticos. É o encontro da Álgebra de Mapas de Dana Tomlin [@tomlin1990geographic] com a Ciência da Computação moderna.
+
+**1. O Mapeamento Matemático (A Origem do Código)** Na programação e na matemática, "mapear" (*mapping*) não significa desenhar continentes. Significa **associar rigorosamente cada elemento de um conjunto a um elemento de outro conjunto**. Se tem os números `[1, 2, 3]` e aplica uma regra de "multiplicar por 2", "mapeou" esses valores para um novo conjunto: `[2, 4, 6]`. A função `purrr::map()` faz exatamente isso: pega no nosso conjunto de pontos (conjunto A) e aplica uma função a cada uma delas para gerar um novo conjunto de Métricas (conjunto B).
 
 **2. O Mapeamento Cartográfico (O Espaço Físico)** Na geografia, um "mapa" faz a mesma coisa, mas com o mundo físico. Um cartógrafo "mapeia" o espaço real associando cada árvore, rio ou estrada do mundo tridimensional (conjunto A) a uma coordenada plana de latitude e longitude no papel (conjunto B).
 
@@ -42,7 +51,7 @@ Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Toml
 
 ## Pacotes e dados
 
-Pacotes.
+Para reproduzir as análises deste capítulo, você precisará dos seguintes pacotes:
 
 ```{r}
 #| label: packages-map
@@ -118,6 +127,8 @@ mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png",
         delay = 5)
 ```
 
+### Mapa Campus Marco Zero
+
 A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
@@ -135,8 +146,7 @@ mapview(campus) + mapview(cameras, col.regions = "yellow")
 ::: {.content-visible when-format="pdf"}
 ### Mapa Campus Marco Zero
 
-A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}).
-Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
+A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}). Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
 #| label: fig-mapa-estatico
@@ -158,25 +168,7 @@ knitr::include_graphics("images/mapa_estatico.png")
 
 O pacote [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/){target="_blank"} tem funções para calcular métricas de paisagem em paisagems categóricos (onde tem uma classificação de cobertura de terra/habitat - modelo mancha-corredor-matriz), em um fluxo de trabalho organizado [@Hesselbarth2019]. Existem diversos tutoriais e exemplos no site do proprio pacote: <https://r-spatialecology.github.io/landscapemetrics/> .
 
-Desafio - O Paradigma Split-Apply-Combine em Ecologia Espacial Antes de escrevermos qualquer linha de código, precisamos entender a estratégia que estamos usando para resolver problemas complexos. Em 2011, foi formalizado no R um conceito chamado Split-Apply-Combine (Dividir, Aplicar e Combinar).
-
-A família map() do pacote purrr foi projetada especificamente para iterar sobre essas estruturas complexas com muito mais segurança e velocidade. Ao dominar essa lógica, vocês não estão apenas aprendendo a rodar métricas de paisagem; vocês estão ganhando um modelo mental poderoso que pode ser usado para rodar modelos climáticos, processar milhares de arquivos de áudio, ou analisar grandes bancos de metadados genéticos.
-
-A ideia central é simples: quando um desafio analítico é grande demais ou consome muita memória do computador, nós não tentamos resolvê-lo de uma vez só. Nós o quebramos em três etapas lógicas:
-
-1.  SPLIT (Dividir) Em vez de tentar processar o raster de uso do solo do estado inteiro de uma vez, nós dividimos o problema.
-
-No nosso código: O argumento .x = pontos_sf\$id_ponto faz o Split. Ele separa o nosso conjunto de dados de 17 pontos de amostragem e diz ao computador: "Esqueça o todo; olhe apenas para o Ponto 1 agora".
-
-2.  APPLY (Aplicar) Uma vez que o problema foi reduzido a um pedaço gerenciável, nós aplicamos a nossa análise (a nossa função "trabalhadora") apenas àquele pedaço.
-
-No nosso código: A função processar_uma_camera faz o Apply. Ela pega aquele ponto isolado, recorta um mini-raster (crop) ao seu redor e calcula as métricas (sample_lsm) para as escalas de 25, 50 e 100 metros. O computador faz isso sorrindo, porque processar um único ponto exige quase zero de memória RAM.
-
-3.  COMBINE (Combinar) O R agora tem 17 pequenos resultados flutuando soltos na memória. A etapa final é costurar todos eles de volta em um formato útil.
-
-No nosso código: A função final purrr::list_rbind() faz o Combine. Ela recolhe as 17 pequenas tabelas individuais que foram geradas no passo anterior e as empilha perfeitamente em um único Data Frame final, pronto para ser exportado ou visualizado no ggplot2.
-
-Carregar classificação.
+### Carregar classificação.
 
 ```{r}
 #| label: load-class5
@@ -192,6 +184,8 @@ plot(class_3)
 # Verificamos se o raster é reconhecido pelo landscapemetrics
 check_landscape(class_3)
 ```
+
+### Construindo a Função de Processamento
 
 Especificar escala (raios).
 
@@ -224,24 +218,28 @@ what_metricas <- c(metrics_comp, metrics_conf, metrics_div)
 
 Abordagem split-apply-combine. Sempre que precisarem repetir uma análise para dezenas de polígonos, pontos ou imagens, isolem o que identifica o local no .x. Todo o resto da base de dados espacial (como os rasters) entra como argumento estático logo abaixo. Isso mantém o código limpo, rápido e mais fácil de ler.
 
+### Função de Processamento
+
 ```{r}
 #| label: calcular-metricas
 #| eval: FALSE
 #| message: false
 #| warning: false
- 
+
+# Função para processar cada ponto individualmente
 processar_uma_camera <- function(id_alvo, pontos_totais, raster_cheio, 
                                  escalas_alvo) {
   
-  # 1. Isola apenas a câmera atual
+  # 1. Isola o ponto de interesse / câmera atual
   ponto_atual <- pontos_totais |> filter(instal_ponto == id_alvo)
   
-  # 2. Recorta o raster (Proteção de Memória)
+  # 2. Recorta o raster para economizar memória (Crop)
   raio_max <- max(escalas_alvo) + 10
   buffer_local <- sf::st_buffer(ponto_atual, dist = raio_max)
   raster_local <- terra::crop(raster_cheio, terra::ext(buffer_local))
   
-  # 3. Calcula as métricas para as três escalas
+  # 3. Itera sobre as escalas (Apply).
+  # Calcula as métricas para as três escalas
   # Usamos map_dfr internamente para evitar o erro de vetor do landscapemetrics!
   resultados <- purrr::map_dfr(escalas_alvo, function(raio) {
     
@@ -301,6 +299,24 @@ write.csv(tabela_metricas_final,
           "data/tabela_metricas_final.csv", row.names = FALSE)
 ```
 
+Desafio - O Paradigma Split-Apply-Combine em Ecologia Espacial Antes de escrevermos qualquer linha de código, precisamos entender a estratégia que estamos usando para resolver problemas complexos. Em 2011, foi formalizado no R um conceito chamado Split-Apply-Combine (Dividir, Aplicar e Combinar).
+
+A família map() do pacote purrr foi projetada especificamente para iterar sobre essas estruturas complexas com muito mais segurança e velocidade. Ao dominar essa lógica, vocês não estão apenas aprendendo a rodar métricas de paisagem; vocês estão ganhando um modelo mental poderoso que pode ser usado para rodar modelos climáticos, processar milhares de arquivos de áudio, ou analisar grandes bancos de metadados genéticos.
+
+A ideia central é simples: quando um desafio analítico é grande demais ou consome muita memória do computador, nós não tentamos resolvê-lo de uma vez só. Nós o quebramos em três etapas lógicas:
+
+1.  SPLIT (Dividir) Em vez de tentar processar o raster de uso do solo do estado inteiro de uma vez, nós dividimos o problema.
+
+No nosso código: O argumento .x = pontos_sf\$id_ponto faz o Split. Ele separa o nosso conjunto de dados de 17 pontos de amostragem e diz ao computador: "Esqueça o todo; olhe apenas para o Ponto 1 agora".
+
+2.  APPLY (Aplicar) Uma vez que o problema foi reduzido a um pedaço gerenciável, nós aplicamos a nossa análise (a nossa função "trabalhadora") apenas àquele pedaço.
+
+No nosso código: A função processar_uma_camera faz o Apply. Ela pega aquele ponto isolado, recorta um mini-raster (crop) ao seu redor e calcula as métricas (sample_lsm) para as escalas de 25, 50 e 100 metros. O computador faz isso sorrindo, porque processar um único ponto exige quase zero de memória RAM.
+
+3.  COMBINE (Combinar) O R agora tem 17 pequenos resultados flutuando soltos na memória. A etapa final é costurar todos eles de volta em um formato útil.
+
+No nosso código: A função final purrr::list_rbind() faz o Combine. Ela recolhe as 17 pequenas tabelas individuais que foram geradas no passo anterior e as empilha perfeitamente em um único Data Frame final, pronto para ser exportado ou visualizado no ggplot2.
+
 Entendendo a Mágica do purrr::map(): O Dinâmico vs. O Fixo Quando criamos a nossa função processar_uma_camera(), nós definimos que ela precisa de exatamente quatro "ingredientes" para funcionar:
 
 id_alvo: O número da câmera que será processada agora.
@@ -337,7 +353,7 @@ value: O valor matemático da métrica.
 
 escala_buffer: O tamanho da paisagem ao redor do ponto (25, 50 ou 100).
 
-## Escala e a caracterização da paisagem
+## Análise e Interpretação
 
 ### Diversidade
 
