@@ -91,7 +91,7 @@ cameras <- st_read(fmz, layer = "ep_species_pa")
 ```
 
 ::: {.content-visible when-format="html"}
-## Mapa Interativo Campus Marco Zero
+## Campus Marco Zero
 
 ```{r}
 #| label: gerar-imagem-mapa
@@ -118,7 +118,7 @@ mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png",
         delay = 5)
 ```
 
-Como você está lendo a versão online deste material, explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
+A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
 #| label: mapa-interativo
@@ -133,9 +133,10 @@ mapview(campus) + mapview(cameras, col.regions = "yellow")
 :::
 
 ::: {.content-visible when-format="pdf"}
-## Mapa Campus Marco Zero
+### Mapa Campus Marco Zero
 
 A figura abaixo apresenta a distribuição espacial das armadilhas fotograficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}).
+Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
 ```{r}
 #| label: fig-mapa-estatico
@@ -733,7 +734,7 @@ Para evitar problemas de multicolinearidade em análises futuras, eu recomendo m
 
 O que descartar? Descarte ca e cpland, pois a pland já explica quase 100% da variação delas. Foram incluidos para gerar resumos, e não precisa incluir-las nas analises.
 
-## Implicações para a Fauna:
+## Implicações para a Fauna
 
 - Espécies Especialistas:\
   Provavelmente estão ausentes ou apenas de passagem, pois não encontram "área de núcleo" (cpland) suficiente para estabelecer território ou reprodução segura.
@@ -744,7 +745,7 @@ O que descartar? Descarte ca e cpland, pois a pland já explica quase 100% da va
 - Conectividade:\
   O Cerrado Antrópico no campus funciona mais como stepping stones (pontos de parada) do que como um corredor ecológico funcional, devido à rápida perda de representatividade (pland) em escalas espaciais maiores.
 
-## Conclusão da Análise
+## Conclusão
 
 A paisagem do Campus Marco Zero é escala-dependente. O que parece um "bloco de vegetação" em uma análise de curto alcance (12,5m), revela-se uma paisagem multifacetada em escala de 100m. Para a fauna, isso significa que não existem refúgios isolados da influência urbana; todo animal que transita pelo campus está a poucos metros de uma mudança na composição da paisagem.
 
