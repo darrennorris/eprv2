@@ -32,6 +32,10 @@ Embora este capítulo foque na estrutura física, a quantificação correta da p
 
 Um dos maiores desafios na ecologia de paisagens é decidir a "escala de efeito". Em vez de escolhermos um raio arbitrário (ex: 50m), calcularemos métricas em múltiplos raios (12.5m a 100m) para observar como a percepção da paisagem muda para um observador (especie de interesse). Para entender a paisagem, precisamos de pelo menos dois pilares: um técnico (**iteração**) e um teórico (**interação com a escala**).
 
+
+> **Nota:** É crucial não confundir Iteração (repetição de código) com Interação (relação entre variáveis). Neste capítulo, **iteramos** o código para descobrir como as métricas de paisagem **interagem** com o tamanho do buffer.
+
+
 #### A Iteração (O "Como fazer")
 
 Na programação, **iterar** significa repetir uma ação para vários elementos. Em vez de escrever o código 17 vezes (uma para cada ponto (câmera)), criamos um fluxo automatizado. Usaremos o pacote purrr para mapear nossas funções sobre os dados, garantindo que a análise seja idêntica para todos os pontos.
@@ -52,7 +56,6 @@ A paisagem não é estática; ela muda conforme o "zoom" que utilizamos. A **int
 
 2.  **Escalas de Paisagem (Interação de Mosaico):** Em raios maiores (100m), começamos a captar a interação entre diferentes classes de uso do solo. É nesta escala que percebemos o efeito de borda e a fragmentação.
 
-> **Nota:** É crucial não confundir Iteração (repetição de código) com Interação (relação entre variáveis). Neste capítulo, **iteramos** o código para descobrir como as métricas de paisagem **interagem** com o tamanho do buffer.
 
 ::: {.callout-tip title="O Duplo Sentido de 'Mapear'" icon="false"}
 Na programação funcional, "map" não significa desenhar um mapa geográfico. Significa **associar** cada elemento de um conjunto a uma regra. Quando usamos a função `purrr::map()`, estamos "mapeando" nossas coordenadas geográficas a resultados estatísticos. É o encontro da Álgebra de Mapas de Dana Tomlin [@tomlin1990geographic] com a Ciência da Computação moderna.
@@ -66,7 +69,10 @@ Na programação funcional, "map" não significa desenhar um mapa geográfico. S
 Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Tomlin nos anos 1980 [@tomlin1990geographic]), que é o que o pacote `terra` usa por trás dos panos . Quando somamos dois *rasters* ou os recortamos, o computador está simplesmente a "mapear" uma regra matemática sobre cada pequeno píxel da imagem, transformando o uso do solo em dados quantitativos.
 :::
 
-## Pacotes e dados
+## Preparação: pacotes e dados
+
+
+### Pacotes
 
 Para reproduzir as análises deste capítulo, você precisará dos seguintes pacotes:
 
@@ -95,7 +101,8 @@ library(tmap)
 library(mapview)
 ```
 
-Dados.
+
+### Dados.
 
 Os dados utilizados nos exemplos de código provêm dos pacotes. Cópias também estão disponíveis. Arquivos espaciais com mapeamento e classificação da paisagem:
 
@@ -117,7 +124,8 @@ cameras <- st_read(fmz, layer = "ep_species_pa")
 ```
 
 ::: {.content-visible when-format="html"}
-## Campus Marco Zero
+
+### Campus Marco Zero
 
 ```{r}
 #| label: gerar-imagem-mapa
@@ -144,7 +152,7 @@ mapshot2(meu_mapa_campus, file = "images/mapa_estatico.png",
         delay = 5)
 ```
 
-### Mapa Campus Marco Zero
+#### Mapa Campus Marco Zero
 
 A figura abaixo apresenta a distribuição espacial das armadilhas fotográficas. Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
@@ -161,7 +169,7 @@ mapview(campus) + mapview(cameras, col.regions = "yellow")
 :::
 
 ::: {.content-visible when-format="pdf"}
-### Mapa Campus Marco Zero
+#### Mapa Campus Marco Zero
 
 A figura abaixo apresenta a distribuição espacial das armadilhas fotográficas. (Nota: Uma versão interativa deste mapa está disponível na versão online deste livro [Clique aqui para ver o mapa](https://darrennorris.github.io/eprv2/map.html){target="_blank"}). Com mapview você pode explore o mapa interativo abaixo. Você pode utilizar o zoom, arrastar a tela e clicar nos condados para visualizar os valores exatos de cada ponto/polígono.
 
@@ -316,7 +324,7 @@ tabela_fatores <- cats(class_3)[[1]]
 
 tabela_metricas_final <- tabela_metricas_final |>
   left_join(tabela_fatores, by = c("class" = "value")) |>
-  # Opcional: Reorganizando as colunas para o nome da categoria ficar perto do ID
+  # Reorganizando as colunas para o nome da categoria ficar perto do ID
   relocate(class_3, .after = class)
 
 # Export
