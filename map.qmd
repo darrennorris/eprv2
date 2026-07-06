@@ -399,7 +399,7 @@ escala_buffer: O tamanho da paisagem ao redor do ponto (25, 50 ou 100).
 #| out-width: "100%"
 #| message: false
 #| warning: false
-#| 
+
 # Ler o arquivo com metricas
 dados_metricas <- read_csv("data/tabela_metricas_final.csv")
 
@@ -680,11 +680,12 @@ print(cor_results_class)
 
 ```
 
-Visualizar em um grafico.
+Visualizar os valores em um grafico.
 
 ```{r}
 #| label: fig-correlations
 #| fig-cap: "A fazer. "
+#| out-width: "90%"
 #| message: false
 #| warning: false
 
