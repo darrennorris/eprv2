@@ -716,6 +716,7 @@ print(cor_results_class)
 #| message: false
 #| warning: false
 #| eval: false
+#| echo: false
 
 # Nothing is normal.
 normalidade_por_escala <- class_wide |>
@@ -826,7 +827,7 @@ Com base no gráfico de calor (@fig-correlations) e na tabela cor_summary, tem u
 
 #### Resumo: Quais métricas manter no seu modelo final?
 
-Para evitar problemas de multicolinearidade em análises futuras, eu recomendo manter 3 métricas de class:
+Para evitar problemas de multicolinearidade em análises futuras, eu recomendo manter 2 métricas de class:
 
 - pland (Representa a Quantidade: quanto de habitat existe).
 
