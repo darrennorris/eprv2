@@ -61,7 +61,7 @@ Na programação funcional, "map" não significa desenhar um mapa geográfico. S
 
 **2. O Mapeamento Cartográfico (O Espaço Físico)** Na geografia, um "mapa" faz a mesma coisa, mas com o mundo físico. Um cartógrafo "mapeia" o espaço real associando cada árvore, rio ou estrada do mundo tridimensional (conjunto A) a uma coordenada plana de latitude e longitude no papel (conjunto B).
 
-**3. O Encontro na Ecologia da Paisagem** No nosso script, unimos estes dois mundos. Quando corremos o `purrr::map()`, estamos a **mapear matematicamente o nosso mapa espacial**. Pegamos numa localização no espaço real (o *buffer* de 50 metros em redor de uma armadilha fotografica) e transformamo-la num conceito abstrato: um número que representa a caracterisação do espaço (a métrica de paisagem).
+**3. O Encontro na Ecologia da Paisagem** No nosso script, unimos estes dois mundos. Quando corremos o `purrr::map()`, estamos a **mapear matematicamente o nosso mapa espacial**. Pegamos numa localização no espaço real (o *buffer* de 50 metros em redor de uma armadilha fotografica) e transformamo-la num conceito abstrato: um número que representa a caracterização do espaço (a métrica de paisagem).
 
 Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Tomlin nos anos 1980 [@tomlin1990geographic]), que é o que o pacote `terra` usa por trás dos panos . Quando somamos dois *rasters* ou os recortamos, o computador está simplesmente a "mapear" uma regra matemática sobre cada pequeno píxel da imagem, transformando o uso do solo em dados quantitativos.
 :::
@@ -87,6 +87,7 @@ library(landscapemetrics)
 
 # 3. Data Manipulation & Grammar
 library(tidyverse)
+library(broom)
 
 # 4. Analytical Models
 library(mgcv)
@@ -230,7 +231,7 @@ Especificar as métricas. A escolha das métricas deve refletir diretamente as p
 # composição - o que e quanto tem
 metrics_comp <- c("lsm_l_ta","lsm_c_cpland", "lsm_c_pland", "lsm_c_ca")
 # configuração - "como" classes são organizados e distribuídos no espaço.
-metrics_conf <- c("lsm_c_ed", "lsm_c_ai")
+metrics_conf <- c("lsm_c_ed", "lsm_c_ai", "lsm_l_lsi", "lsm_l_pd", "lsm_l_contag")
 # diversidade da paisagem - Quão heterogênea é a matriz paisagística?
 metrics_div <- "lsm_l_shdi"
 
@@ -479,7 +480,7 @@ Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não
 # Limpar e filtrar os dados
 dados_prop <- dados_metricas |>
   # Filtrar apenas a métrica de porcentagem da paisagem (cpland)
-  filter(metric %in% c("cpland", "pland")) |>
+  filter(level == "class", metric %in% c("cpland", "pland")) |>
   # Remover linhas que não têm classe definida (ex: métricas de nível de landscape)
   filter(!is.na(class_3)) |> 
   tidyr::complete(plot_id, escala_buffer, metric, class_3, fill = list(value = 0))
@@ -617,6 +618,20 @@ O Densidade de Borda (ED) mede a quantidade de bordas (contato entre diferentes 
 
 Para modelos inferenciais (como GLM, GAM etc), a referência na ecologia é: @dormann_collinearity_2013 - "Collinearity: a review of methods to deal with it and a simulation study evaluating their performance". Este estudo testou diversos métodos e concluiu que uma correlação entre variavies de r\>0.7 é o ponto onde as estimativas dos coeficientes tornam-se instáveis e o erro do modelo aumenta significativamente. Assim sendo, correlação entre variavies de r\>0.7 se torno um dos criterios objetivos para identificar varieveis redundantes.
 
+::: callout-note
+## Cuidado com correlação
+
+Misturar métricas de níveis diferentes como nível class com métricas de nível landscape na mesma matriz de correlação é um erro conceitual na modelagem espacial.
+
+Manter as matrizes rigorosamente separadas é o correto pelos seguintes motivos:
+
+Naturezas Espaciais Distintas: \
+As métricas de classe quantificam o arranjo e a integridade de um habitat específico (ex: a área núcleo do "Cerrado Antrópico"), enquanto as métricas de paisagem avaliam o mosaico como uma entidade única (ex: a textura geral ou a diversidade de manchas no buffer).
+
+Correlações Estruturais Espúrias: \
+Colocá-las na mesma matriz de correlação frequentemente gera resultados que são apenas artefatos matemáticos. Por exemplo, a proporção da classe mais dominante (pland) quase sempre ditará a diversidade estrutural do buffer inteiro (shdi). Correlacionar essas duas coisas não testa a redundância real dos preditores ecológicos, apenas reflete a estrutura da equação.
+:::
+
 O bloco de código abaixo calcula correlações aos pares e gera gráficos para facilitar a comparação das correlações entre as diferentes métricas.
 
 ```{r}
@@ -633,10 +648,20 @@ landscape_wide <- dados_metricas |>
 
 
 # Filtering for class level metrics; pivot so metrics are columns
-class_wide <- dados_metricas |>
-  filter(level == "class") |>
+class_wide <- dados_metricas |> 
+  # Filtrar apenas a métrica de porcentagem da paisagem (cpland)
+  filter(metric %in% c("cpland", "pland", "ca")) |>
+  # Remover linhas que não têm classe definida (ex: métricas de nível de landscape)
+  filter(!is.na(class_3)) |> 
+  tidyr::complete(plot_id, escala_buffer, metric, class_3, fill = list(value = 0)) |> 
   select(plot_id, escala_buffer, class_3, metric, value) |>
-  pivot_wider(names_from = metric, values_from = value)
+  pivot_wider(names_from = metric, values_from = value) |> 
+  left_join(
+  dados_metricas |>
+  filter(level == "class", !metric %in% c("cpland", "pland", "ca")) |>
+  select(plot_id, escala_buffer, class_3, metric, value) |>
+  pivot_wider(names_from = metric, values_from = value) 
+)
 
 cor_results_l <- landscape_wide |>
   group_by(escala_buffer) |>
@@ -686,6 +711,36 @@ print(cor_results_class)
 
 ```
 
+```{r}
+#| label: test-normal
+#| message: false
+#| warning: false
+#| eval: false
+
+# Nothing is normal.
+normalidade_por_escala <- class_wide |>
+  group_by(escala_buffer) |>
+  nest() |>
+  mutate(
+    # Mapeamos sobre os dados de cada escala
+    teste_shapiro = map(data, \(df_escala) {
+      
+      df_escala |>
+        select(where(is.numeric)) |>
+        # Aplicamos o teste para cada coluna numérica
+        map(\(coluna) shapiro.test(coluna)) |>
+        # O broom::glance transforma o resultado estatístico em uma linha de tabela
+        map_dfr(glance, .id = "metrica") 
+      
+    })
+  ) |>
+  select(-data) |>
+  unnest(teste_shapiro) |>
+  # Filtramos para ver rapidamente quais métricas não são normais (p < 0.05)
+  mutate(distribuicao = ifelse(p.value < 0.05, "Não-Normal", "Normal"))
+
+```
+
 Visualizar os valores em um grafico.
 
 ```{r}
@@ -727,20 +782,12 @@ ggplot(cor_plot_data, aes(x = metric_name, y = metric_pair, fill = r)) +
     axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
     panel.grid = element_blank() # Clean look for heatmaps
   ) +
-  coord_fixed() # Makes tiles perfectly square
+  coord_fixed() # Makes tiles square
 
 
 ```
 
-Muitas valores nos resultados da Matriz de Correlação (@fig-correlations).
-
-::: callout-note
-## Nota sobre escala
-
-Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra.
-:::
-
-Para ajudar indentificar os valores de correlação mais importantes podemos fazer um resumo.
+Muitas valores nos resultados da Matriz de Correlação (@fig-correlations). Para ajudar indentificar os valores de correlação mais importantes podemos fazer um resumo.
 
 ```{r}
 # 1. Create the summary table
@@ -773,13 +820,9 @@ Com base no gráfico de calor (@fig-correlations) e na tabela cor_summary, tem u
     As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Area Percentage of Landscape) estão altíssimamente correlacionadas entre si em todas as escalas (r entre 0,94 e 0,98). À medida que a área total da classe aumenta, a porcentagem da paisagem e a área de núcleo aumentam quase perfeitamente juntas.\
     **Decisão:** Escolha apenas UMA destas. **Recomendação:** Fique com a pland. É a métrica padrão na literatura científica por ser normalizada (0-100%) e facilitar a comparação entre áreas de tamanhos diferentes.
 
-2.  A Métrica de Configuração (ai)\
-    O ai (Aggregation Index) tem correlações moderadas com a área (r≈0,51 a 0,55). Isso é bom. Significa que o ai traz uma informação nova que a quantidade de área não explica: se as manchas estão muito próximas/agrupadas ou dispersas.\
-    **Decisão:** Mantenha o ai. Ele é importante para explicar a conectividade estrutural.
-
-3.  A Métrica de Borda (ed)\
+2.  A Métrica de Configuração (ed)\
     O ed (Edge Density) apresenta um comportamento interessante de dependência de escala. Na escala de 12.5m, ele é fortemente correlacionado negativamente com a área (r=−0.86). Na escala de 100m, essa correlação cai para quase zero (r=−0.12). Em escalas pequenas, a borda e a área estão ligadas de forma simples. Em escalas maiores, a paisagem se torna mais complexa e a densidade de bordas passa a ser independente da quantidade de área.\
-    **Decisão:** Mantenha o ed. Ele será crucial para capturar a fragmentação em escalas maiores que a métrica de área (pland) não percebe.
+    **Decisão:** Mantenha o ed. Ele será crucial para capturar a configuração em escalas maiores que a métrica de área (pland) não percebe.
 
 #### Resumo: Quais métricas manter no seu modelo final?
 
@@ -787,11 +830,7 @@ Para evitar problemas de multicolinearidade em análises futuras, eu recomendo m
 
 - pland (Representa a Quantidade: quanto de habitat existe).
 
-- ai (Representa a Agregação: como esse habitat está agrupado).
-
 - ed (Representa a Borda: quanta interface/ecotone existe com a matriz).
-
-O que descartar? Descarte ca e cpland, pois a pland já explica quase 100% da variação delas. Foram incluidos para gerar resumos, e não precisa incluir-las nas analises.
 
 ## Implicações para a Fauna
 
