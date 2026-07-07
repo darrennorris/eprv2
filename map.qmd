@@ -669,7 +669,8 @@ cor_results_class <- class_wide |>
     
     # Calculate correlation matrix using base R
     # use = "pairwise.complete.obs" handles any NAs safely
-    res_matrix <- cor(numeric_data, use = "pairwise.complete.obs")
+    res_matrix <- cor(numeric_data, method = "spearman", 
+                      use = "pairwise.complete.obs")
     
     # Convert matrix to a tidy data frame
     res_matrix |> 
@@ -712,7 +713,7 @@ ggplot(cor_plot_data, aes(x = metric_name, y = metric_pair, fill = r)) +
   scale_fill_gradient2(
     low = "#313695", mid = "white", high = "#a50026", 
     midpoint = 0, limit = c(-1, 1), 
-    name = "Pearson\nCorrelation"
+    name = "Spearman\nCorrelation"
   ) +
   # Create a separate panel for each scale
   facet_wrap(~escala_buffer, labeller = label_both) +
@@ -739,7 +740,7 @@ Muitas valores nos resultados da Matriz de Correlação (@fig-correlations).
 Observe que no seu gráfico de 100m, os quadrados estão muito mais "claros" (cores mais fracas), exceto entre pland e cpland. Isso indica que, conforme você aumenta o buffer, as métricas tornam-se mais independentes uma da outra.
 :::
 
-Para ajudar indentificar valores de correlação mais importantes podemos fazer um resumo.
+Para ajudar indentificar os valores de correlação mais importantes podemos fazer um resumo.
 
 ```{r}
 # 1. Create the summary table
@@ -761,7 +762,7 @@ cor_summary <- cor_plot_data |>
   distinct() |> 
   mutate(flag_co = ifelse((abs(max_correlation)> 0.699|
                              abs(min_correlation)> 0.699), 
-                          "colinearidade", ""))
+                          "colinearidade", "manter"))
 
 print(cor_summary)
 ```
