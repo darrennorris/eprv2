@@ -32,9 +32,7 @@ Embora este capítulo foque na estrutura física, a quantificação correta da p
 
 Um dos maiores desafios na ecologia de paisagens é decidir a "escala de efeito". Em vez de escolhermos um raio arbitrário (ex: 50m), calcularemos métricas em múltiplos raios (12.5m a 100m) para observar como a percepção da paisagem muda para um observador (especie de interesse). Para entender a paisagem, precisamos de pelo menos dois pilares: um técnico (**iteração**) e um teórico (**interação com a escala**).
 
-
 > **Nota:** É crucial não confundir Iteração (repetição de código) com Interação (relação entre variáveis). Neste capítulo, **iteramos** o código para descobrir como as métricas de paisagem **interagem** com o tamanho do buffer.
-
 
 #### A Iteração (O "Como fazer")
 
@@ -56,7 +54,6 @@ A paisagem não é estática; ela muda conforme o "zoom" que utilizamos. A **int
 
 2.  **Escalas de Paisagem (Interação de Mosaico):** Em raios maiores (100m), começamos a captar a interação entre diferentes classes de uso do solo. É nesta escala que percebemos o efeito de borda e a fragmentação.
 
-
 ::: {.callout-tip title="O Duplo Sentido de 'Mapear'" icon="false"}
 Na programação funcional, "map" não significa desenhar um mapa geográfico. Significa **associar** cada elemento de um conjunto a uma regra. Quando usamos a função `purrr::map()`, estamos "mapeando" nossas coordenadas geográficas a resultados estatísticos. É o encontro da Álgebra de Mapas de Dana Tomlin [@tomlin1990geographic] com a Ciência da Computação moderna.
 
@@ -70,7 +67,6 @@ Esta mesma lógica é o coração da **Álgebra de Mapas** (criada por Dana Toml
 :::
 
 ## Preparação: pacotes e dados
-
 
 ### Pacotes
 
@@ -101,7 +97,6 @@ library(tmap)
 library(mapview)
 ```
 
-
 ### Dados.
 
 Os dados utilizados nos exemplos de código provêm dos pacotes. Cópias também estão disponíveis. Arquivos espaciais com mapeamento e classificação da paisagem:
@@ -124,7 +119,6 @@ cameras <- st_read(fmz, layer = "ep_species_pa")
 ```
 
 ::: {.content-visible when-format="html"}
-
 ### Campus Marco Zero
 
 ```{r}
@@ -210,12 +204,11 @@ plot(class_3)
 check_landscape(class_3)
 ```
 
-### Construindo a Função de Processamento
+### Preparação Pre-processamento
 
 Antes de escrever codigo para o processamento, precisamos definir e especificar no R algumas valores de referencia importantes.
 
 Em vez de utilizarmos um único raio arbitrário, definiremos um vetor com múltiplas escalas de observação:
-
 
 ```{r}
 #| label: raios
@@ -226,8 +219,7 @@ escalas_metros <- c(12.5, 25, 50, 100)
 
 ```
 
-Especificar as métricas.
-A escolha das métricas deve refletir diretamente as perguntas ecológicas. Agruparemos nossos indicadores em três categorias clássicas e, em seguida, os consolidaremos:
+Especificar as métricas. A escolha das métricas deve refletir diretamente as perguntas ecológicas. Agruparemos nossos indicadores em três categorias clássicas e, em seguida, os consolidaremos:
 
 ```{r}
 #| label: metricas-desejados
@@ -247,9 +239,17 @@ what_metricas <- c(metrics_comp, metrics_conf, metrics_div)
 
 ```
 
-### Função de Processamento
+### Função e Processamento
 
-A verdadeira força de um fluxo de trabalho em R, não está em calcular uma métrica manualmente repetidas vezes, mas em criar funções escaláveis. Vamos encapsular a lógica de extração espacial em uma única função estruturada.
+A verdadeira força de um fluxo de trabalho em R, não está em calcular uma métrica manualmente repetidas vezes, mas em criar funções escaláveis. Vamos encapsular a lógica de extração espacial em uma única função estruturada. No proximo bloco de codigo criamos a nossa função processar_uma_camera(). Nós definimos que ela precisa de exatamente quatro "ingredientes" para funcionar:
+
+id_alvo: O número da câmera que será processada agora.
+
+pontos_totais: O mapa vetorial com todas as câmeras.
+
+raster_cheio: A imagem contendo o uso do solo.
+
+escalas_alvo: Os raios de extração (12,5, 25m, 50m, 100m).
 
 ```{r}
 #| label: funcao-metricas
@@ -298,8 +298,7 @@ processar_uma_camera <- function(id_alvo, pontos_totais, raster_cheio,
 
 ```
 
-Agora podemos rodar a função com os pontos, raster e raios desejadaos.
-Com a nossa função processar_uma_camera pronta, precisamos aplicá-la às nossas 17 armadilhas fotográficas simultaneamente. É aqui que a família map() do pacote purrr brilha, concretizando o paradigma Split-Apply-Combine (Dividir, Aplicar e Combinar) de maneira limpa.
+Agora podemos rodar a função com os pontos, raster e raios desejadaos. Com a nossa função processar_uma_camera pronta, precisamos aplicá-la às nossas 17 armadilhas fotográficas simultaneamente. É aqui que a família map() do pacote purrr brilha, concretizando o paradigma Split-Apply-Combine (Dividir, Aplicar e Combinar) de maneira limpa.
 
 ```{r}
 #| label: calcular-metricas
@@ -339,8 +338,25 @@ write.csv(tabela_metricas_final,
           "data/tabela_metricas_final.csv", row.names = FALSE)
 ```
 
-Para processar grandes volumes de dados espaciais sem esgotar a memória do computador, dividimos nossa lógica de iteração entre dois tipos de argumentos:  O Argumento Dinâmico (.x): Ao mapearmos cameras$instal_ponto, separamos nossos dados geográficos. O R processa o ambiente de uma única armadilha de cada vez, o que exige um consumo irrisório de RAM.  Os Argumentos Estáticos: O modelo digital (raster), o mapa vetorial completo e os raios das escalas são "ferramentas constantes" que permanecem imóveis enquanto o .x flui pela função.  A Estrutura de Dados TidyO resultado contido em tabela_metricas_final está agora no formato tidy (dados arrumados), organizado estruturalmente para fluir diretamente para visualizações com o ggplot2 ou modelos estatísticos avançados:  plot_id: Identifica qual dos 17 locais está sob análise.  class_3: Descreve a categoria de cobertura de solo referente à linha atual (ex: Área Urbana, Campo Sujo).  metric: Aponta qual métrica foi extraída (ex: pland, shdi).  value: Armazena o valor quantitativo resultante da métrica.  escala_buffer: Define o tamanho da janela de observação (12.5, 25, 50 ou 100 metros) sob o qual aquele valor foi calculado. 
+Para processar grandes volumes de dados espaciais sem esgotar a memória do computador, dividimos nossa lógica de iteração entre dois tipos de argumentos:
 
+1.  O Argumento Dinâmico (.x):\
+    Ao mapearmos cameras\$instal_ponto, separamos nossos dados geográficos. O R processa o ambiente de uma única armadilha de cada vez, o que exige um consumo irrisório de RAM com raios de menos de 1 km.
+
+2.  Os Argumentos Estáticos:\
+    O modelo digital (raster), o mapa vetorial completo e os raios das escalas são "ferramentas constantes" que permanecem imóveis enquanto o .x flui pela função.
+
+O resultado contido em tabela_metricas_final está agora no formato tidy (dados arrumados), organizado estruturalmente para fluir diretamente para visualizações com o ggplot2 ou modelos estatísticos avançados. As colunas mais importantes que voces precisam compreender são:
+
+- plot_id: Identifica qual dos 17 locais está sob análise.
+
+- class_3: Descreve a categoria de cobertura de solo referente à linha atual (ex: Área Urbana, Campo Sujo).
+
+- metric: Aponta qual métrica foi extraída (ex: pland, shdi).
+
+- value: Armazena o valor quantitativo resultante da métrica.
+
+- escala_buffer: Define o tamanho da janela de observação (12.5, 25, 50 ou 100 metros) sob o qual aquele valor foi calculado.
 
 Abordagem split-apply-combine. Sempre que precisarem repetir uma análise para dezenas de polígonos, pontos ou imagens, isolem o que identifica o local no .x. Todo o resto da base de dados espacial (como os rasters) entra como argumento estático logo abaixo. Isso mantém o código limpo, rápido e mais fácil de ler.
 
@@ -362,15 +378,7 @@ No nosso código: A função processar_uma_camera faz o Apply. Ela pega aquele p
 
 No nosso código: A função final purrr::list_rbind() faz o Combine. Ela recolhe as 17 pequenas tabelas individuais que foram geradas no passo anterior e as empilha perfeitamente em um único Data Frame final, pronto para ser exportado ou visualizado no ggplot2.
 
-Entendendo a Mágica do purrr::map(): O Dinâmico vs. O Fixo Quando criamos a nossa função processar_uma_camera(), nós definimos que ela precisa de exatamente quatro "ingredientes" para funcionar:
-
-id_alvo: O número da câmera que será processada agora.
-
-pontos_totais: O mapa vetorial com todas as câmeras.
-
-raster_cheio: A imagem contendo o uso do solo.
-
-escalas_alvo: Os raios de extração (25m, 50m, 100m).
+Entendendo a Mágica do purrr::map(): O Dinâmico vs. O Fixo
 
 O desafio é: nós temos 17 câmeras. Como dizemos ao R para rodar essa função 17 vezes sem termos que copiar e colar o código 17 vezes? É aqui que entra o purrr::map(). Pensem nele como um gerente de uma linha de montagem inteligente que divide os ingredientes entre o que muda e o que fica fixo.
 
@@ -385,19 +393,6 @@ Ele funciona como uma esteira rolante, alimentando a função até a lista acaba
 2.  As Ferramentas Constantes (Os Argumentos Estáticos) Os outros três ingredientes (pontos_totais, raster_cheio e escalas_alvo) não mudam nunca. Não importa se o R está processando a primeira ou a última câmera, a imagem de satélite de fundo e as escalas de 25m, 50m e 100m serão exatamente as mesmas.
 
 Por isso, nós escrevemos esses argumentos com seus nomes exatos na parte de baixo do map(). O R entende que eles são ferramentas fixas da bancada de trabalho e os entrega iguazinhos em todas as iterações.
-
-Quando os alunos visualizarem a tabela_resultados, eles encontrarão uma estrutura de dados "tidy" (longa), que é perfeita para o ggplot2. As colunas mais importantes que eles precisam compreender são:
-
-plot_id: Representa qual dos 17 pontos está sendo analisado (o centro do buffer).
-
-class: Qual classe de uso do solo (ex: 1 = Floresta, 2 = Água, 3 = Área Urbana) a linha representa.
-
-metric: O nome da métrica calculada (ex: pland para Percentage of Landscape).
-
-value: O valor matemático da métrica.
-
-escala_buffer: O tamanho da paisagem ao redor do ponto (25, 50 ou 100).
-
 
 ## Análise e Interpretação
 
