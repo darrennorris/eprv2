@@ -625,10 +625,10 @@ Misturar métricas de níveis diferentes como nível class com métricas de nív
 
 Manter as matrizes rigorosamente separadas é o correto pelos seguintes motivos:
 
-Naturezas Espaciais Distintas: \
+Naturezas Espaciais Distintas:\
 As métricas de classe quantificam o arranjo e a integridade de um habitat específico (ex: a área núcleo do "Cerrado Antrópico"), enquanto as métricas de paisagem avaliam o mosaico como uma entidade única (ex: a textura geral ou a diversidade de manchas no buffer).
 
-Correlações Estruturais Espúrias: \
+Correlações Estruturais Espúrias:\
 Colocá-las na mesma matriz de correlação frequentemente gera resultados que são apenas artefatos matemáticos. Por exemplo, a proporção da classe mais dominante (pland) quase sempre ditará a diversidade estrutural do buffer inteiro (shdi). Correlacionar essas duas coisas não testa a redundância real dos preditores ecológicos, apenas reflete a estrutura da equação.
 :::
 
@@ -711,12 +711,37 @@ print(cor_results_class)
 
 ```
 
-
 #### Nivel de Paisagem
 
-### Demonstração Interativa do Efeito de Escala
+::: callout-note
+## Dica de Código: Quando a Teoria Ecológica Quebra a Linha de Código
+
+Ao construir fluxos de trabalho automatizados com a estratégia Split-Apply-Combine, é muito comum encararmos erros de compilação ou uma enxurrada de valores NA que parecem não fazer sentido técnico. Um caso clássico no pacote landscapemetrics ocorre quando tentamos calcular o Índice de Contágio (lsm_l_contag) em escalas muito pequenas (como nos raios de 12,5m ou 25m). O script simplesmente falha ou retorna um valor vazio.
+
+Este não é um "bug" do R; é o encontro inevitável entre a ciência de dados e a teoria ecológica.
+
+O Olhar Ecológico: Heterogeneidade vs. Homogeneidade
+
+A teoria de ecologia de paisagens nos ensina que a percepção da estrutura do espaço depende fundamentalmente do grão e da extensão da análise. Em raios curtos ao redor de uma armadilha fotográfica, a extensão é tão reduzida que a probabilidade de o círculo de amostragem cair inteiramente dentro de uma "mancha pura" (ex: 100% de uma edificação de Uso Humano ou 100% de um bloco denso de Cerrado) é altíssima. Nesse nível micro, o mosaico perde sua heterogeneidade e se torna perfeitamente homogêneo e monótono.
+
+Quando a escala é tão pequena que o buffer captura apenas uma única classe, o espaço de transição deixa de existir:
+
+As frequências de adjacência entre classes diferentes tornam-se nulas.
+
+O denominador da equação matemática colapsa para zero.
+
+Diante de uma indeterminação matemática, o landscapemetrics toma a decisão correta de design de software: em vez de inventar um número artificial (como 0 ou 100), ele retorna um valor ausente legítimo (NA).
+
+Como resolver isso no mundo real?
+
+Escolha métricas defensivas.
+Se o seu estudo exige microescalas, utilize métricas que decaiam de forma elegante para um valor base em paisagens puras, sem quebrar. O Número de Manchas (lsm_l_np) assume 1 em áreas puras; o Índice de Forma (lsm_l_lsi) assume 1; a Riqueza (lsm_l_pr) assume 1. Nenhum deles gera NA.
+
+:::
 
 ::: {.content-visible when-format="html"}
+### Demonstração Interativa do Efeito de Escala
+
 Mova o controle deslizante abaixo para expandir o raio do buffer ao redor da armadilha fotográfica e observe o exato momento em que a paisagem deixa de ser homogênea e o erro matemático da métrica de Contágio desaparece.
 
 ```{ojs}
@@ -789,9 +814,7 @@ svg`
 </svg>
 `
 ```
-
 :::
-
 
 ```{r}
 #| label: test-normal
@@ -829,7 +852,7 @@ Visualizar os valores em um grafico.
 ```{r}
 #| label: fig-correlations
 #| fig-cap: "A fazer. "
-#| out-width: "90%"
+#| out-width: "100%"
 #| message: false
 #| warning: false
 
