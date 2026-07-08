@@ -757,7 +757,7 @@ Quando o raio de amostragem é inferior a 30 metros, o buffer captura apenas a m
 #| fig-cap: "Demonstração do Efeito de Escala."
 
 # knitr grabs the image that was generated in the previous hidden chunk
-knitr::include_graphics("images/Screenshot_raio.png")
+knitr::include_graphics("images/Screenshot_raio.jpeg")
 ```
 
 :::
