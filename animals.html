@@ -58,7 +58,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -309,6 +328,7 @@ Figura&nbsp;3.1: Fluxo metodológico para análise multiescalar. O processo inic
 <h2 data-number="3.3" class="anchored" data-anchor-id="análise-da-escala-de-efeito"><span class="header-section-number">3.3</span> Análise da Escala de Efeito</h2>
 <section id="autocorrelação-espacial" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="autocorrelação-espacial"><span class="header-section-number">3.3.1</span> Autocorrelação Espacial</h3>
+<p>Os efeitos negativos de não considerar a dependência espacial na ecologia e biologia da conservação estão bem documentados (<span class="citation" data-cites="carroll2000">Carroll e Pearson (<a href="references.html#ref-carroll2000" role="doc-biblioref">2000</a>)</span>, <span class="citation" data-cites="fletcher2018">Fletcher e Fortin (<a href="references.html#ref-fletcher2018" role="doc-biblioref">2018</a>)</span>).</p>
 <p>A autocorrelação espacial deve ser avaliada primeiro porque ela viola o pressuposto fundamental de independência das observações, o que pode inflar artificialmente a significância estatística (gerando falsos positivos) e distorcer a compreensão dos reais processos que estruturam a paisagem. Para analises precisamos uma objeto com estrutura espacial. O codigo abixo tranformar uma tabela de dados em arquivo espacial.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converter para objeto espacial (sf) e projetar para UTM 22S </span></span>
@@ -765,6 +785,14 @@ Adicionem uma camada de distância euclidiana até o ponto de recurso mais próx
 <p>Avançar da Ecologia de Paisagens descritiva para o desenho quase-experimental permitera que a UNIFAP não seja apenas o local de estudo, mas um laboratório vivo onde testamos teorias sobre como subsídios humanos alteram as regras básicas das interações bióticas na Amazônia urbana.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-carroll2000" class="csl-entry" role="listitem">
+Carroll, Steven S., e David L. Pearson. 2000. <span>“Detecting and Modeling Spatial and Temporal Dependence in Conservation Biology”</span>. <em>Conservation Biology</em> 14 (6): 1893–97. <a href="https://doi.org/10.1111/j.1523-1739.2000.99432.x">https://doi.org/10.1111/j.1523-1739.2000.99432.x</a>.
+</div>
+<div id="ref-fletcher2018" class="csl-entry" role="listitem">
+Fletcher, R., e M.-J. Fortin. 2018. <em><span>Spatial ecology and conservation modeling: applications with r</span></em>. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-030-01989-1">https://doi.org/10.1007/978-3-030-01989-1</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
