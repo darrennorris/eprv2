@@ -98,6 +98,8 @@ df_longo <- especies |>
 
 ### Autocorrelação Espacial
 
+Os efeitos negativos de não considerar a dependência espacial na ecologia e biologia da conservação estão bem documentados (@carroll2000, @fletcher2018).
+
 A autocorrelação espacial deve ser avaliada primeiro porque ela viola o pressuposto fundamental de independência das observações, o que pode inflar artificialmente a significância estatística (gerando falsos positivos) e distorcer a compreensão dos reais processos que estruturam a paisagem. Para analises precisamos uma objeto com estrutura espacial. O codigo abixo tranformar uma tabela de dados em arquivo espacial.
 
 ```{r}
