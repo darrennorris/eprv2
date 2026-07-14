@@ -118,11 +118,10 @@ campus <- st_read(fmz, layer ="campus")
 cameras <- st_read(fmz, layer = "ep_species_pa")
 
 ```
+
 ### Campus Marco Zero
 
 ::: {.content-visible when-format="html"}
-
-
 ```{r}
 #| label: gerar-imagem-mapa
 #| eval: FALSE
@@ -470,6 +469,35 @@ Os pontos com SHDI alto (perto de 0,7) na escala de 100m são zonas de borda ati
 
 Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não existe no buffer (em vez de reportar 0), a função mean() do R calcula a média apenas para os locais onde a classe estava presente. Isto inflaciona artificialmente os valores de pland e cpland, criando a ilusão de que o campus tem muito mais cobertura do que realmente tem.
 
+::: callout-important
+## Importante: O Tratamento de Classes Ausentes no landscapemetrics
+
+Ao analisar múltiplas paisagens, é comum que algumas classes de uso do solo (como floresta nativa ou área urbana) não ocorram em todas as suas unidades amostrais. A forma como vocês tratam essa ausência na planilha de dados define o sucesso da sua análise estatística.
+
+### 1. A Regra do Zero para o CPLAND (Métricas de Composição)
+
+O **CPLAND** (Proporção da Paisagem "core") responde à pergunta direta: *"Quanto dessa classe existe aqui?"*. Se a classe está ausente, a resposta correta é **0%**. Vocês **devem preencher com zero** caso os calculos omita essa linha:
+
+- **Evita o Viés Estatístico:** Se vocês deixarem o espaço em branco (ou omitirem a linha) e calcularem a média apenas para os locais onde a classe existe, a média final do uso do solo na região será superestimada (falsamente inflada).
+- **Significado Ecológico:** Em ecologia, a "ausência verdadeira" de um habitat é uma informação científica extremamente valiosa para modelos de distribuição de espécies e conservação.
+
+### 2. Por que as outras métricas são diferentes? (Métricas de Configuração)
+
+As métricas de configuração (como Área Média da Mancha - AREA_MN, Índice de Forma - SHAPE_MN, Densidade de Borda - ED) respondem a: *"Como são estruturadas as manchas que estão lá?"*. Para estas métricas, **nunca usem zero** quando a classe estiver ausente:
+
+- **Incoerência Ecológica:** Não faz sentido medir a forma, isolamento ou borda de fragmentos que simplesmente não existem. Não há "borda zero" ou "forma zero" para manchas inexistentes.
+- **Impossibilidade Matemática:** Muitas dessas métricas são médias calculadas dividindo-se pelo número total de manchas ($N$). Se a classe está ausente, $N = 0$. Como a divisão por zero é matematicamente indefinida, forçar um "0" causará distorções graves nos cálculos de variância e desvio padrão do seu modelo.
+
+------------------------------------------------------------------------
+
+### 📌 Resumo Prático para a Planilha de Dados
+
+| Tipo de Métrica | Exemplos | Se a classe NÃO existe na paisagem... |
+|:-----------------------|:-----------------------|:-----------------------|
+| **Métrica de Composição** | PLAND, CPLAND, CA (Área Total) | **Preencha com `0`** |
+| **Métrica de Configuração** | AREA_MN, SHAPE_MN, ENN, ED | **Deixe vazio, use `NA` (ou `NaN`)** |
+:::
+
 ```{r}
 #| label: fig-escala-comp
 #| fig-cap: "Efeito de escala na composição da paisagem ao redor das estações de monitoramento fotográfico. A linha contínua negra representa a tendência espacial suavizada (LOESS) da proporção de cobertura, enquanto as barras indicam a média e o intervalo de confiança de 95% (bootstrap) para os raios de amostragem. Os quadros estão ordenados da classe de uso do solo mais dominante para a menos dominante acerca das estações de monitoramento."
@@ -484,6 +512,7 @@ dados_prop <- dados_metricas |>
   filter(level == "class", metric %in% c("cpland", "pland")) |>
   # Remover linhas que não têm classe definida (ex: métricas de nível de landscape)
   filter(!is.na(class_3)) |> 
+  # Preencher com zero
   tidyr::complete(plot_id, escala_buffer, metric, class_3, fill = list(value = 0))
 
 # Grafico
@@ -656,16 +685,12 @@ Diante de uma indeterminação matemática, o landscapemetrics toma a decisão c
 
 Como resolver isso no mundo real?
 
-Escolha métricas defensivas.
-Se o seu estudo exige microescalas, utilize métricas que decaiam de forma elegante para um valor base em paisagens puras, sem quebrar. O Número de Manchas (lsm_l_np) assume 1 em áreas puras; o Índice de Forma (lsm_l_lsi) assume 1; a Riqueza (lsm_l_pr) assume 1. Nenhum deles gera NA.
-
+Escolha métricas defensivas. Se o seu estudo exige microescalas, utilize métricas que decaiam de forma elegante para um valor base em paisagens puras, sem quebrar. O Número de Manchas (lsm_l_np) assume 1 em áreas puras; o Índice de Forma (lsm_l_lsi) assume 1; a Riqueza (lsm_l_pr) assume 1. Nenhum deles gera NA.
 :::
-
 
 ### Efeito de Escala na Matematica das Métricas
 
 ::: {.content-visible when-format="html"}
-
 Mova o controle deslizante abaixo para expandir o raio do buffer ao redor da armadilha fotográfica e observe o exato momento em que a paisagem deixa de ser homogênea e o erro matemático da métrica de Contágio desaparece.
 
 ```{ojs}
@@ -742,7 +767,6 @@ svg`
 :::
 
 ::: {.content-visible when-format="pdf"}
-
 Nota: A versão interativa e dinâmica deste simulador está disponível exclusivamente na versão online do livro.
 
 Quando o raio de amostragem é inferior a 30 metros, o buffer captura apenas a matriz de Uso Humano, resultando em uma paisagem homogênea. Ao expandirmos o raio, o círculo intercepta manchas adicionais, tornando possível o cálculo de métricas de justaposição.
@@ -759,9 +783,7 @@ Quando o raio de amostragem é inferior a 30 metros, o buffer captura apenas a m
 # knitr grabs the image that was generated in the previous hidden chunk
 knitr::include_graphics("images/Screenshot_raio.jpeg")
 ```
-
 :::
-
 
 O bloco de código abaixo calcula correlações aos pares e gera gráficos para facilitar a comparação das correlações entre as diferentes métricas.
 
@@ -841,11 +863,6 @@ cor_results_class <- class_wide |>
 print(cor_results_class)
 
 ```
-
-
-
-
-
 
 ```{r}
 #| label: test-normal

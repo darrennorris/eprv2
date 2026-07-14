@@ -32,6 +32,8 @@ Um conceito central aqui é a **Escala de Efeito**: a escala espacial na qual a 
 
 Utilizaremos o ecossistema `tidyverse` para manipulação, `sf` para dados espaciais e pacotes de modelagem estatística.
 
+### Pacotes
+
 ```{r}
 #| label: packages-map
 #| message: false
@@ -55,7 +57,15 @@ library(CooccurrenceAffinity)
 library(patchwork)   # Para organizar gráficos
 ```
 
-Dados
+### Dados
+
+Aqui usamos as métricas calculadas anteriormente no [Capitlo 2](https://darrennorris.github.io/eprv2/map.html). Tambem incluimos dados de Presença-ausência de espécies na planilha de dados [ep_species_pa.xlsx](https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&ouid=113037231579524180689&rtpof=true&sd=true) : <https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&ouid=113037231579524180689&rtpof=true&sd=true> .
+
+A planilha tem os registros de presença-ausência em cada ponto de: *Aramides cajaneus*, *Tigrisoma lineatum*, *Iguana iguana*, *Didelphis marsupialis*, *Nasua nasua*, *Felis catus*, *Canis lupus familiaris*, *Homo sapiens* e veículos.
+
+Imagens disponíveis no Projeto iNaturalist:  [Biodiversidade do Campus Marco Zero](https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero)
+
+<https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero>
 
 ```{r}
 #| label: dados-animais
@@ -64,21 +74,21 @@ Dados
 
 # Ler o arquivo com metricas
 metricas <- read.csv("data/tabela_metricas_final.csv")
-# Ler o arquivo com presença-ausença
+# Ler o arquivo com presença-ausência
 especies <- read.csv("data/ep_species_pa.csv")
 # Limpeza e padronização de IDs
 especies <- especies |> 
   rename(plot_id = instal_ponto)
 ```
 
-Preparação da Paisagem As métricas calculadas via landscapemetrics precisam ser organizadas. Focaremos na métrica pland (porcentagem da classe) para a classe "uso humano", que é frequentemente um preditor forte para espécies domésticas.
+Preparação da Paisagem. As métricas calculadas via landscapemetrics precisam ser organizadas. Focaremos na métrica pland (porcentagem da classe) para a classe "uso humano", que é frequentemente um preditor forte para espécies domésticas.
 
 ```{r}
 #| label: prep-dados
 #| message: false
 #| warning: false
 
-# Filtrando a métrica PLAND para áreas de Uso Humano
+# Filtrando a métrica PLAND para classe de Uso Humano
 df_pland_humano <- metricas |>
   tidyr::complete(plot_id, metric, class_3, escala_buffer, fill = list(value = 0)) |>
   filter(metric == "pland", class_3 == "uso humano") |>
@@ -290,7 +300,7 @@ fig_m_gato <- ggplot(res_gatos, aes(x = moran_i)) +
 fig_m_cao + fig_m_gato
 ```
 
-Na Figura @fig-spat-auto, a área cinza representa todas as possibilidades de organização espacial que poderiam ocorrer por puro acaso no Campus. Note que tanto para cães quanto para gatos, a linha sólida (nosso dado real) cai dentro dessa zona de densidade cinza. Isso prova visualmente que os nossos registros presença-ausença de fauna não apresentam um padrão espacial de agrupamento ou segregação; eles são indistinguíveis do acaso (padrão aleitoria) na escala estudada.
+Na Figura @fig-spat-auto, a área cinza representa todas as possibilidades de organização espacial que poderiam ocorrer por puro acaso no Campus. Note que tanto para cães quanto para gatos, a linha sólida (nosso dado real) cai dentro dessa zona de densidade cinza. Isso prova visualmente que os nossos registros presença-ausência de fauna não apresentam um padrão espacial de agrupamento ou segregação; eles são indistinguíveis do acaso (padrão aleitoria) na escala estudada.
 
 ### Cooccorencias
 
@@ -368,7 +378,7 @@ Agora comparação dos resultados.
 
 ```{r}
 #| label: fig-scale-effect
-#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados são considerados estatisticamente equivalentes em termos das informações que contêm."
+#| fig-cap: "Identificação da escala de efeito para a ocorrência de cães (Canis familiaris) e gatos (Felis catus) em relação à porcentagem de áreas de uso humano (métrica PLAND) no Campus Marco Zero da UNIFAP, Macapá-AP. As curvas representam a variação do Critério de Informação de Akaike corrigido (AICc) em quatro escalas espaciais (raios de 12.5, 25, 50 e 100 metros). A linha horizontal tracejada indica o limiar de parcimônia (ΔAICc≤2); modelos abaixo desta linha são considerados estatisticamente equivalentes em termos das informações que contêm."
 #| message: false
 #| warning: false
 #| fig-width: 9
