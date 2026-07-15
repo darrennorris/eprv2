@@ -721,7 +721,6 @@ np_val = raio < 30 ? 1 : (raio < 60 ? 2 : 3);
 //| fig-cap: "Simulador interativo demonstrando a transição de uma paisagem homogênea para heterogênea com a expansão do raio de amostragem."
 
 // Bloco 3: O visual. Unimos a tabela e o SVG em uma única <div> usando Flexbox.
-// Isso impede as subfiguras (letras a,b,c) e coloca os elementos lado a lado.
 html`
 <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 10px;">
   
@@ -755,8 +754,8 @@ html`
       <rect x="0" y="0" width="500" height="260" fill="#f97316" opacity="0.15" />
       <text x="15" y="25" font-size="12" fill="#ea580c" font-family="sans-serif" font-weight="600">Matriz: Uso Humano</text>
 
-      <circle cx="350" cy="130" r="40" fill="#22c55e" opacity="0.4" /> 
-      <text x="325" y="134" font-size="11" fill="#14532d" font-family="sans-serif" font-weight="600">Cerrado</text>
+      <circle cx="510" cy="130" r="200" fill="#22c55e" opacity="0.4" /> 
+      <text x="400" y="134" font-size="11" fill="#14532d" font-family="sans-serif" font-weight="600">Cerrado</text>
 
       <circle cx="90" cy="130" r="40" fill="#3b82f6" opacity="0.4" />             
       <text x="60" y="134" font-size="11" fill="#1e3a8a" font-family="sans-serif" font-weight="600">Campo Sujo</text>
@@ -770,6 +769,7 @@ html`
 
 </div>
 `
+
 ```
 
 :::
