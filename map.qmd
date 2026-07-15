@@ -474,14 +474,14 @@ Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não
 
 Ao analisar múltiplas paisagens, é comum que algumas classes de uso do solo (como floresta nativa ou área urbana) não ocorram em todas as suas unidades amostrais. A forma como vocês tratam essa ausência na planilha de dados define o sucesso da sua análise estatística.
 
-1.  A Regra do Zero para Métricas de Composição como CPLAND
+### 1.  A Regra do Zero para Métricas de Composição como CPLAND {.unnumbered}
 
 O **CPLAND** (Proporção da Paisagem "core") responde à pergunta direta: *"Quanto dessa classe existe aqui?"*. Se a classe está ausente, a resposta correta é **0%**. Vocês **devem preencher com zero** caso os calculos omita essa linha:
 
 - **Evita o Viés Estatístico:** Se vocês deixarem o espaço em branco (ou omitirem a linha) e calcularem a média apenas para os locais onde a classe existe, a média final do uso do solo na região será superestimada (falsamente inflada).
 - **Significado Ecológico:** Em ecologia, a "ausência verdadeira" de um habitat é uma informação científica extremamente valiosa para modelos de distribuição de espécies e conservação.
 
-2.  Por que as outras métricas são diferentes? (Métricas de Configuração)
+### 2.  Por que as outras métricas são diferentes? (Métricas de Configuração) {.unnumbered}
 
 As métricas de configuração (como Área Média da Mancha - AREA_MN, Índice de Forma - SHAPE_MN, Densidade de Borda - ED) respondem a: *"Como são estruturadas as manchas que estão lá?"*. Para estas métricas, **nunca usem zero** quando a classe estiver ausente:
 
