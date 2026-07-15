@@ -167,6 +167,35 @@ div.csl-indent {
 <link href="site_libs/cameras-CSS-0.0.1/cameras_home-button.css" rel="stylesheet">
 
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -269,9 +298,9 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#diversidade" id="toc-diversidade" class="nav-link" data-scroll-target="#diversidade"><span class="header-section-number">2.5.1</span> Diversidade</a></li>
   <li><a href="#composição" id="toc-composição" class="nav-link" data-scroll-target="#composição"><span class="header-section-number">2.5.2</span> Composição</a></li>
-  <li><a href="#configuração" id="toc-configuração" class="nav-link" data-scroll-target="#configuração"><span class="header-section-number">2.5.3</span> Configuração</a></li>
-  <li><a href="#correlações-entre-métricas" id="toc-correlações-entre-métricas" class="nav-link" data-scroll-target="#correlações-entre-métricas"><span class="header-section-number">2.5.4</span> Correlações entre métricas</a></li>
-  <li><a href="#demonstração-do-efeito-de-escala" id="toc-demonstração-do-efeito-de-escala" class="nav-link" data-scroll-target="#demonstração-do-efeito-de-escala"><span class="header-section-number">2.5.5</span> Demonstração do Efeito de Escala</a></li>
+  <li><a href="#configuração" id="toc-configuração" class="nav-link" data-scroll-target="#configuração"><span class="header-section-number">2.5.4</span> Configuração</a></li>
+  <li><a href="#correlações-entre-métricas" id="toc-correlações-entre-métricas" class="nav-link" data-scroll-target="#correlações-entre-métricas"><span class="header-section-number">2.5.5</span> Correlações entre métricas</a></li>
+  <li><a href="#efeito-de-escala-na-matematica-das-métricas" id="toc-efeito-de-escala-na-matematica-das-métricas" class="nav-link" data-scroll-target="#efeito-de-escala-na-matematica-das-métricas"><span class="header-section-number">2.5.6</span> Efeito de Escala na Matematica das Métricas</a></li>
   </ul></li>
   <li><a href="#implicações-para-a-fauna" id="toc-implicações-para-a-fauna" class="nav-link" data-scroll-target="#implicações-para-a-fauna"><span class="header-section-number">2.6</span> Implicações para a Fauna</a></li>
   <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">2.7</span> Conclusão</a></li>
@@ -454,8 +483,8 @@ Projected CRS: SIRGAS 2000 / UTM zone 22S</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criando o mapa interativo</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mapview</span>(campus) <span class="sc">+</span> <span class="fu">mapview</span>(cameras, <span class="at">col.regions =</span> <span class="st">"yellow"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-ccc53a3e43821004be96" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-ccc53a3e43821004be96">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["CartoDB.Positron","CartoDB.Positron","CartoDB.Positron",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter","CartoDB.DarkMatter","CartoDB.DarkMatter",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenTopoMap","OpenTopoMap","OpenTopoMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-51.08187295288061,-51.08234412887909,-51.0824869094847,-51.08274819799294,-51.08286813370165,-51.08293452668325,-51.08308928408786,-51.08311770287685,-51.08314579296258,-51.08900937523462,-51.08897021983341,-51.08774373443133,-51.08774230662527,-51.08765378264978,-51.08702947445181,-51.08701662419728,-51.08457079242338,-51.08188937265023,-51.08186581385034,-51.08187295288061],"lat":[-0.003641699329963381,-0.005652050256786028,-0.006454477260261374,-0.007720941231917982,-0.008407715944847495,-0.008767523070968277,-0.009636918371413273,-0.009934292957205888,-0.01021940856770801,-0.01019047579008902,-0.006325260812198476,-0.006332399842468624,-0.006245303673048683,0.0009065768614093679,0.0008901570917535574,0.001749696337462393,0.00166402797410687,0.001546947877516019,-0.0009003117024585688,-0.003641699329963381]}]]],null,"campus",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#333333","weight":0.5,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0.6,"smoothFactor":1,"noClip":false},"<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>full_id&emsp;<\/th><td>r11913500&emsp;<\/td><\/tr><tr><td>2<\/td><th>osm_id&emsp;<\/th><td>11913500&emsp;<\/td><\/tr><tr><td>3<\/td><th>osm_type&emsp;<\/th><td>relation&emsp;<\/td><\/tr><tr><td>4<\/td><th>admin_leve&emsp;<\/th><td>10&emsp;<\/td><\/tr><tr><td>5<\/td><th>boundary&emsp;<\/th><td>administrative&emsp;<\/td><\/tr><tr><td>6<\/td><th>name&emsp;<\/th><td>Universidade&emsp;<\/td><\/tr><tr><td>7<\/td><th>type&emsp;<\/th><td>boundary&emsp;<\/td><\/tr><tr><td>8<\/td><th>geom&emsp;<\/th><td>sfc_MULTIPOLYGON&emsp;<\/td><\/tr><\/table><\/div>",{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":1,"opacity":0.9,"fillOpacity":0.84,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addHomeButton","args":[-51.08900937523462,-0.01021940856770801,-51.08186581385034,0.001749696337462393,true,"campus","Zoom to campus","<strong> campus <\/strong>","bottomright"]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["campus"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"campus"}]},{"method":"createMapPane","args":["point",440]},{"method":"addCircleMarkers","args":[[-0.009530000000000828,-0.01000000000000305,-0.01010170000000082,-0.00991170000000163,-0.008162999999992197,-0.008101999999997491,-0.007879300000007503,-0.00822669999999414,-0.006561699999996831,-0.006327000000001412,-0.006281000000003396,-0.00458889999999769,-0.00453200000000601,-0.004660600000007208,-0.004510000000006618,-0.002841500000005083,-0.005389999999997501],[-51.08345,-51.08458,-51.0868917,-51.08813,-51.082852,-51.084543,-51.086296,-51.0879733,-51.082745,-51.084657,-51.086225,-51.082739,-51.084461,-51.0863515,-51.0874967,-51.084507,-51.0843067],6,null,"cameras",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"point","stroke":true,"color":"#333333","weight":1,"opacity":0.9,"fill":true,"fillColor":"#FFFF00","fillOpacity":0.6},null,null,["<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0095300&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08345&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 71.77&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>2&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0100000&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08458&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 71.70&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>3&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0101017&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08689&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 66.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>4&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0600&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0099117&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08813&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 75.94&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>5&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0081630&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08285&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 69.16&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>6&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0081020&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08454&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 87.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>7&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0078793&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08630&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 45.65&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>8&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0600&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0082267&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08797&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 59.62&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>9&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0065617&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08275&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 65.16&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>10&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0063270&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08466&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 87.93&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>11&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0062810&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08622&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 61.20&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>12&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0100&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045889&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08274&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 90.13&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>13&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0300&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045320&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08446&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td>114.94&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>14&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0500&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0046606&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08635&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 35.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>15&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0700&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045100&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08750&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 31.95&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>16&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_09_0300&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0028415&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08451&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 90.14&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>17&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>extra_01_CA&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0053900&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08431&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 48.76&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>"],{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addHomeButton","args":[-51.08813,-0.01010170000000082,-51.082739,-0.002841500000005083,true,"cameras","Zoom to cameras","<strong> cameras <\/strong>","bottomright"]},{"method":"addLayersControl","args":[["CartoDB.Positron","CartoDB.DarkMatter","OpenStreetMap","Esri.WorldImagery","OpenTopoMap"],["campus","cameras"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#FFFF00"],"labels":["cameras"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"cameras"}]},{"method":"addHomeButton","args":[-51.08900937523462,-0.01021940856770801,-51.08186581385034,0.001749696337462393,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[-0.01021940856770801,0.001749696337462393],"lng":[-51.08900937523462,-51.08186581385034]},"fitBounds":[-0.01021940856770801,-51.08900937523462,0.001749696337462393,-51.08186581385034,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-fedb7bf0ca1586405e3e" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fedb7bf0ca1586405e3e">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["CartoDB.Positron","CartoDB.Positron","CartoDB.Positron",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter","CartoDB.DarkMatter","CartoDB.DarkMatter",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenTopoMap","OpenTopoMap","OpenTopoMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-51.08187295288061,-51.08234412887909,-51.0824869094847,-51.08274819799294,-51.08286813370165,-51.08293452668325,-51.08308928408786,-51.08311770287685,-51.08314579296258,-51.08900937523462,-51.08897021983341,-51.08774373443133,-51.08774230662527,-51.08765378264978,-51.08702947445181,-51.08701662419728,-51.08457079242338,-51.08188937265023,-51.08186581385034,-51.08187295288061],"lat":[-0.003641699329963381,-0.005652050256786028,-0.006454477260261374,-0.007720941231917982,-0.008407715944847495,-0.008767523070968277,-0.009636918371413273,-0.009934292957205888,-0.01021940856770801,-0.01019047579008902,-0.006325260812198476,-0.006332399842468624,-0.006245303673048683,0.0009065768614093679,0.0008901570917535574,0.001749696337462393,0.00166402797410687,0.001546947877516019,-0.0009003117024585688,-0.003641699329963381]}]]],null,"campus",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#333333","weight":0.5,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0.6,"smoothFactor":1,"noClip":false},"<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>full_id&emsp;<\/th><td>r11913500&emsp;<\/td><\/tr><tr><td>2<\/td><th>osm_id&emsp;<\/th><td>11913500&emsp;<\/td><\/tr><tr><td>3<\/td><th>osm_type&emsp;<\/th><td>relation&emsp;<\/td><\/tr><tr><td>4<\/td><th>admin_leve&emsp;<\/th><td>10&emsp;<\/td><\/tr><tr><td>5<\/td><th>boundary&emsp;<\/th><td>administrative&emsp;<\/td><\/tr><tr><td>6<\/td><th>name&emsp;<\/th><td>Universidade&emsp;<\/td><\/tr><tr><td>7<\/td><th>type&emsp;<\/th><td>boundary&emsp;<\/td><\/tr><tr><td>8<\/td><th>geom&emsp;<\/th><td>sfc_MULTIPOLYGON&emsp;<\/td><\/tr><\/table><\/div>",{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":1,"opacity":0.9,"fillOpacity":0.84,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addHomeButton","args":[-51.08900937523462,-0.01021940856770801,-51.08186581385034,0.001749696337462393,true,"campus","Zoom to campus","<strong> campus <\/strong>","bottomright"]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["campus"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"campus"}]},{"method":"createMapPane","args":["point",440]},{"method":"addCircleMarkers","args":[[-0.009530000000000828,-0.01000000000000305,-0.01010170000000082,-0.00991170000000163,-0.008162999999992197,-0.008101999999997491,-0.007879300000007503,-0.00822669999999414,-0.006561699999996831,-0.006327000000001412,-0.006281000000003396,-0.00458889999999769,-0.00453200000000601,-0.004660600000007208,-0.004510000000006618,-0.002841500000005083,-0.005389999999997501],[-51.08345,-51.08458,-51.0868917,-51.08813,-51.082852,-51.084543,-51.086296,-51.0879733,-51.082745,-51.084657,-51.086225,-51.082739,-51.084461,-51.0863515,-51.0874967,-51.084507,-51.0843067],6,null,"cameras",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"point","stroke":true,"color":"#333333","weight":1,"opacity":0.9,"fill":true,"fillColor":"#FFFF00","fillOpacity":0.6},null,null,["<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0095300&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08345&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 71.77&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>2&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0100000&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08458&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 71.70&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>3&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0101017&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08689&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 66.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>4&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_01_0600&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0099117&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08813&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 75.94&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>5&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0081630&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08285&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 69.16&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>6&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0081020&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08454&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 87.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>7&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0078793&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08630&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 45.65&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>8&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_03_0600&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0082267&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08797&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 59.62&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>9&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0000&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0065617&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08275&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 65.16&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>10&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0200&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0063270&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08466&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 87.93&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>11&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_05_0400&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0062810&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08622&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 61.20&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>12&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0100&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045889&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08274&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 90.13&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>13&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0300&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045320&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08446&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td>114.94&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>14&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0500&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0046606&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08635&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 35.90&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>15&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_07_0700&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0045100&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08750&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 31.95&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>16&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>LO_09_0300&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0028415&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08451&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 90.14&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class=mapview-popup id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>17&emsp;<\/td><\/tr><tr><td>1<\/td><th>instal_ponto&emsp;<\/th><td>extra_01_CA&emsp;<\/td><\/tr><tr><td>2<\/td><th>lat_y&emsp;<\/th><td>-0.0053900&emsp;<\/td><\/tr><tr><td>3<\/td><th>lon_x&emsp;<\/th><td>-51.08431&emsp;<\/td><\/tr><tr><td>4<\/td><th>total_days&emsp;<\/th><td> 48.76&emsp;<\/td><\/tr><tr><td>5<\/td><th>calu&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>6<\/td><th>feca&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>7<\/td><th>dima&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>8<\/td><th>nana&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>9<\/td><th>igig&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>10<\/td><th>arsa&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>11<\/td><th>tili&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>12<\/td><th>veic&emsp;<\/th><td>0&emsp;<\/td><\/tr><tr><td>13<\/td><th>hosa&emsp;<\/th><td>1&emsp;<\/td><\/tr><tr><td>14<\/td><th>geom&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>"],{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addHomeButton","args":[-51.08813,-0.01010170000000082,-51.082739,-0.002841500000005083,true,"cameras","Zoom to cameras","<strong> cameras <\/strong>","bottomright"]},{"method":"addLayersControl","args":[["CartoDB.Positron","CartoDB.DarkMatter","OpenStreetMap","Esri.WorldImagery","OpenTopoMap"],["campus","cameras"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#FFFF00"],"labels":["cameras"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"cameras"}]},{"method":"addHomeButton","args":[-51.08900937523462,-0.01021940856770801,-51.08186581385034,0.001749696337462393,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[-0.01021940856770801,0.001749696337462393],"lng":[-51.08900937523462,-51.08186581385034]},"fitBounds":[-0.01021940856770801,-51.08900937523462,0.001749696337462393,-51.08186581385034,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 <p>Localização das armadilhas fotográficas (cameras) no Campus Marco Zero.</p>
 </div>
 </div>
@@ -723,7 +752,66 @@ Figura&nbsp;2.1: Efeito de escala na diversidade da paisagem ao redor das estaç
 </section>
 <section id="composição" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="composição"><span class="header-section-number">2.5.2</span> Composição</h3>
-<p>Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não existe no buffer (em vez de reportar 0), a função mean() do R calcula a média apenas para os locais onde a classe estava presente. Isto inflaciona artificialmente os valores de pland e cpland, criando a ilusão de que o campus tem muito mais cobertura do que realmente tem.</p>
+<p>Se o pacote de ecologia espacial simplesmente omite a linha quando a classe não existe no buffer (em vez de reportar 0), o valor da média seria apenas para os locais onde a classe estava presente. Isto inflaciona artificialmente os valores de pland e cpland, criando a ilusão de que o campus tem muito mais cobertura do que realmente tem.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Importante: O Tratamento de Classes Ausentes no landscapemetrics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ao analisar múltiplas paisagens, é comum que algumas classes de uso do solo (como floresta nativa ou área urbana) não ocorram em todas as suas unidades amostrais. A forma como vocês tratam essa ausência na planilha de dados define o sucesso da sua análise estatística.</p>
+<ol type="1">
+<li>A Regra do Zero para Métricas de Composição como CPLAND</li>
+</ol>
+<p>O <strong>CPLAND</strong> (Proporção da Paisagem “core”) responde à pergunta direta: <em>“Quanto dessa classe existe aqui?”</em>. Se a classe está ausente, a resposta correta é <strong>0%</strong>. Vocês <strong>devem preencher com zero</strong> caso os calculos omita essa linha:</p>
+<ul>
+<li><strong>Evita o Viés Estatístico:</strong> Se vocês deixarem o espaço em branco (ou omitirem a linha) e calcularem a média apenas para os locais onde a classe existe, a média final do uso do solo na região será superestimada (falsamente inflada).</li>
+<li><strong>Significado Ecológico:</strong> Em ecologia, a “ausência verdadeira” de um habitat é uma informação científica extremamente valiosa para modelos de distribuição de espécies e conservação.</li>
+</ul>
+<ol start="2" type="1">
+<li>Por que as outras métricas são diferentes? (Métricas de Configuração)</li>
+</ol>
+<p>As métricas de configuração (como Área Média da Mancha - AREA_MN, Índice de Forma - SHAPE_MN, Densidade de Borda - ED) respondem a: <em>“Como são estruturadas as manchas que estão lá?”</em>. Para estas métricas, <strong>nunca usem zero</strong> quando a classe estiver ausente:</p>
+<ul>
+<li><strong>Incoerência Ecológica:</strong> Não faz sentido medir a forma, isolamento ou borda de fragmentos que simplesmente não existem. Não há “borda zero” ou “forma zero” para manchas inexistentes.</li>
+<li><strong>Impossibilidade Matemática:</strong> Muitas dessas métricas são médias calculadas dividindo-se pelo número total de manchas (<span class="math inline">\(N\)</span>). Se a classe está ausente, <span class="math inline">\(N = 0\)</span>. Como a divisão por zero é matematicamente indefinida, forçar um “0” causará distorções graves nos cálculos de variância e desvio padrão do seu modelo.</li>
+</ul>
+<hr>
+<section id="resumo-prático-para-a-planilha-de-dados" class="level3" data-number="2.5.3">
+<h3 data-number="2.5.3" class="anchored" data-anchor-id="resumo-prático-para-a-planilha-de-dados"><span class="header-section-number">2.5.3</span> 📌 Resumo Prático para a Planilha de Dados</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tipo de Métrica</th>
+<th style="text-align: left;">Exemplos</th>
+<th style="text-align: left;">Se a classe NÃO existe na paisagem…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Métrica de Composição</strong></td>
+<td style="text-align: left;">PLAND, CPLAND, CA (Área Total)</td>
+<td style="text-align: left;"><strong>Preencha com <code>0</code></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Métrica de Configuração</strong></td>
+<td style="text-align: left;">AREA_MN, SHAPE_MN, ENN, ED</td>
+<td style="text-align: left;"><strong>Deixe vazio, use <code>NA</code> (ou <code>NaN</code>)</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar e filtrar os dados</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dados_prop <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span></span>
@@ -731,54 +819,55 @@ Figura&nbsp;2.1: Efeito de escala na diversidade da paisagem ao redor das estaç
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="st">"class"</span>, metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"cpland"</span>, <span class="st">"pland"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remover linhas que não têm classe definida (ex: métricas de nível de landscape)</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(class_3)) <span class="sc">|&gt;</span> </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">complete</span>(plot_id, escala_buffer, metric, class_3, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">value =</span> <span class="dv">0</span>))</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>grafico_escala_efeito <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dados_prop, </span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> value, </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color =</span> class_3, <span class="at">fill =</span> class_3)) <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Pontos Brutos</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">1.5</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Crossbar  </span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adicionamos aes(group = escala_buffer) LOCALMENTE. </span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Isso avisa ao ggplot: "Para calcular a média e o bootstrap, agrupe por escala. </span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Mas não estrague a continuidade do eixo X para o resto do gráfico".</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">group =</span> escala_buffer), </span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun.data =</span> <span class="st">"mean_cl_boot"</span>, </span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"crossbar"</span>, </span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.4</span>, </span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,       </span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.6</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Linha de Tendência (Loess)</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Como o agrupamento foi isolado no crossbar, o loess consegue enxergar</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># a distância contínua (ex: o salto maior de 50m para 100m) e desenha a curva.</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"loess"</span>, </span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.2</span>,</span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span> <span class="co"># Forçamos a linha para preto para destacar sobre os pontos coloridos</span></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(metric <span class="sc">~</span> <span class="fu">fct_reorder</span>(class_3, value, <span class="at">.fun =</span> mean, <span class="at">.desc =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efeito de Escala na Composição da Paisagem"</span>,</span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Variação contínua e tendência (Média ± IC 95%)"</span>,</span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Raio de Amostragem (metros)"</span>,</span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proporção na Paisagem (%)"</span></span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, </span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
-<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aumentar a clareza visual mantendo apenas as linhas principais no eixo X</span></span>
-<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>() </span>
-<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_escala_efeito)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Preencher com zero</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">complete</span>(plot_id, escala_buffer, metric, class_3, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">value =</span> <span class="dv">0</span>))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>grafico_escala_efeito <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dados_prop, </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> value, </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color =</span> class_3, <span class="at">fill =</span> class_3)) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Pontos Brutos</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">1.5</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Crossbar  </span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adicionamos aes(group = escala_buffer) LOCALMENTE. </span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Isso avisa ao ggplot: "Para calcular a média e o bootstrap, agrupe por escala. </span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Mas não estrague a continuidade do eixo X para o resto do gráfico".</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">group =</span> escala_buffer), </span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun.data =</span> <span class="st">"mean_cl_boot"</span>, </span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"crossbar"</span>, </span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.4</span>, </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,       </span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.6</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Linha de Tendência (Loess)</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Como o agrupamento foi isolado no crossbar, o loess consegue enxergar</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># a distância contínua (ex: o salto maior de 50m para 100m) e desenha a curva.</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"loess"</span>, </span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.2</span>,</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span> <span class="co"># Forçamos a linha para preto para destacar sobre os pontos coloridos</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(metric <span class="sc">~</span> <span class="fu">fct_reorder</span>(class_3, value, <span class="at">.fun =</span> mean, <span class="at">.desc =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efeito de Escala na Composição da Paisagem"</span>,</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Variação contínua e tendência (Média ± IC 95%)"</span>,</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Raio de Amostragem (metros)"</span>,</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proporção na Paisagem (%)"</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, </span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aumentar a clareza visual mantendo apenas as linhas principais no eixo X</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>() </span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_escala_efeito)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-escala-comp" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -798,8 +887,8 @@ Figura&nbsp;2.2: Efeito de escala na composição da paisagem ao redor das esta�
 <p>A manutenção de valores baixos de cpland sugere que a maior parte do Cerrado Antrópico no campus é composta por “bordas”. Em ecologia de paisagem, quando o cpland é significativamente menor que o pland, entende-se que o fragmento é excessivamente alongado ou pequeno demais para manter condições de interior (microclima estável, menor ruído, menor incidência de espécies invasoras ou domésticas).</p>
 <p>A redução expressiva do pland ao aumentar o raio de amostragem demonstra que as manchas de Cerrado são pequenas e estão imersas em uma matriz dominante de “Uso Humano” (edificações, asfalto, áreas desmatadas). No Campus Marco Zero, isso reflete a pressão da infraestrutura universitária sobre os remanescentes naturais. A paisagem deixa de ser “Cerrado com interferência” para se tornar “Urbanização com fragmentos de Cerrado”.</p>
 </section>
-<section id="configuração" class="level3" data-number="2.5.3">
-<h3 data-number="2.5.3" class="anchored" data-anchor-id="configuração"><span class="header-section-number">2.5.3</span> Configuração</h3>
+<section id="configuração" class="level3" data-number="2.5.4">
+<h3 data-number="2.5.4" class="anchored" data-anchor-id="configuração"><span class="header-section-number">2.5.4</span> Configuração</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar e filtrar os dados</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dados_conf <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span></span>
@@ -871,8 +960,8 @@ Figura&nbsp;2.3: Efeito de escala na configuração da paisagem ao redor das est
 <p>O indicie de aggregação (AI) mede o quão próximos ou “agrupados” estão os pixels de uma mesma classe (vai de 0 a 100%).Em todas as classes (Campo Sujo, Cerrado Antrópico e Uso Humano), o AI é extremamente alto e estável (próximo a 100%). Isso indica que a vegetação no campus não está distribuída de forma “salpicada” ou fragmentada em minúsculos pontos isolados (como gramados raleados). Pelo contrário, onde a vegetação existe, ela forma blocos compactos - pelo menos com uma classificação em 3 classes.</p>
 <p>O Densidade de Borda (ED) mede a quantidade de bordas (contato entre diferentes classes) em relação à área total (metros por hectare). É um dos principais indicadores de fragmentação. Campo Sujo (O mais fragmentado), apresenta os valores de ED mais altos na escala local (12,5m), chegando a 400-600 m/ha. Isso mostra que as áreas de Campo Sujo são manchas menores ou com formatos muito irregulares, onde quase tudo é “borda”. Conforme o raio aumenta para 100m, o ED cai para ~150 m/ha, indicando que essas manchas estão imersas em uma matriz que “dilui” essa borda. Para o classe de Uso Humano (a matriz estável) o ED é o mais baixo e estável (perto de 100 m/ha). Isso ocorre porque as áreas construídas no campus (blocos, estacionamentos) tendem a ter formatos geométricos e contínuos, gerando menos “perímetro de borda” por unidade de área do que a vegetação natural, que é mais irregular.</p>
 </section>
-<section id="correlações-entre-métricas" class="level3" data-number="2.5.4">
-<h3 data-number="2.5.4" class="anchored" data-anchor-id="correlações-entre-métricas"><span class="header-section-number">2.5.4</span> Correlações entre métricas</h3>
+<section id="correlações-entre-métricas" class="level3" data-number="2.5.5">
+<h3 data-number="2.5.5" class="anchored" data-anchor-id="correlações-entre-métricas"><span class="header-section-number">2.5.5</span> Correlações entre métricas</h3>
 <p>Para modelos inferenciais (como GLM, GAM etc), a referência na ecologia é: <span class="citation" data-cites="dormann_collinearity_2013">Dormann et al. (<a href="references.html#ref-dormann_collinearity_2013" role="doc-biblioref">2013</a>)</span> - “Collinearity: a review of methods to deal with it and a simulation study evaluating their performance”. Este estudo testou diversos métodos e concluiu que uma correlação entre variavies de r&gt;0.7 é o ponto onde as estimativas dos coeficientes tornam-se instáveis e o erro do modelo aumenta significativamente. Assim sendo, correlação entre variavies de r&gt;0.7 se torno um dos criterios objetivos para identificar varieveis redundantes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -892,53 +981,252 @@ As métricas de classe quantificam o arranjo e a integridade de um habitat espec
 Colocá-las na mesma matriz de correlação frequentemente gera resultados que são apenas artefatos matemáticos. Por exemplo, a proporção da classe mais dominante (pland) quase sempre ditará a diversidade estrutural do buffer inteiro (shdi). Correlacionar essas duas coisas não testa a redundância real dos preditores ecológicos, apenas reflete a estrutura da equação.</p>
 </div>
 </div>
+<section id="demonstração-do-efeito-de-escala" class="level4" data-number="2.5.5.1">
+<h4 data-number="2.5.5.1" class="anchored" data-anchor-id="demonstração-do-efeito-de-escala"><span class="header-section-number">2.5.5.1</span> Demonstração do Efeito de Escala</h4>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Dica de Código: Quando a Teoria Ecológica Quebra a Linha de Código
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ao construir fluxos de trabalho automatizados com a estratégia Split-Apply-Combine, é muito comum encararmos erros de compilação ou uma enxurrada de valores NA que parecem não fazer sentido técnico. Um caso clássico no pacote landscapemetrics ocorre quando tentamos calcular o Índice de Contágio (lsm_l_contag) em escalas muito pequenas (como nos raios de 12,5m ou 25m). O script simplesmente falha ou retorna um valor vazio.</p>
+<p>Este não é um “bug” do R; é o encontro inevitável entre a ciência de dados e a teoria ecológica.</p>
+<p>O Olhar Ecológico: Heterogeneidade vs.&nbsp;Homogeneidade</p>
+<p>A teoria de ecologia de paisagens nos ensina que a percepção da estrutura do espaço depende fundamentalmente do grão e da extensão da análise. Em raios curtos ao redor de uma armadilha fotográfica, a extensão é tão reduzida que a probabilidade de o círculo de amostragem cair inteiramente dentro de uma “mancha pura” (ex: 100% de uma edificação de Uso Humano ou 100% de um bloco denso de Cerrado) é altíssima. Nesse nível micro, o mosaico perde sua heterogeneidade e se torna perfeitamente homogêneo e monótono.</p>
+<p>Quando a escala é tão pequena que o buffer captura apenas uma única classe, o espaço de transição deixa de existir:</p>
+<p>As frequências de adjacência entre classes diferentes tornam-se nulas.</p>
+<p>O denominador da equação matemática colapsa para zero.</p>
+<p>Diante de uma indeterminação matemática, o landscapemetrics toma a decisão correta de design de software: em vez de inventar um número artificial (como 0 ou 100), ele retorna um valor ausente legítimo (NA).</p>
+<p>Como resolver isso no mundo real?</p>
+<p>Escolha métricas defensivas. Se o seu estudo exige microescalas, utilize métricas que decaiam de forma elegante para um valor base em paisagens puras, sem quebrar. O Número de Manchas (lsm_l_np) assume 1 em áreas puras; o Índice de Forma (lsm_l_lsi) assume 1; a Riqueza (lsm_l_pr) assume 1. Nenhum deles gera NA.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="efeito-de-escala-na-matematica-das-métricas" class="level3" data-number="2.5.6">
+<h3 data-number="2.5.6" class="anchored" data-anchor-id="efeito-de-escala-na-matematica-das-métricas"><span class="header-section-number">2.5.6</span> Efeito de Escala na Matematica das Métricas</h3>
+<p>Mova o controle deslizante abaixo para expandir o raio do buffer ao redor da armadilha fotográfica e observe o exato momento em que a paisagem deixa de ser homogênea e o erro matemático da métrica de Contágio desaparece.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb20" data-startfrom="701" data-source-offset="-55"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 700;"><span id="cb20-701"><a href="#cb20-701" aria-hidden="true" tabindex="-1"></a>viewof raio <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> {</span>
+<span id="cb20-702"><a href="#cb20-702" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="dv">15</span><span class="op">,</span> </span>
+<span id="cb20-703"><a href="#cb20-703" aria-hidden="true" tabindex="-1"></a>  <span class="dt">step</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> </span>
+<span id="cb20-704"><a href="#cb20-704" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"Raio do Buffer de Amostragem (Metros):"</span></span>
+<span id="cb20-705"><a href="#cb20-705" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb20-706"><a href="#cb20-706" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-707"><a href="#cb20-707" aria-hidden="true" tabindex="-1"></a><span class="co">// 2. Lógica matemática rigorosamente sincronizada com a distância espacial do SVG</span></span>
+<span id="cb20-708"><a href="#cb20-708" aria-hidden="true" tabindex="-1"></a><span class="co">// A Matriz de fundo é "Uso Humano" (1 mancha base).</span></span>
+<span id="cb20-709"><a href="#cb20-709" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &lt; 30m: O buffer toca apenas a matriz. (1 Classe, 1 Mancha)</span></span>
+<span id="cb20-710"><a href="#cb20-710" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &gt;= 30m: O buffer alcança a mancha de Cerrado Antrópico. (2 Classes, 2 Manchas)</span></span>
+<span id="cb20-711"><a href="#cb20-711" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &gt;= 60m: O buffer alcança a mancha de Campo Sujo. (3 Classes, 3 Manchas)</span></span>
+<span id="cb20-712"><a href="#cb20-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-713"><a href="#cb20-713" aria-hidden="true" tabindex="-1"></a>status_paisagem <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">"Homogênea (Monótona)"</span> <span class="op">:</span> <span class="st">"Heterogênea (Mosaico)"</span><span class="op">;</span></span>
+<span id="cb20-714"><a href="#cb20-714" aria-hidden="true" tabindex="-1"></a>qtd_classes <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> (raio <span class="op">&lt;</span> <span class="dv">60</span> <span class="op">?</span> <span class="dv">2</span> <span class="op">:</span> <span class="dv">3</span>)<span class="op">;</span></span>
+<span id="cb20-715"><a href="#cb20-715" aria-hidden="true" tabindex="-1"></a>contag_val <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">"NULO: NA (Divisão por Zero)"</span> <span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(<span class="dv">15</span> <span class="op">+</span> (raio <span class="op">*</span> <span class="fl">0.5</span>)) <span class="op">+</span> <span class="st">"% (Sucesso)"</span><span class="op">;</span></span>
+<span id="cb20-716"><a href="#cb20-716" aria-hidden="true" tabindex="-1"></a>np_val <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> (raio <span class="op">&lt;</span> <span class="dv">60</span> <span class="op">?</span> <span class="dv">2</span> <span class="op">:</span> <span class="dv">3</span>)<span class="op">;</span></span>
+<span id="cb20-717"><a href="#cb20-717" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-718"><a href="#cb20-718" aria-hidden="true" tabindex="-1"></a><span class="co">// 3. Renderização do painel de resultados em HTML dinâmico</span></span>
+<span id="cb20-719"><a href="#cb20-719" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb20-720"><a href="#cb20-720" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;div style="background: #fafafa; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-top: 15px; font-family: system-ui, sans-serif; max-width: 500px;"&gt;</span></span>
+<span id="cb20-721"><a href="#cb20-721" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;h5 style="margin-top:0; margin-bottom: 15px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;"&gt;Métricas em Tempo Real no Buffer&lt;/h5&gt;</span></span>
+<span id="cb20-722"><a href="#cb20-722" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width: 100%; border-collapse: collapse; font-size: 14px;"&gt;</span></span>
+<span id="cb20-723"><a href="#cb20-723" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
+<span id="cb20-724"><a href="#cb20-724" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Status da Paisagem:&lt;/td&gt;</span></span>
+<span id="cb20-725"><a href="#cb20-725" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#e11d48'</span> <span class="op">:</span> <span class="st">'#16a34a'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>status_paisagem<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb20-726"><a href="#cb20-726" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
+<span id="cb20-727"><a href="#cb20-727" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
+<span id="cb20-728"><a href="#cb20-728" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Classes Detectadas (&lt;code&gt;lsm_l_pr&lt;/code&gt;):&lt;/td&gt;</span></span>
+<span id="cb20-729"><a href="#cb20-729" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; color: #334155;"&gt;</span><span class="sc">${</span>qtd_classes<span class="sc">}</span><span class="vs"> de 3&lt;/td&gt;</span></span>
+<span id="cb20-730"><a href="#cb20-730" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
+<span id="cb20-731"><a href="#cb20-731" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
+<span id="cb20-732"><a href="#cb20-732" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Contágio (&lt;code&gt;lsm_l_contag&lt;/code&gt;):&lt;/td&gt;</span></span>
+<span id="cb20-733"><a href="#cb20-733" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#e11d48'</span> <span class="op">:</span> <span class="st">'#334155'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb20-734"><a href="#cb20-734" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;span style="padding: 2px 6px; border-radius: 4px; background: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#ffe4e6'</span> <span class="op">:</span> <span class="st">'#f1f5f9'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>contag_val<span class="sc">}</span><span class="vs">&lt;/span&gt;</span></span>
+<span id="cb20-735"><a href="#cb20-735" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/td&gt;</span></span>
+<span id="cb20-736"><a href="#cb20-736" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
+<span id="cb20-737"><a href="#cb20-737" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
+<span id="cb20-738"><a href="#cb20-738" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Nº de Manchas (&lt;code&gt;lsm_l_np&lt;/code&gt;):&lt;/td&gt;</span></span>
+<span id="cb20-739"><a href="#cb20-739" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: #0284c7;"&gt;</span><span class="sc">${</span>np_val<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb20-740"><a href="#cb20-740" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
+<span id="cb20-741"><a href="#cb20-741" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
+<span id="cb20-742"><a href="#cb20-742" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb20-743"><a href="#cb20-743" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb21" data-startfrom="748" data-source-offset="-2672"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 747;"><span id="cb21-748"><a href="#cb21-748" aria-hidden="true" tabindex="-1"></a><span class="fu">svg</span><span class="vs">`</span></span>
+<span id="cb21-749"><a href="#cb21-749" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;svg width="500" height="260" style="background:#fff3e0; border-radius:8px; margin-top:15px; border: 1px solid #e2e8f0;"&gt;</span></span>
+<span id="cb21-750"><a href="#cb21-750" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span></span>
+<span id="cb21-751"><a href="#cb21-751" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;rect x="0" y="0" width="500" height="260" fill="#f97316" opacity="0.15" /&gt;</span></span>
+<span id="cb21-752"><a href="#cb21-752" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="15" y="25" font-size="12" fill="#ea580c" font-family="sans-serif" font-weight="600"&gt;Matriz: Uso Humano&lt;/text&gt;</span></span>
+<span id="cb21-753"><a href="#cb21-753" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-754"><a href="#cb21-754" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="350" cy="130" r="40" fill="#22c55e" opacity="0.4" /&gt; </span></span>
+<span id="cb21-755"><a href="#cb21-755" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="325" y="134" font-size="11" fill="#14532d" font-family="sans-serif" font-weight="600"&gt;Cerrado&lt;/text&gt;</span></span>
+<span id="cb21-756"><a href="#cb21-756" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-757"><a href="#cb21-757" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="90" cy="130" r="40" fill="#3b82f6" opacity="0.4" /&gt;             </span></span>
+<span id="cb21-758"><a href="#cb21-758" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="60" y="134" font-size="11" fill="#1e3a8a" font-family="sans-serif" font-weight="600"&gt;Campo Sujo&lt;/text&gt;</span></span>
+<span id="cb21-759"><a href="#cb21-759" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-760"><a href="#cb21-760" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="250" cy="130" r="6" fill="#ef4444" /&gt;</span></span>
+<span id="cb21-761"><a href="#cb21-761" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="238" y="115" font-size="12" font-family="sans-serif" font-weight="bold" fill="#ef4444"&gt;Câmera&lt;/text&gt;</span></span>
+<span id="cb21-762"><a href="#cb21-762" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span></span>
+<span id="cb21-763"><a href="#cb21-763" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="250" cy="130" r="</span><span class="sc">${</span>raio <span class="op">*</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-dasharray="5,5" /&gt;</span></span>
+<span id="cb21-764"><a href="#cb21-764" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/svg&gt;</span></span>
+<span id="cb21-765"><a href="#cb21-765" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-ojs-cell-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ojs-cell-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-6" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-6" data-nodetype="expression">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(f)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-ojs-cell-1-7" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ojs-cell-1-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1-7" data-nodetype="expression">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ojs-cell-1-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(g)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ojs-cell-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.4: Simulador interativo demonstrando a transição de uma paisagem homogênea para heterogênea com a expansão do raio de amostragem.
+</figcaption>
+</figure>
+</div>
+</div>
 <p>O bloco de código abaixo calcula correlações aos pares e gera gráficos para facilitar a comparação das correlações entre as diferentes métricas.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Prepare data</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for landscape level metrics; pivot so metrics are columns</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>landscape_wide <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="st">"landscape"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for class level metrics; pivot so metrics are columns</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>class_wide <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span> </span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtrar apenas a métrica de porcentagem da paisagem (cpland)</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"cpland"</span>, <span class="st">"pland"</span>, <span class="st">"ca"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remover linhas que não têm classe definida (ex: métricas de nível de landscape)</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(class_3)) <span class="sc">|&gt;</span> </span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">complete</span>(plot_id, escala_buffer, metric, class_3, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">value =</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span> </span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  dados_metricas <span class="sc">|&gt;</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="st">"class"</span>, <span class="sc">!</span>metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"cpland"</span>, <span class="st">"pland"</span>, <span class="st">"ca"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value) </span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>cor_results_l <span class="ot">&lt;-</span> landscape_wide <span class="sc">|&gt;</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cor_mat =</span> <span class="fu">map</span>(data, <span class="sc">~</span> {</span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select only numeric columns (metrics)</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    numeric_data <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate correlation matrix using base R</span></span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use = "pairwise.complete.obs" handles any NAs safely</span></span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_data, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert matrix to a tidy data frame</span></span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="sc">|&gt;</span> </span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"metric_name"</span>)</span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  })) <span class="sc">|&gt;</span></span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the raw 'data' column and expand the correlation results</span></span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data) <span class="sc">|&gt;</span> </span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(cor_mat)</span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="co"># View the numeric results</span></span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_results_l)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Prepare data</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for landscape level metrics; pivot so metrics are columns</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>landscape_wide <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="st">"landscape"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for class level metrics; pivot so metrics are columns</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>class_wide <span class="ot">&lt;-</span> dados_metricas <span class="sc">|&gt;</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filtrar apenas a métrica de porcentagem da paisagem (cpland)</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"cpland"</span>, <span class="st">"pland"</span>, <span class="st">"ca"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remover linhas que não têm classe definida (ex: métricas de nível de landscape)</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(class_3)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">complete</span>(plot_id, escala_buffer, metric, class_3, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">value =</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  dados_metricas <span class="sc">|&gt;</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="st">"class"</span>, <span class="sc">!</span>metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"cpland"</span>, <span class="st">"pland"</span>, <span class="st">"ca"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, escala_buffer, class_3, metric, value) <span class="sc">|&gt;</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> metric, <span class="at">values_from =</span> value) </span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>cor_results_l <span class="ot">&lt;-</span> landscape_wide <span class="sc">|&gt;</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cor_mat =</span> <span class="fu">map</span>(data, <span class="sc">~</span> {</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select only numeric columns (metrics)</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    numeric_data <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate correlation matrix using base R</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use = "pairwise.complete.obs" handles any NAs safely</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_data, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert matrix to a tidy data frame</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="sc">|&gt;</span> </span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"metric_name"</span>)</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>  })) <span class="sc">|&gt;</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the raw 'data' column and expand the correlation results</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data) <span class="sc">|&gt;</span> </span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(cor_mat)</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a><span class="co"># View the numeric results</span></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_results_l)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 × 7
 # Groups:   escala_buffer [4]
@@ -965,29 +1253,29 @@ Colocá-las na mesma matriz de correlação frequentemente gera resultados que s
 19         100   shdi        -0.977   0.811   0.390   1        0.00994
 20         100   ta           0.205  -0.0466 -0.396   0.00994  1      </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cor_results_class <span class="ot">&lt;-</span> class_wide <span class="sc">|&gt;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cor_mat =</span> <span class="fu">map</span>(data, <span class="sc">~</span> {</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select only numeric columns (metrics)</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    numeric_data <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate correlation matrix using base R</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use = "pairwise.complete.obs" handles any NAs safely</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_data, <span class="at">method =</span> <span class="st">"spearman"</span>, </span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert matrix to a tidy data frame</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="sc">|&gt;</span> </span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"metric_name"</span>)</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  })) <span class="sc">|&gt;</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the raw 'data' column and expand the correlation results</span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data) <span class="sc">|&gt;</span> </span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(cor_mat)</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co"># View the numeric results</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_results_class)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cor_results_class <span class="ot">&lt;-</span> class_wide <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cor_mat =</span> <span class="fu">map</span>(data, <span class="sc">~</span> {</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select only numeric columns (metrics)</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    numeric_data <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate correlation matrix using base R</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use = "pairwise.complete.obs" handles any NAs safely</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_data, <span class="at">method =</span> <span class="st">"spearman"</span>, </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert matrix to a tidy data frame</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    res_matrix <span class="sc">|&gt;</span> </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"metric_name"</span>)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  })) <span class="sc">|&gt;</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the raw 'data' column and expand the correlation results</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data) <span class="sc">|&gt;</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(cor_mat)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># View the numeric results</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_results_class)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 × 7
 # Groups:   escala_buffer [4]
@@ -1013,147 +1301,6 @@ Colocá-las na mesma matriz de correlação frequentemente gera resultados que s
 18         100   pland        0.983   0.994  1      0.875 -0.139 
 19         100   ai           0.851   0.910  0.875  1     -0.327 
 20         100   ed          -0.0765 -0.167 -0.139 -0.327  1     </code></pre>
-</div>
-</div>
-<section id="nivel-de-paisagem" class="level4" data-number="2.5.4.1">
-<h4 data-number="2.5.4.1" class="anchored" data-anchor-id="nivel-de-paisagem"><span class="header-section-number">2.5.4.1</span> Nivel de Paisagem</h4>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Dica de Código: Quando a Teoria Ecológica Quebra a Linha de Código
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ao construir fluxos de trabalho automatizados com a estratégia Split-Apply-Combine, é muito comum encararmos erros de compilação ou uma enxurrada de valores NA que parecem não fazer sentido técnico. Um caso clássico no pacote landscapemetrics ocorre quando tentamos calcular o Índice de Contágio (lsm_l_contag) em escalas muito pequenas (como nos raios de 12,5m ou 25m). O script simplesmente falha ou retorna um valor vazio.</p>
-<p>Este não é um “bug” do R; é o encontro inevitável entre a ciência de dados e a teoria ecológica.</p>
-<p>O Olhar Ecológico: Heterogeneidade vs.&nbsp;Homogeneidade</p>
-<p>A teoria de ecologia de paisagens nos ensina que a percepção da estrutura do espaço depende fundamentalmente do grão e da extensão da análise. Em raios curtos ao redor de uma armadilha fotográfica, a extensão é tão reduzida que a probabilidade de o círculo de amostragem cair inteiramente dentro de uma “mancha pura” (ex: 100% de uma edificação de Uso Humano ou 100% de um bloco denso de Cerrado) é altíssima. Nesse nível micro, o mosaico perde sua heterogeneidade e se torna perfeitamente homogêneo e monótono.</p>
-<p>Quando a escala é tão pequena que o buffer captura apenas uma única classe, o espaço de transição deixa de existir:</p>
-<p>As frequências de adjacência entre classes diferentes tornam-se nulas.</p>
-<p>O denominador da equação matemática colapsa para zero.</p>
-<p>Diante de uma indeterminação matemática, o landscapemetrics toma a decisão correta de design de software: em vez de inventar um número artificial (como 0 ou 100), ele retorna um valor ausente legítimo (NA).</p>
-<p>Como resolver isso no mundo real?</p>
-<p>Escolha métricas defensivas. Se o seu estudo exige microescalas, utilize métricas que decaiam de forma elegante para um valor base em paisagens puras, sem quebrar. O Número de Manchas (lsm_l_np) assume 1 em áreas puras; o Índice de Forma (lsm_l_lsi) assume 1; a Riqueza (lsm_l_pr) assume 1. Nenhum deles gera NA.</p>
-</div>
-</div>
-</section>
-</section>
-<section id="demonstração-do-efeito-de-escala" class="level3" data-number="2.5.5">
-<h3 data-number="2.5.5" class="anchored" data-anchor-id="demonstração-do-efeito-de-escala"><span class="header-section-number">2.5.5</span> Demonstração do Efeito de Escala</h3>
-<p>Mova o controle deslizante abaixo para expandir o raio do buffer ao redor da armadilha fotográfica e observe o exato momento em que a paisagem deixa de ser homogênea e o erro matemático da métrica de Contágio desaparece.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb24" data-startfrom="753" data-source-offset="-55"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 752;"><span id="cb24-753"><a href="#cb24-753" aria-hidden="true" tabindex="-1"></a>viewof raio <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> {</span>
-<span id="cb24-754"><a href="#cb24-754" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="dv">15</span><span class="op">,</span> </span>
-<span id="cb24-755"><a href="#cb24-755" aria-hidden="true" tabindex="-1"></a>  <span class="dt">step</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> </span>
-<span id="cb24-756"><a href="#cb24-756" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"Raio do Buffer de Amostragem (Metros):"</span></span>
-<span id="cb24-757"><a href="#cb24-757" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
-<span id="cb24-758"><a href="#cb24-758" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-759"><a href="#cb24-759" aria-hidden="true" tabindex="-1"></a><span class="co">// 2. Lógica matemática rigorosamente sincronizada com a distância espacial do SVG</span></span>
-<span id="cb24-760"><a href="#cb24-760" aria-hidden="true" tabindex="-1"></a><span class="co">// A Matriz de fundo é "Uso Humano" (1 mancha base).</span></span>
-<span id="cb24-761"><a href="#cb24-761" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &lt; 30m: O buffer toca apenas a matriz. (1 Classe, 1 Mancha)</span></span>
-<span id="cb24-762"><a href="#cb24-762" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &gt;= 30m: O buffer alcança a mancha de Cerrado Antrópico. (2 Classes, 2 Manchas)</span></span>
-<span id="cb24-763"><a href="#cb24-763" aria-hidden="true" tabindex="-1"></a><span class="co">// - Raio &gt;= 60m: O buffer alcança a mancha de Campo Sujo. (3 Classes, 3 Manchas)</span></span>
-<span id="cb24-764"><a href="#cb24-764" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-765"><a href="#cb24-765" aria-hidden="true" tabindex="-1"></a>status_paisagem <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">"Homogênea (Monótona)"</span> <span class="op">:</span> <span class="st">"Heterogênea (Mosaico)"</span><span class="op">;</span></span>
-<span id="cb24-766"><a href="#cb24-766" aria-hidden="true" tabindex="-1"></a>qtd_classes <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> (raio <span class="op">&lt;</span> <span class="dv">60</span> <span class="op">?</span> <span class="dv">2</span> <span class="op">:</span> <span class="dv">3</span>)<span class="op">;</span></span>
-<span id="cb24-767"><a href="#cb24-767" aria-hidden="true" tabindex="-1"></a>contag_val <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">"NULO: NA (Divisão por Zero)"</span> <span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(<span class="dv">15</span> <span class="op">+</span> (raio <span class="op">*</span> <span class="fl">0.5</span>)) <span class="op">+</span> <span class="st">"% (Sucesso)"</span><span class="op">;</span></span>
-<span id="cb24-768"><a href="#cb24-768" aria-hidden="true" tabindex="-1"></a>np_val <span class="op">=</span> raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> (raio <span class="op">&lt;</span> <span class="dv">60</span> <span class="op">?</span> <span class="dv">2</span> <span class="op">:</span> <span class="dv">3</span>)<span class="op">;</span></span>
-<span id="cb24-769"><a href="#cb24-769" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-770"><a href="#cb24-770" aria-hidden="true" tabindex="-1"></a><span class="co">// 3. Renderização do painel de resultados em HTML dinâmico</span></span>
-<span id="cb24-771"><a href="#cb24-771" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span></span>
-<span id="cb24-772"><a href="#cb24-772" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;div style="background: #fafafa; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-top: 15px; font-family: system-ui, sans-serif; max-width: 500px;"&gt;</span></span>
-<span id="cb24-773"><a href="#cb24-773" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;h5 style="margin-top:0; margin-bottom: 15px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;"&gt;Métricas em Tempo Real no Buffer&lt;/h5&gt;</span></span>
-<span id="cb24-774"><a href="#cb24-774" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width: 100%; border-collapse: collapse; font-size: 14px;"&gt;</span></span>
-<span id="cb24-775"><a href="#cb24-775" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
-<span id="cb24-776"><a href="#cb24-776" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Status da Paisagem:&lt;/td&gt;</span></span>
-<span id="cb24-777"><a href="#cb24-777" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#e11d48'</span> <span class="op">:</span> <span class="st">'#16a34a'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>status_paisagem<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb24-778"><a href="#cb24-778" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
-<span id="cb24-779"><a href="#cb24-779" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
-<span id="cb24-780"><a href="#cb24-780" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Classes Detectadas (&lt;code&gt;lsm_l_pr&lt;/code&gt;):&lt;/td&gt;</span></span>
-<span id="cb24-781"><a href="#cb24-781" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; color: #334155;"&gt;</span><span class="sc">${</span>qtd_classes<span class="sc">}</span><span class="vs"> de 3&lt;/td&gt;</span></span>
-<span id="cb24-782"><a href="#cb24-782" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
-<span id="cb24-783"><a href="#cb24-783" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
-<span id="cb24-784"><a href="#cb24-784" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Contágio (&lt;code&gt;lsm_l_contag&lt;/code&gt;):&lt;/td&gt;</span></span>
-<span id="cb24-785"><a href="#cb24-785" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#e11d48'</span> <span class="op">:</span> <span class="st">'#334155'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
-<span id="cb24-786"><a href="#cb24-786" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;span style="padding: 2px 6px; border-radius: 4px; background: </span><span class="sc">${</span>raio <span class="op">&lt;</span> <span class="dv">30</span> <span class="op">?</span> <span class="st">'#ffe4e6'</span> <span class="op">:</span> <span class="st">'#f1f5f9'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>contag_val<span class="sc">}</span><span class="vs">&lt;/span&gt;</span></span>
-<span id="cb24-787"><a href="#cb24-787" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/td&gt;</span></span>
-<span id="cb24-788"><a href="#cb24-788" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
-<span id="cb24-789"><a href="#cb24-789" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tr style="border-bottom: 1px solid #f1f5f9;"&gt;</span></span>
-<span id="cb24-790"><a href="#cb24-790" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: 600; color: #475569;"&gt;Nº de Manchas (&lt;code&gt;lsm_l_np&lt;/code&gt;):&lt;/td&gt;</span></span>
-<span id="cb24-791"><a href="#cb24-791" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;td style="padding: 10px 0; font-weight: bold; color: #0284c7;"&gt;</span><span class="sc">${</span>np_val<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb24-792"><a href="#cb24-792" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;</span></span>
-<span id="cb24-793"><a href="#cb24-793" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
-<span id="cb24-794"><a href="#cb24-794" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;</span></span>
-<span id="cb24-795"><a href="#cb24-795" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-1" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-2" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-3" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-4" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-5" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-6" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb25" data-startfrom="800" data-source-offset="-2672"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 799;"><span id="cb25-800"><a href="#cb25-800" aria-hidden="true" tabindex="-1"></a><span class="fu">svg</span><span class="vs">`</span></span>
-<span id="cb25-801"><a href="#cb25-801" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;svg width="500" height="260" style="background:#fff3e0; border-radius:8px; margin-top:15px; border: 1px solid #e2e8f0;"&gt;</span></span>
-<span id="cb25-802"><a href="#cb25-802" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span></span>
-<span id="cb25-803"><a href="#cb25-803" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;rect x="0" y="0" width="500" height="260" fill="#f97316" opacity="0.15" /&gt;</span></span>
-<span id="cb25-804"><a href="#cb25-804" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="15" y="25" font-size="12" fill="#ea580c" font-family="sans-serif" font-weight="600"&gt;Matriz: Uso Humano&lt;/text&gt;</span></span>
-<span id="cb25-805"><a href="#cb25-805" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-806"><a href="#cb25-806" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="350" cy="130" r="40" fill="#22c55e" opacity="0.4" /&gt; </span></span>
-<span id="cb25-807"><a href="#cb25-807" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="325" y="134" font-size="11" fill="#14532d" font-family="sans-serif" font-weight="600"&gt;Cerrado&lt;/text&gt;</span></span>
-<span id="cb25-808"><a href="#cb25-808" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-809"><a href="#cb25-809" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="90" cy="130" r="40" fill="#3b82f6" opacity="0.4" /&gt;             </span></span>
-<span id="cb25-810"><a href="#cb25-810" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="60" y="134" font-size="11" fill="#1e3a8a" font-family="sans-serif" font-weight="600"&gt;Campo Sujo&lt;/text&gt;</span></span>
-<span id="cb25-811"><a href="#cb25-811" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-812"><a href="#cb25-812" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="250" cy="130" r="6" fill="#ef4444" /&gt;</span></span>
-<span id="cb25-813"><a href="#cb25-813" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;text x="238" y="115" font-size="12" font-family="sans-serif" font-weight="bold" fill="#ef4444"&gt;Câmera&lt;/text&gt;</span></span>
-<span id="cb25-814"><a href="#cb25-814" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span></span>
-<span id="cb25-815"><a href="#cb25-815" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;circle cx="250" cy="130" r="</span><span class="sc">${</span>raio <span class="op">*</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-dasharray="5,5" /&gt;</span></span>
-<span id="cb25-816"><a href="#cb25-816" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/svg&gt;</span></span>
-<span id="cb25-817"><a href="#cb25-817" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-7" data-nodetype="expression">
-
-</div>
-</div>
 </div>
 </div>
 <p>Visualizar os valores em um grafico.</p>
@@ -1198,13 +1345,13 @@ Colocá-las na mesma matriz de correlação frequentemente gera resultados que s
 <img src="map_files/figure-html/fig-correlations-1.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.4: A fazer.
+Figura&nbsp;2.5: A fazer.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Muitas valores nos resultados da Matriz de Correlação (<a href="#fig-correlations" class="quarto-xref">Figura&nbsp;<span>2.4</span></a>). Para ajudar indentificar os valores de correlação mais importantes podemos fazer um resumo.</p>
+<p>Muitas valores nos resultados da Matriz de Correlação (<a href="#fig-correlations" class="quarto-xref">Figura&nbsp;<span>2.5</span></a>). Para ajudar indentificar os valores de correlação mais importantes podemos fazer um resumo.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create the summary table</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>cor_summary <span class="ot">&lt;-</span> cor_plot_data <span class="sc">|&gt;</span></span>
@@ -1244,7 +1391,7 @@ Figura&nbsp;2.4: A fazer.
 10 ed - pland               -0.646          -0.930         -0.139  colinearidade</code></pre>
 </div>
 </div>
-<p>Com base no gráfico de calor (<a href="#fig-correlations" class="quarto-xref">Figura&nbsp;<span>2.4</span></a>) e na tabela cor_summary, tem um caso claro de redundância nas métricas.</p>
+<p>Com base no gráfico de calor (<a href="#fig-correlations" class="quarto-xref">Figura&nbsp;<span>2.5</span></a>) e na tabela cor_summary, tem um caso claro de redundância nas métricas.</p>
 <ol type="1">
 <li><p>O Grupo Redundante (Área)<br>
 As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Area Percentage of Landscape) estão altíssimamente correlacionadas entre si em todas as escalas (r entre 0,94 e 0,98). À medida que a área total da classe aumenta, a porcentagem da paisagem e a área de núcleo aumentam quase perfeitamente juntas.<br>
@@ -1253,8 +1400,8 @@ As métricas ca (Class Area), pland (Percentage of Landscape) e cpland (Core Are
 O ed (Edge Density) apresenta um comportamento interessante de dependência de escala. Na escala de 12.5m, ele é fortemente correlacionado negativamente com a área (r=−0.86). Na escala de 100m, essa correlação cai para quase zero (r=−0.12). Em escalas pequenas, a borda e a área estão ligadas de forma simples. Em escalas maiores, a paisagem se torna mais complexa e a densidade de bordas passa a ser independente da quantidade de área.<br>
 <strong>Decisão:</strong> Mantenha o ed.&nbsp;Ele será crucial para capturar a configuração em escalas maiores que a métrica de área (pland) não percebe.</p></li>
 </ol>
-<section id="resumo-quais-métricas-manter-no-seu-modelo-final" class="level4" data-number="2.5.5.1">
-<h4 data-number="2.5.5.1" class="anchored" data-anchor-id="resumo-quais-métricas-manter-no-seu-modelo-final"><span class="header-section-number">2.5.5.1</span> Resumo: Quais métricas manter no seu modelo final?</h4>
+<section id="resumo-quais-métricas-manter-no-seu-modelo-final" class="level4" data-number="2.5.6.1">
+<h4 data-number="2.5.6.1" class="anchored" data-anchor-id="resumo-quais-métricas-manter-no-seu-modelo-final"><span class="header-section-number">2.5.6.1</span> Resumo: Quais métricas manter no seu modelo final?</h4>
 <p>Para evitar problemas de multicolinearidade em análises futuras, eu recomendo manter 2 métricas de class:</p>
 <ul>
 <li><p>pland (Representa a Quantidade: quanto de habitat existe).</p></li>

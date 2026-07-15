@@ -694,6 +694,7 @@ Escolha métricas defensivas. Se o seu estudo exige microescalas, utilize métri
 Mova o controle deslizante abaixo para expandir o raio do buffer ao redor da armadilha fotográfica e observe o exato momento em que a paisagem deixa de ser homogênea e o erro matemático da métrica de Contágio desaparece.
 
 ```{ojs}
+//| eval: false
 //| echo: false
 //| fig-cap: "Simulador interativo demonstrando a transição de uma paisagem homogênea para heterogênea com a expansão do raio de amostragem."
 
@@ -764,6 +765,85 @@ svg`
 </svg>
 `
 ```
+
+```{ojs}
+//| echo: false
+//| panel: input
+// Bloco 1: Apenas o input. A opção 'panel: input' garante que o Quarto 
+// formate este slider com o fundo cinza clássico de controles.
+viewof raio = Inputs.range([10, 100], {
+  value: 15, 
+  step: 5, 
+  label: "Raio do Buffer de Amostragem (Metros):"
+})
+```
+
+```{ojs}
+//| echo: false
+// Bloco 2: Apenas a lógica. Como não há HTML aqui, nada é impresso na tela.
+status_paisagem = raio < 30 ? "Homogênea (Monótona)" : "Heterogênea (Mosaico)";
+qtd_classes = raio < 30 ? 1 : (raio < 60 ? 2 : 3);
+contag_val = raio < 30 ? "ERRO: NA (Divisão por Zero)" : Math.round(15 + (raio * 0.5)) + "% (Sucesso)";
+np_val = raio < 30 ? 1 : (raio < 60 ? 2 : 3);
+```
+
+```{ojs}
+//| echo: false
+//| label: fig-simulador-escala
+//| fig-cap: "Simulador interativo demonstrando a transição de uma paisagem homogênea para heterogênea com a expansão do raio de amostragem."
+
+// Bloco 3: O visual. Unimos a tabela e o SVG em uma única <div> usando Flexbox.
+// Isso impede as subfiguras (letras a,b,c) e coloca os elementos lado a lado.
+html`
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 10px;">
+  
+  <div style="background: #fafafa; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; font-family: system-ui, sans-serif; flex: 1; min-width: 250px; max-width: 350px;">
+    <h5 style="margin-top:0; margin-bottom: 12px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">Métricas em Tempo Real</h5>
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 8px 0; font-weight: 600; color: #475569;">Status:</td>
+        <td style="padding: 8px 0; font-weight: bold; color: ${raio < 30 ? '#e11d48' : '#16a34a'};">${status_paisagem}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 8px 0; font-weight: 600; color: #475569;">Classes:</td>
+        <td style="padding: 8px 0; color: #334155;">${qtd_classes} de 3</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 8px 0; font-weight: 600; color: #475569;">Contágio:</td>
+        <td style="padding: 8px 0; font-weight: bold; color: ${raio < 30 ? '#e11d48' : '#334155'};">
+          <span style="padding: 2px 4px; border-radius: 4px; background: ${raio < 30 ? '#ffe4e6' : '#f1f5f9'};">${contag_val}</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; font-weight: 600; color: #475569;">Manchas (<code>np</code>):</td>
+        <td style="padding: 8px 0; font-weight: bold; color: #0284c7;">${np_val}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="flex: 1; min-width: 300px; max-width: 450px;">
+    <svg viewBox="0 0 500 260" style="width: 100%; height: auto; background:#fff3e0; border-radius:8px; border: 1px solid #e2e8f0; display: block;">
+      
+      <rect x="0" y="0" width="500" height="260" fill="#f97316" opacity="0.15" />
+      <text x="15" y="25" font-size="12" fill="#ea580c" font-family="sans-serif" font-weight="600">Matriz: Uso Humano</text>
+
+      <circle cx="350" cy="130" r="40" fill="#22c55e" opacity="0.4" /> 
+      <text x="325" y="134" font-size="11" fill="#14532d" font-family="sans-serif" font-weight="600">Cerrado</text>
+
+      <circle cx="90" cy="130" r="40" fill="#3b82f6" opacity="0.4" />             
+      <text x="60" y="134" font-size="11" fill="#1e3a8a" font-family="sans-serif" font-weight="600">Campo Sujo</text>
+
+      <circle cx="250" cy="130" r="6" fill="#ef4444" />
+      <text x="238" y="115" font-size="12" font-family="sans-serif" font-weight="bold" fill="#ef4444">Câmera</text>
+      
+      <circle cx="250" cy="130" r="${raio * 2}" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-dasharray="5,5" />
+    </svg>
+  </div>
+
+</div>
+`
+```
+
 :::
 
 ::: {.content-visible when-format="pdf"}
