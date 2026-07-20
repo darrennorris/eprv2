@@ -219,9 +219,14 @@ div.csl-indent {
   <li><a href="#autocorrelação-espacial" id="toc-autocorrelação-espacial" class="nav-link" data-scroll-target="#autocorrelação-espacial"><span class="header-section-number">3.3.1</span> Autocorrelação Espacial</a></li>
   <li><a href="#cooccorencias" id="toc-cooccorencias" class="nav-link" data-scroll-target="#cooccorencias"><span class="header-section-number">3.3.2</span> Cooccorencias</a></li>
   <li><a href="#escalas-diferentes" id="toc-escalas-diferentes" class="nav-link" data-scroll-target="#escalas-diferentes"><span class="header-section-number">3.3.3</span> Escalas diferentes</a></li>
-  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.4</span> Rumo ao Desenho Quase-Experimental</a></li>
   </ul></li>
-  <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">3.4</span> Conclusão</a></li>
+  <li><a href="#associação-estatística-interação-estatística-e-interação-ecológica" id="toc-associação-estatística-interação-estatística-e-interação-ecológica" class="nav-link" data-scroll-target="#associação-estatística-interação-estatística-e-interação-ecológica"><span class="header-section-number">3.4</span> Associação estatística, interação estatística e interação ecológica</a>
+  <ul class="collapse">
+  <li><a href="#exemplo-prático-em-r" id="toc-exemplo-prático-em-r" class="nav-link" data-scroll-target="#exemplo-prático-em-r"><span class="header-section-number">3.4.1</span> Exemplo prático em R</a></li>
+  <li><a href="#evitando-viés-estatisticas-de-pequena-amostra" id="toc-evitando-viés-estatisticas-de-pequena-amostra" class="nav-link" data-scroll-target="#evitando-viés-estatisticas-de-pequena-amostra"><span class="header-section-number">3.4.2</span> Evitando viés estatisticas de pequena amostra</a></li>
+  <li><a href="#rumo-ao-desenho-quase-experimental" id="toc-rumo-ao-desenho-quase-experimental" class="nav-link" data-scroll-target="#rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.4.3</span> Rumo ao Desenho Quase-Experimental</a></li>
+  </ul></li>
+  <li><a href="#conclusão" id="toc-conclusão" class="nav-link" data-scroll-target="#conclusão"><span class="header-section-number">3.5</span> Conclusão</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/darrennorris/eprv2/blob/main/animals.qmd" class="toc-action"><i class="bi bi-github"></i>Ver o código fonte</a></li></ul></div></nav>
     </div>
@@ -299,9 +304,11 @@ Figura&nbsp;3.1: Fluxo metodológico para análise multiescalar. O processo inic
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(detectseparation)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(logistf)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="dados" class="level3" data-number="3.2.2">
@@ -456,7 +463,7 @@ Figura&nbsp;3.2: Gráfico de dispersão de Moran (Moran Plot) para a ocorrência
 </div>
 </div>
 </div>
-<p>O que isso significa na pratica? Isso valida o uso de modelos estatísticos simples (como ANOVA, GLM etc). Como não há autocorrelação espacial significativa, os resíduos dos modelos são independentes, e você não precisa de modelos complexos para “corrigir” a proximidade das câmeras. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na <a href="#fig-moran-gg" class="quarto-xref">Figura&nbsp;<span>3.2</span></a> pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (<a href="#fig-moran-gg" class="quarto-xref">Figura&nbsp;<span>3.2</span></a>), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).</p>
+<p>O que isso significa na pratica? Isso valida o uso de modelos estatísticos simples (como ANOVA, GLM etc). A ausência de autocorrelação espacial significativa apoiou a manutenção dos 17 pontos como unidades amostrais independentes para as análises subsequentes. Como não há autocorrelação espacial significativa, você não precisa de modelos complexos para “corrigir” a proximidade das câmeras. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na <a href="#fig-moran-gg" class="quarto-xref">Figura&nbsp;<span>3.2</span></a> pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (<a href="#fig-moran-gg" class="quarto-xref">Figura&nbsp;<span>3.2</span></a>), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).</p>
 <p>Para garantir a robustez da nossa análise com 17 estações, utilizamos o teste de Monte Carlo (moran.mc) no proximo bloco de codigo. Em vez de confiar em fórmulas matemáticas ideais (por exemplo o moran.test assume que os dados seguem uma distribuição normal, o que raramente é verdade para presença/ausência), este teste embaralha nossos dados 999 vezes para criar um ‘cenário de acaso’ customizado para o Campus Marco Zero.</p>
 <p>Ele pega os 17 valores de cães/gatos, mantém a localização das câmeras fixa, e “embaralha” os valores entre elas centenas de vezes (ex: 999 vezes). Para cada embaralhamento, ele calcula o I de Moran. Isso cria uma distribuição nula (o que seria o acaso). O moran.mc não retorna um “CI do valor observado”. Ele retorna onde o seu valor observado está em relação a todos os valores possíveis ao acaso. No entanto, você pode calcular os quantis dessa simulação para dizer: “95% das vezes, o acaso gera valores de Moran entre X e Y”. Se o seu valor observado estiver fora desse intervalo, ele é significativo (registros apresentem Autocorrelação Espacial).</p>
 <div class="cell">
@@ -653,7 +660,7 @@ LO_03_0200    1    1</code></pre>
 </section>
 <section id="escalas-diferentes" class="level3" data-number="3.3.3">
 <h3 data-number="3.3.3" class="anchored" data-anchor-id="escalas-diferentes"><span class="header-section-number">3.3.3</span> Escalas diferentes</h3>
-<p>Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar ‘brigando por espaço’ ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a interação biótica direta (espécie-espécie) é fraca, sera que um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar ‘quem está com quem’ para perguntar ‘em qual distância o ambiente urbano realmente dita a regra’ para cada espécie.</p>
+<p>Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar ‘brigando por espaço’ ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a associação biótica direta (espécie-espécie) é fraca, sera que um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar ‘quem está com quem’ para perguntar ‘em qual distância o ambiente urbano realmente dita a regra’ para cada espécie.</p>
 <p>Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes raios (buffers: 12.5m, 25m, 50m, 100m).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. O Fluxo Nest-Map-Unnest (O "Coração" da análise)</span></span>
@@ -702,40 +709,241 @@ Figura&nbsp;3.4: Identificação da escala de efeito para a ocorrência de cães
 </div>
 </div>
 <p>Observa-se na <a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.4</span></a> que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.</p>
-<p>Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (<a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.4</span></a>) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação ‘indivíduo-paisagem’ e passamos a analisar a ‘interação biótica multiescalar’. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.</p>
-<p>Para gerar a análise de interação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de ‘empacotar’ os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:</p>
+</section>
+</section>
+<section id="associação-estatística-interação-estatística-e-interação-ecológica" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="associação-estatística-interação-estatística-e-interação-ecológica"><span class="header-section-number">3.4</span> Associação estatística, interação estatística e interação ecológica</h2>
+<p>Em estudos de ecologia da paisagem que usam dados de presença-ausência (por exemplo, registros de armadilhas fotográficas), é comum perguntar se a ocorrência de uma espécie está relacionada à ocorrência de outra. Um modelo de regressão pode até detectar essa relação — mas o nome que damos a esse resultado importa. É fácil escrever “interação entre as espécies” quando, na verdade, o que foi testado foi apenas uma <strong>associação estatística condicionada</strong>. O quadro a seguir separa três conceitos que costumam ser confundidos.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Quadro — Três conceitos que não são sinônimos
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Associação estatística.</strong> Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.</p>
+<p><strong>Interação estatística</strong> tem um significado técnico específico dentro de um modelo de regressão: ocorre quando o efeito de uma variável preditora sobre a resposta muda conforme o nível de outra preditora (modificação de efeito). Formalmente, é um termo de produto no modelo (<code>resposta ~ x1 * x2</code>), testado por um coeficiente próprio. Isso é uma propriedade da forma do modelo — não tem relação direta com “duas espécies interagindo entre si”.</p>
+<p><strong>Interação ecológica (biótica)</strong> — competição, predação, facilitação, mutualismo, parasitismo — descreve um processo causal direto entre organismos. Para sustentar essa afirmação é preciso evidência além da co-ocorrência: manipulação experimental, observação comportamental, análise de dieta, ou dados finos o bastante para separar “quem responde à paisagem” de “quem responde ao outro organismo”.</p>
+<p>O erro mais comum: um modelo do tipo <em>ocorrência da espécie A ~ presença da espécie B + métrica de paisagem C</em> testa uma <strong>associação estatística condicionada por C</strong>, não uma interação ecológica e nem uma interação estatística no sentido técnico acima. Se A e B respondem, cada uma de forma independente, à mesma variável C, o modelo pode acusar uma “associação positiva” entre A e B sem que exista qualquer relação biológica direta — um caso clássico de confundimento por variável compartilhada.</p>
+</div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Conceito</th>
+<th>O que mede</th>
+<th>Teste típico</th>
+<th>O que permite concluir</th>
+<th>O que falta para concluir mais que isso</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Associação estatística</td>
+<td>Covariação entre duas variáveis</td>
+<td>Correlação; modelos probabilísticos de coocorrência</td>
+<td>“A e B ocorrem juntas mais/menos do que o esperado ao acaso”</td>
+<td>Nada por si só — não implica causa nem mecanismo</td>
+</tr>
+<tr class="even">
+<td>Interação estatística (efeito de modificação)</td>
+<td>Se o efeito de X1 sobre Y muda conforme o nível de X2</td>
+<td>Termo de produto num GLM/GLMM (<code>Y ~ X1 * X2</code>)</td>
+<td>“O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos”</td>
+<td>Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão</td>
+</tr>
+<tr class="odd">
+<td>Interação ecológica (biótica)</td>
+<td>Processo causal direto entre organismos</td>
+<td>Nenhum teste estatístico isolado comprova isso</td>
+<td>“A afeta B (ou vice-versa) por um mecanismo biológico”</td>
+<td>Manipulação experimental, observação direta, dieta/comportamento, ou desenho longitudinal fino</td>
+</tr>
+</tbody>
+</table>
+<section id="exemplo-prático-em-r" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="exemplo-prático-em-r"><span class="header-section-number">3.4.1</span> Exemplo prático em R</h3>
+<section id="quando-duas-espécies-parecem-associadas-sem-interagir" class="level4" data-number="3.4.1.1">
+<h4 data-number="3.4.1.1" class="anchored" data-anchor-id="quando-duas-espécies-parecem-associadas-sem-interagir"><span class="header-section-number">3.4.1.1</span> Quando duas espécies parecem associadas sem interagir</h4>
+<p>Vamos simular duas espécies que respondem <strong>de forma totalmente independente</strong> à mesma métrica de paisagem (por exemplo, CPLAND). No processo gerador dos dados, uma espécie não afeta a outra em nenhum momento.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interação Biótica: Cães vs Gatos"</span>,</span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Uma métrica de paisagem comum às duas espécies</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>cpland <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Espécie A e espécie B respondem, cada uma isoladamente, à mesma variável.</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Não existe nenhuma relação direta entre A e B no processo gerador dos dados.</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>logit_A <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span> <span class="sc">+</span> <span class="fl">0.06</span> <span class="sc">*</span> cpland</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>logit_B <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> cpland</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>especie_A <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(logit_A))</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>especie_B <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(logit_B))</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(cpland, especie_A, especie_B)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dados, <span class="fu">aes</span>(<span class="at">x =</span> cpland)) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> especie_A, <span class="at">color =</span> <span class="st">"Espécie A"</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"binomial"</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> especie_B, <span class="at">color =</span> <span class="st">"Espécie B"</span>),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"binomial"</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"CPLAND (%)"</span>, <span class="at">y =</span> <span class="st">"Probabilidade prevista de ocorrência"</span>, <span class="at">color =</span> <span class="st">"Espécie"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-driver-comum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-driver-comum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="animals_files/figure-html/fig-driver-comum-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-driver-comum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.5: As duas espécies aumentam em probabilidade de ocorrência com CPLAND — não porque uma responde à outra, mas porque ambas respondem ao mesmo componente da paisagem.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Agora comparamos um modelo <strong>ingênuo</strong> (que ignora a paisagem) com um modelo <strong>condicionado</strong> (que a controla):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>modelo_ingenuo <span class="ot">&lt;-</span> <span class="fu">glm</span>(especie_A <span class="sc">~</span> especie_B, <span class="at">data =</span> dados, <span class="at">family =</span> binomial)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>modelo_condicionado <span class="ot">&lt;-</span> <span class="fu">glm</span>(especie_A <span class="sc">~</span> especie_B <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ingenuo)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept) -0.7537718  0.2475368 -3.045090 0.0023261093
+especie_B    1.1592369  0.3075838  3.768849 0.0001640022</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_condicionado)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept) -3.40208884  0.4940620 -6.885955 5.740121e-12
+especie_B   -0.22559513  0.4220502 -0.534522 5.929804e-01
+cpland       0.06983353  0.0101294  6.894140 5.419149e-12</code></pre>
+</div>
+</div>
+<p>No modelo ingênuo, <code>especie_B</code> tende a aparecer como preditor positivo e significativo de <code>especie_A</code> — puro efeito do confundimento pela paisagem compartilhada. No modelo condicionado, ao controlar por <code>cpland</code>, o coeficiente de <code>especie_B</code> tende a encolher em direção a zero, porque no processo gerador dos dados as duas espécies nunca tiveram relação direta. <strong>Isso é exatamente o que uma associação condicionada consegue mostrar: reduz, mas não elimina, a possibilidade de confundimento</strong> — e mesmo o resultado do modelo condicionado continua sendo uma associação estatística, não uma prova de interação ecológica.</p>
+</section>
+<section id="como-é-uma-interação-estatística-de-verdade" class="level4" data-number="3.4.1.2">
+<h4 data-number="3.4.1.2" class="anchored" data-anchor-id="como-é-uma-interação-estatística-de-verdade"><span class="header-section-number">3.4.1.2</span> Como é uma interação estatística de verdade</h4>
+<p>Agora simulamos um caso em que o efeito da paisagem sobre a ocorrência <strong>realmente muda</strong> conforme o tipo de ambiente — uma interação estatística no sentido técnico.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>paisagem <span class="ot">&lt;-</span> <span class="fu">runif</span>(n2, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>ambiente <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Cerrado Antrópico"</span>, <span class="st">"Uso Humano"</span>), <span class="at">each =</span> n2 <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># O efeito de "paisagem" sobre a ocorrência muda de acordo com o ambiente:</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forte e positivo em Cerrado Antrópico; fraco/neutro em Uso Humano.</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>logit <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ambiente <span class="sc">==</span> <span class="st">"Cerrado Antrópico"</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> paisagem,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.005</span> <span class="sc">*</span> paisagem)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>ocorrencia <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n2, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(logit))</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>dados2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(paisagem, ambiente, ocorrencia)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>modelo_interacao <span class="ot">&lt;-</span> <span class="fu">glm</span>(ocorrencia <span class="sc">~</span> paisagem <span class="sc">*</span> ambiente, <span class="at">data =</span> dados2, <span class="at">family =</span> binomial)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_interacao)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                               Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept)                 -4.87573636 0.99103884 -4.919824 8.662220e-07
+paisagem                     0.09744675 0.01877164  5.191168 2.089791e-07
+ambienteUso Humano           3.75205870 1.09898791  3.414104 6.399222e-04
+paisagem:ambienteUso Humano -0.09001296 0.02019400 -4.457411 8.295539e-06</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dados2<span class="sc">$</span>prob_prevista <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_interacao, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dados2, <span class="fu">aes</span>(<span class="at">x =</span> paisagem, <span class="at">y =</span> prob_prevista, <span class="at">color =</span> ambiente)) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Métrica de paisagem (CPLAND, %)"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Probabilidade prevista de ocorrência"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Ambiente"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-interacao-real" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-interacao-real-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="animals_files/figure-html/fig-interacao-real-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-interacao-real-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.6: Interação estatística real: a inclinação da curva muda conforme o ambiente — o efeito de uma variável é modificado pela outra.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>O termo <code>paisagem:ambiente</code> no modelo é a evidência de interação estatística: as retas têm inclinações diferentes. Note que isso não envolve nenhuma segunda espécie — é uma propriedade de como uma única variável resposta reage a duas preditoras em conjunto. É um conceito completamente diferente do “associação entre a ocorrência de duas espécies” do primeiro exemplo.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Dica</span>Para lembrar
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Duas espécies co-ocorrem</strong> → associação estatística. Não implica mecanismo.</li>
+<li><strong>O efeito de uma variável muda conforme outra variável</strong> → interação estatística (termo de produto no modelo).</li>
+<li><strong>Uma espécie afeta biologicamente a outra</strong> → interação ecológica. Exige evidência além da presença-ausência.</li>
+<li>Ao escrever Métodos e Resultados, prefira nomear o que o modelo realmente testa: “associação condicionada pela paisagem”, em vez de “interação entre as espécies”, a menos que haja evidência adicional de mecanismo.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="associação-condicional-ecologica" class="level4" data-number="3.4.1.3">
+<h4 data-number="3.4.1.3" class="anchored" data-anchor-id="associação-condicional-ecologica"><span class="header-section-number">3.4.1.3</span> Associação condicional ecologica</h4>
+<p>Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (<a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.4</span></a>) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação ‘indivíduo-paisagem’ e passamos a analisar a ‘interação biótica multiescalar’. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.</p>
+<p>Para gerar a análise de associação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de ‘empacotar’ os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Associação Biótica: Cães vs Gatos"</span>,</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-effect-co" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -743,13 +951,13 @@ Figura&nbsp;3.4: Identificação da escala de efeito para a ocorrência de cães
 <img src="animals_files/figure-html/fig-effect-co-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-effect-co-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.5: Análise multiescalar da interação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de interação).
+Figura&nbsp;3.7: Análise multiescalar da associação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de associação).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (<a href="#fig-effect-co" class="quarto-xref">Figura&nbsp;<span>3.5</span></a>). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.</p>
+<p>Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (<a href="#fig-effect-co" class="quarto-xref">Figura&nbsp;<span>3.7</span></a>). Isso indica que, estatisticamente, não há evidência de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.</p>
 <p>Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental</p>
 <ul>
 <li><p>Hotspots de Recursos (Atração Comum):<br>
@@ -779,8 +987,78 @@ Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem co
 </div>
 </div>
 </section>
-<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.3.4">
-<h3 data-number="3.3.4" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.3.4</span> Rumo ao Desenho Quase-Experimental</h3>
+</section>
+<section id="evitando-viés-estatisticas-de-pequena-amostra" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="evitando-viés-estatisticas-de-pequena-amostra"><span class="header-section-number">3.4.2</span> Evitando viés estatisticas de pequena amostra</h3>
+<p>O problema, em uma frase Com N=17 e (para cão) só 3 ausências, a máxima verossimilhança comum (glm()) pode “explodir” o coeficiente para valores absurdos (log-odds de 10,8 ≈ razão de chances de 49.000) porque, perto da separação completa dos dados, a curva de verossimilhança fica quase plana no infinito — o algoritmo empurra a estimativa cada vez mais longe sem nunca convergir de verdade. Firth’s correction resolve exatamente isso.</p>
+<section id="o-que-o-firth-faz" class="level4" data-number="3.4.2.1">
+<h4 data-number="3.4.2.1" class="anchored" data-anchor-id="o-que-o-firth-faz"><span class="header-section-number">3.4.2.1</span> O que o Firth faz</h4>
+<p>É uma regressão logística de verossimilhança penalizada: em vez de maximizar a log-verossimilhança comum, adiciona-se um termo de penalização equivalente a um prior de Jeffreys (proporcional à raiz quadrada do determinante da matriz de informação de Fisher) antes de maximizar. Na prática isso:</p>
+<p>Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes). Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é “encolhido” (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver. Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.</p>
+<p>É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (Heinze &amp; Schemper, 2002, Statistics in Medicine).</p>
+</section>
+<section id="como-identificar-quais-modelos-precisam-disso" class="level4" data-number="3.4.2.2">
+<h4 data-number="3.4.2.2" class="anchored" data-anchor-id="como-identificar-quais-modelos-precisam-disso"><span class="header-section-number">3.4.2.2</span> Como identificar quais modelos precisam disso</h4>
+<p>Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sinais de separação num modelo já ajustado com glm()</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Atenção a: warning "fitted probabilities numerically 0 or 1 occurred"</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># e a erros-padrão MUITO maiores que os próprios coeficientes</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"detect_separation"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Como implementar com logistf.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparação lado a lado com o glm() original</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>fit_glm   <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>fit_firth <span class="ot">&lt;-</span> <span class="fu">logistf</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)  <span class="co"># pl=TRUE = IC de perfil (default)</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_firth)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de </span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forma sistemática:</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>rambientes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"uso_humano"</span>, <span class="st">"cerrado_antropico"</span>, <span class="st">"campo_sujo"</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>escalas   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">400</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>resultados <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (amb <span class="cf">in</span> ambientes) {</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (esc <span class="cf">in</span> escalas) {</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    var_cpland <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"cpland_"</span>, amb, <span class="st">"_"</span>, esc)</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    formula_i  <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"cao ~ iguana +"</span>, var_cpland))</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">logistf</span>(formula_i, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    resultados <span class="ot">&lt;-</span> <span class="fu">rbind</span>(resultados, <span class="fu">data.frame</span>(</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">ambiente =</span> amb, <span class="at">escala =</span> esc,</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">coef     =</span> <span class="fu">coef</span>(fit)[<span class="st">"iguana"</span>],</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">ic_lower =</span> fit<span class="sc">$</span>ci.lower[<span class="st">"iguana"</span>],</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">ic_upper =</span> fit<span class="sc">$</span>ci.upper[<span class="st">"iguana"</span>],</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">p_valor  =</span> fit<span class="sc">$</span>prob[<span class="st">"iguana"</span>]</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>rn    <span class="ot">&lt;-</span> <span class="fu">nobs</span>(fit_firth)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>k    <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(fit_firth))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>aic  <span class="ot">&lt;-</span> <span class="fu">extractAIC</span>(fit_firth)[<span class="dv">2</span>]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>aicc <span class="ot">&lt;-</span> aic <span class="sc">+</span> (<span class="dv">2</span> <span class="sc">*</span> k <span class="sc">*</span> (k <span class="sc">+</span> <span class="dv">1</span>)) <span class="sc">/</span> (n <span class="sc">-</span> k <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Cuidado de comparabilidade: se só alguns dos 45 modelos forem trocados para Firth (os que mostrarem separação) e os demais continuarem em glm(), o AICc deixa de ser diretamente comparável entre eles, porque a função de verossimilhança maximizada não é a mesma. O mais defensável é: (a) rodar Firth em todos os modelos da mesma família de comparação, ou (b) reportar os dois ajustes lado a lado só nas células problemáticas, deixando explícito no texto qual critério foi usado em cada caso.</p>
+</section>
+<section id="como-interpretar-o-resultado" class="level4" data-number="3.4.2.3">
+<h4 data-number="3.4.2.3" class="anchored" data-anchor-id="como-interpretar-o-resultado"><span class="header-section-number">3.4.2.3</span> Como interpretar o resultado</h4>
+<p>Coeficiente penalizado menor que o MLE original → confirma que o valor de 10,8 log-odds era, ao menos em parte, artefato numérico de separação, não um efeito biológico real dessa magnitude. Esperem uma redução, às vezes substancial. IC ainda excluindo zero após Firth → evidência de associação mais robusta, porque já não depende de um ajuste instável; pode ser reportado com mais confiança. IC passando a incluir zero após Firth → o “efeito significativo” original era majoritariamente artefato da separação; a célula deve ser reclassificada como não significativa no texto. O p-valor de logistf vem de um teste de razão de verossimilhanças penalizadas, não de Wald — é o valor correto a reportar junto com o coeficiente Firth, não o p de Wald do summary() padrão. Firth reduz o viés numérico, mas não aumenta o poder estatístico nem resolve o problema de fundo do N pequeno — com 17 pontos, mesmo um efeito real tende a vir acompanhado de incerteza considerável. A leitura ecológica ainda deve ser cautelosa, exatamente como vocês já fizeram na Discussão ao tratar Cães×Iguanas como resposta compartilhada à paisagem.</p>
+<p>O ideal é reportar rapidamente em Métodos que modelos com sinais de separação (SE desproporcional, glm() com warning) foram reajustados com regressão logística de Firth (logistf, R), citando Firth (1993) e Heinze &amp; Schemper (2002), e nos Resultados mostrar o antes/depois pelo menos para a célula mais extrema (Cerrado Antrópico, 100 m).</p>
+</section>
+</section>
+<section id="rumo-ao-desenho-quase-experimental" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.4.3</span> Rumo ao Desenho Quase-Experimental</h3>
 <p>Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o “quase-experimento” aproveita variações existentes.</p>
 <p>A. Amostragem Estratificada por Gradiente de Recurso.<br>
 Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).</p>
@@ -790,8 +1068,8 @@ O campus passa por mudanças cíclicas que podem ser tratadas como tratamentos e
 Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem.</p>
 </section>
 </section>
-<section id="conclusão" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="conclusão"><span class="header-section-number">3.4</span> Conclusão</h2>
+<section id="conclusão" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="conclusão"><span class="header-section-number">3.5</span> Conclusão</h2>
 <p>Ao longo das análises, não confiamos em apenas uma fonte, mas sim, um conjunto de evidencias cientificas. Usamos o pacote cooccur para testar interações bióticas, o landscapemetrics para quantificar a estrutura da paisagem e modelos lineares generalizados (GLM) para avaliar a escala de efeito. Por que isso é importante?</p>
 <p>Rigor contra o subjetivismo: O que parece óbvio ao olhar para o mapa (ex: ‘tem cachorros perto dos gatos’) só se torna evidência científica quando resiste a testes estatísticos de diferentes naturezas. Alem disso, conclusões baseadas em múltiplas análises protegem o gestor ambiental. Se você precisar propor uma política de getão de fauna doméstica, terá em mãos não apenas um ‘acho que’, mas um corpo de evidências cientificas robustas que mostra exatamente em qual escala o problema ocorre e quais fatores (bióticos ou abióticos) são irrelevantes.</p>
 <p>Embora a ocorrência (presença-ausência) não mostre segregação, uma análise nova usando abundância relativa (frequência de fotos) poderia revelar padrões diferentes, como uma maior concentração de ambas as espécies em torno de “ilhas de recursos” (ex: Restaurante Universitário).</p>

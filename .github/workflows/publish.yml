@@ -35,6 +35,8 @@ jobs:
             any::Hmisc
             any::AICcmodavg
             any::MuMIn
+            any::logistf
+            any::detectseparation
             any::CooccurrenceAffinity
             any::patchwork
             any::mapview

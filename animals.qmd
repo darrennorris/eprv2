@@ -52,6 +52,8 @@ library(broom)
 library(MuMIn) # Para comparação de modelos
 library(cooccur) 
 library(CooccurrenceAffinity)
+library(detectseparation)
+library(logistf)
 
 # 4. Cartography & Visualization
 library(patchwork)   # Para organizar gráficos
@@ -215,7 +217,7 @@ p2 <- ggplot(dados_plot, aes(x = feca, y = lag_feca)) +
 p1 + p2
 ```
 
-O que isso significa na pratica? Isso valida o uso de modelos estatísticos simples (como ANOVA, GLM etc). Como não há autocorrelação espacial significativa, os resíduos dos modelos são independentes, e você não precisa de modelos complexos para "corrigir" a proximidade das câmeras. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na @fig-moran-gg pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (@fig-moran-gg), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).
+O que isso significa na pratica? Isso valida o uso de modelos estatísticos simples (como ANOVA, GLM etc). A ausência de autocorrelação espacial significativa apoiou a manutenção dos 17 pontos como unidades amostrais independentes para as análises subsequentes. Como não há autocorrelação espacial significativa, você não precisa de modelos complexos para "corrigir" a proximidade das câmeras. Para os cães, o Índice de Moran foi próximo de zero (I=−0,007; p=0,36), o que é visualizado na @fig-moran-gg pela linha de regressão praticamente horizontal. Isso indica que a presença de um cão em uma estação não está correlacionada à sua presença nas estações vizinhas. Para os gatos (@fig-moran-gg), observou-se uma inclinação levemente positiva (I=0,10), sugerindo uma tendência sutil de agrupamento, embora estatisticamente não significativa (p=0,15).
 
 Para garantir a robustez da nossa análise com 17 estações, utilizamos o teste de Monte Carlo (moran.mc) no proximo bloco de codigo. Em vez de confiar em fórmulas matemáticas ideais (por exemplo o moran.test assume que os dados seguem uma distribuição normal, o que raramente é verdade para presença/ausência), este teste embaralha nossos dados 999 vezes para criar um 'cenário de acaso' customizado para o Campus Marco Zero.
 
@@ -345,7 +347,7 @@ Na ecologia, quando duas espécies são muito comuns, elas coocorrem frequenteme
 
 ### Escalas diferentes
 
-Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar 'brigando por espaço' ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a interação biótica direta (espécie-espécie) é fraca, sera que um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar 'quem está com quem' para perguntar 'em qual distância o ambiente urbano realmente dita a regra' para cada espécie.
+Os resultados da seção anterior nos trazem uma revelação importante: no Campus Marco Zero, cães e gatos não parecem estar 'brigando por espaço' ou se evitando ativamente; a presença de um não prediz a ausência do outro. No entanto, isso não significa que a distribuição deles seja aleatória em relação ao espaço. Se a associação biótica direta (espécie-espécie) é fraca, sera que um animal percebe o impacto da urbanização em um raio de 10 metros ou de 100 metros? Para descobrir isso, precisamos investigar a Escala de Efeito. Nesta seção, deixaremos de perguntar 'quem está com quem' para perguntar 'em qual distância o ambiente urbano realmente dita a regra' para cada espécie.
 
 Para identificar a escala de efeito, testamos a ocorrência da espécie contra a métrica da paisagem em diferentes raios (buffers: 12.5m, 25m, 50m, 100m).
 
@@ -400,13 +402,140 @@ resultados_modelos |>
 
 Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
 
+
+
+## Associação estatística, interação estatística e interação ecológica
+Em estudos de ecologia da paisagem que usam dados de presença-ausência (por exemplo, registros de armadilhas fotográficas), é comum perguntar se a ocorrência de uma espécie está relacionada à ocorrência de outra. Um modelo de regressão pode até detectar essa relação — mas o nome que damos a esse resultado importa. É fácil escrever "interação entre as espécies" quando, na verdade, o que foi testado foi apenas uma **associação estatística condicionada**. O quadro a seguir separa três conceitos que costumam ser confundidos.
+
+::: {.callout-note appearance="default" icon="false"}
+## Quadro — Três conceitos que não são sinônimos {.unnumbered}
+
+**Associação estatística.** Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.
+
+**Interação estatística** tem um significado técnico específico dentro de um modelo de regressão: ocorre quando o efeito de uma variável preditora sobre a resposta muda conforme o nível de outra preditora (modificação de efeito). Formalmente, é um termo de produto no modelo (`resposta ~ x1 * x2`), testado por um coeficiente próprio. Isso é uma propriedade da forma do modelo — não tem relação direta com "duas espécies interagindo entre si".
+
+**Interação ecológica (biótica)** — competição, predação, facilitação, mutualismo, parasitismo — descreve um processo causal direto entre organismos. Para sustentar essa afirmação é preciso evidência além da co-ocorrência: manipulação experimental, observação comportamental, análise de dieta, ou dados finos o bastante para separar "quem responde à paisagem" de "quem responde ao outro organismo".
+
+O erro mais comum: um modelo do tipo *ocorrência da espécie A \~ presença da espécie B + métrica de paisagem C* testa uma **associação estatística condicionada por C**, não uma interação ecológica e nem uma interação estatística no sentido técnico acima. Se A e B respondem, cada uma de forma independente, à mesma variável C, o modelo pode acusar uma "associação positiva" entre A e B sem que exista qualquer relação biológica direta — um caso clássico de confundimento por variável compartilhada.
+:::
+
+| Conceito | O que mede | Teste típico | O que permite concluir | O que falta para concluir mais que isso |
+|----|----|----|----|----|
+| Associação estatística | Covariação entre duas variáveis | Correlação; modelos probabilísticos de coocorrência | "A e B ocorrem juntas mais/menos do que o esperado ao acaso" | Nada por si só — não implica causa nem mecanismo |
+| Interação estatística (efeito de modificação) | Se o efeito de X1 sobre Y muda conforme o nível de X2 | Termo de produto num GLM/GLMM (`Y ~ X1 * X2`) | "O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos" | Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão |
+| Interação ecológica (biótica) | Processo causal direto entre organismos | Nenhum teste estatístico isolado comprova isso | "A afeta B (ou vice-versa) por um mecanismo biológico" | Manipulação experimental, observação direta, dieta/comportamento, ou desenho longitudinal fino |
+
+### Exemplo prático em R
+
+#### Quando duas espécies parecem associadas sem interagir
+
+Vamos simular duas espécies que respondem **de forma totalmente independente** à mesma métrica de paisagem (por exemplo, CPLAND). No processo gerador dos dados, uma espécie não afeta a outra em nenhum momento.
+
+```{r}
+#| label: simulacao-confundimento
+
+set.seed(123)
+n <- 200
+
+# Uma métrica de paisagem comum às duas espécies
+cpland <- runif(n, min = 0, max = 100)
+
+# Espécie A e espécie B respondem, cada uma isoladamente, à mesma variável.
+# Não existe nenhuma relação direta entre A e B no processo gerador dos dados.
+logit_A <- -3 + 0.06 * cpland
+logit_B <- -2 + 0.05 * cpland
+
+especie_A <- rbinom(n, size = 1, prob = plogis(logit_A))
+especie_B <- rbinom(n, size = 1, prob = plogis(logit_B))
+
+dados <- data.frame(cpland, especie_A, especie_B)
+```
+
+```{r}
+#| label: fig-driver-comum
+#| fig-cap: "As duas espécies aumentam em probabilidade de ocorrência com CPLAND — não porque uma responde à outra, mas porque ambas respondem ao mesmo componente da paisagem."
+
+ggplot(dados, aes(x = cpland)) +
+  geom_smooth(aes(y = especie_A, color = "Espécie A"),
+              method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  geom_smooth(aes(y = especie_B, color = "Espécie B"),
+              method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  labs(x = "CPLAND (%)", y = "Probabilidade prevista de ocorrência", color = "Espécie")
+```
+
+Agora comparamos um modelo **ingênuo** (que ignora a paisagem) com um modelo **condicionado** (que a controla):
+
+```{r}
+#| label: modelos-confundimento
+
+modelo_ingenuo <- glm(especie_A ~ especie_B, data = dados, family = binomial)
+modelo_condicionado <- glm(especie_A ~ especie_B + cpland, data = dados, family = binomial)
+
+summary(modelo_ingenuo)$coefficients
+summary(modelo_condicionado)$coefficients
+```
+
+No modelo ingênuo, `especie_B` tende a aparecer como preditor positivo e significativo de `especie_A` — puro efeito do confundimento pela paisagem compartilhada. No modelo condicionado, ao controlar por `cpland`, o coeficiente de `especie_B` tende a encolher em direção a zero, porque no processo gerador dos dados as duas espécies nunca tiveram relação direta. **Isso é exatamente o que uma associação condicionada consegue mostrar: reduz, mas não elimina, a possibilidade de confundimento** — e mesmo o resultado do modelo condicionado continua sendo uma associação estatística, não uma prova de interação ecológica.
+
+#### Como é uma interação estatística de verdade
+
+Agora simulamos um caso em que o efeito da paisagem sobre a ocorrência **realmente muda** conforme o tipo de ambiente — uma interação estatística no sentido técnico.
+
+```{r}
+#| label: simulacao-interacao
+
+set.seed(456)
+n2 <- 200
+
+paisagem <- runif(n2, min = 0, max = 100)
+ambiente <- rep(c("Cerrado Antrópico", "Uso Humano"), each = n2 / 2)
+
+# O efeito de "paisagem" sobre a ocorrência muda de acordo com o ambiente:
+# forte e positivo em Cerrado Antrópico; fraco/neutro em Uso Humano.
+logit <- ifelse(ambiente == "Cerrado Antrópico",
+                -4 + 0.08 * paisagem,
+                -1 + 0.005 * paisagem)
+
+ocorrencia <- rbinom(n2, size = 1, prob = plogis(logit))
+dados2 <- data.frame(paisagem, ambiente, ocorrencia)
+
+modelo_interacao <- glm(ocorrencia ~ paisagem * ambiente, data = dados2, family = binomial)
+summary(modelo_interacao)$coefficients
+```
+
+```{r}
+#| label: fig-interacao-real
+#| fig-cap: "Interação estatística real: a inclinação da curva muda conforme o ambiente — o efeito de uma variável é modificado pela outra."
+
+dados2$prob_prevista <- predict(modelo_interacao, type = "response")
+
+ggplot(dados2, aes(x = paisagem, y = prob_prevista, color = ambiente)) +
+  geom_line(linewidth = 1) +
+  labs(x = "Métrica de paisagem (CPLAND, %)",
+       y = "Probabilidade prevista de ocorrência",
+       color = "Ambiente")
+```
+
+O termo `paisagem:ambiente` no modelo é a evidência de interação estatística: as retas têm inclinações diferentes. Note que isso não envolve nenhuma segunda espécie — é uma propriedade de como uma única variável resposta reage a duas preditoras em conjunto. É um conceito completamente diferente do "associação entre a ocorrência de duas espécies" do primeiro exemplo.
+
+::: {.callout-tip appearance="default" icon="false"}
+## Para lembrar {.unnumbered}
+
+- **Duas espécies co-ocorrem** → associação estatística. Não implica mecanismo.
+- **O efeito de uma variável muda conforme outra variável** → interação estatística (termo de produto no modelo).
+- **Uma espécie afeta biologicamente a outra** → interação ecológica. Exige evidência além da presença-ausência.
+- Ao escrever Métodos e Resultados, prefira nomear o que o modelo realmente testa: "associação condicionada pela paisagem", em vez de "interação entre as espécies", a menos que haja evidência adicional de mecanismo.
+:::
+
+
+#### Associação condicional ecologica
 Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (@fig-scale-effect) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação 'indivíduo-paisagem' e passamos a analisar a 'interação biótica multiescalar'. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.
 
-Para gerar a análise de interação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de 'empacotar' os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:
+Para gerar a análise de associação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de 'empacotar' os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:
 
 ```{r}
 #| label: fig-effect-co
-#| fig-cap: "Análise multiescalar da interação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de interação)."
+#| fig-cap: "Análise multiescalar da associação biótica entre cães e gatos no Campus Marco Zero da UNIFAP, Macapá-AP. Os pontos representam as estimativas de inclinação (coeficientes Log-odds) da presença de cães sobre a probabilidade de ocorrência de gatos, controladas estatisticamente pela porcentagem de áreas de uso humano (métrica PLAND). As barras verticais indicam os intervalos de confiança (IC) de 95%. A linha tracejada vermelha no valor zero representa a hipótese nula (ausência de associação)."
 #| message: false
 #| warning: false
 
@@ -435,7 +564,7 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
                 width = 0.2, size = 0.8, color = "purple") +
   geom_point(size = 4, color = "purple") +
   labs(
-    title = "Interação Biótica: Cães vs Gatos",
+    title = "Associação Biótica: Cães vs Gatos",
     subtitle = "Intervalos de Confiança (IC) de 95% calculados via verossimilhança",
     x = "Escala de Buffer (m)",
     y = "Efeito da Presença de Cães (Log-odds)"
@@ -443,7 +572,7 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
   theme_light(base_size = 12)
 ```
 
-Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma interação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
+Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
 
 Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental
 
@@ -470,6 +599,117 @@ Você pode estar pensando: "Tanto código e análise para descobrir que a relaç
 
 Portanto, o "não" da estatística redireciona seu olhar: o questão não é como os animais interagem, mas sim como a paisagem urbana e ações antropicos está facilitando a presença de ambos de forma indiscriminada. Entender que o processo é **independente da escala** nos poupa de tentar resolver um problema biológico quando o desafio é, na verdade, o planejamento do ambiente.
 :::
+
+
+### Evitando viés estatisticas de pequena amostra
+
+O problema, em uma frase
+Com N=17 e (para cão) só 3 ausências, a máxima verossimilhança comum (glm()) pode "explodir" o coeficiente para valores absurdos (log-odds de 10,8 ≈ razão de chances de 49.000) porque, perto da separação completa dos dados, a curva de verossimilhança fica quase plana no infinito — o algoritmo empurra a estimativa cada vez mais longe sem nunca convergir de verdade. Firth's correction resolve exatamente isso.
+
+#### O que o Firth faz
+É uma regressão logística de verossimilhança penalizada: em vez de maximizar a log-verossimilhança comum, adiciona-se um termo de penalização equivalente a um prior de Jeffreys (proporcional à raiz quadrada do determinante da matriz de informação de Fisher) antes de maximizar. Na prática isso:
+
+Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes).
+Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é "encolhido" (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver.
+Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.
+
+É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (Heinze & Schemper, 2002, Statistics in Medicine).
+
+#### Como identificar quais modelos precisam disso
+Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):
+
+```{r}
+#| label: glm-sep
+#| message: false
+#| warning: false
+#| eval: false
+
+# Sinais de separação num modelo já ajustado com glm()
+fit <- glm(cao ~ iguana + cpland, data = dados, family = binomial)
+summary(fit)
+# Atenção a: warning "fitted probabilities numerically 0 or 1 occurred"
+# e a erros-padrão MUITO maiores que os próprios coeficientes
+```
+
+
+Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:
+
+```{r}
+#| label: glm-sep-detectseparation
+#| message: false
+#| warning: false
+#| eval: false
+
+glm(cao ~ iguana + cpland, data = dados, family = binomial,
+    method = "detect_separation")
+```
+
+
+Como implementar com logistf.
+
+```{r}
+#| label: glm-sep-logistf
+#| message: false
+#| warning: false
+#| eval: false
+
+# Comparação lado a lado com o glm() original
+fit_glm   <- glm(cao ~ iguana + cpland, data = dados, family = binomial)
+fit_firth <- logistf(cao ~ iguana + cpland, data = dados, pl = TRUE)  # pl=TRUE = IC de perfil (default)
+
+summary(fit_firth)
+
+# Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de 
+# forma sistemática:
+rambientes <- c("uso_humano", "cerrado_antropico", "campo_sujo")
+escalas   <- c(25, 50, 100, 200, 400)
+resultados <- data.frame()
+
+for (amb in ambientes) {
+  for (esc in escalas) {
+    var_cpland <- paste0("cpland_", amb, "_", esc)
+    formula_i  <- as.formula(paste("cao ~ iguana +", var_cpland))
+    fit <- logistf(formula_i, data = dados, pl = TRUE)
+
+    resultados <- rbind(resultados, data.frame(
+      ambiente = amb, escala = esc,
+      coef     = coef(fit)["iguana"],
+      ic_lower = fit$ci.lower["iguana"],
+      ic_upper = fit$ci.upper["iguana"],
+      p_valor  = fit$prob["iguana"]
+    ))
+  }
+}
+```
+
+
+
+Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:
+
+```{r}
+#| label: glm-sep-aicc
+#| message: false
+#| warning: false
+#| eval: false
+
+rn    <- nobs(fit_firth)
+k    <- length(coef(fit_firth))
+aic  <- extractAIC(fit_firth)[2]
+aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
+```
+
+
+Cuidado de comparabilidade: se só alguns dos 45 modelos forem trocados para Firth (os que mostrarem separação) e os demais continuarem em glm(), o AICc deixa de ser diretamente comparável entre eles, porque a função de verossimilhança maximizada não é a mesma. O mais defensável é: (a) rodar Firth em todos os modelos da mesma família de comparação, ou (b) reportar os dois ajustes lado a lado só nas células problemáticas, deixando explícito no texto qual critério foi usado em cada caso.
+
+#### Como interpretar o resultado
+
+Coeficiente penalizado menor que o MLE original → confirma que o valor de 10,8 log-odds era, ao menos em parte, artefato numérico de separação, não um efeito biológico real dessa magnitude. Esperem uma redução, às vezes substancial.
+IC ainda excluindo zero após Firth → evidência de associação mais robusta, porque já não depende de um ajuste instável; pode ser reportado com mais confiança.
+IC passando a incluir zero após Firth → o "efeito significativo" original era majoritariamente artefato da separação; a célula deve ser reclassificada como não significativa no texto.
+O p-valor de logistf vem de um teste de razão de verossimilhanças penalizadas, não de Wald — é o valor correto a reportar junto com o coeficiente Firth, não o p de Wald do summary() padrão.
+Firth reduz o viés numérico, mas não aumenta o poder estatístico nem resolve o problema de fundo do N pequeno — com 17 pontos, mesmo um efeito real tende a vir acompanhado de incerteza considerável. A leitura ecológica ainda deve ser cautelosa, exatamente como vocês já fizeram na Discussão ao tratar Cães×Iguanas como resposta compartilhada à paisagem.
+
+O ideal é reportar rapidamente em Métodos que modelos com sinais de separação (SE desproporcional, glm() com warning) foram reajustados com regressão logística de Firth (logistf, R), citando Firth (1993) e Heinze & Schemper (2002), e nos Resultados mostrar o antes/depois pelo menos para a célula mais extrema (Cerrado Antrópico, 100 m).
 
 ### Rumo ao Desenho Quase-Experimental
 

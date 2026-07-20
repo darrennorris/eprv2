@@ -2,7 +2,8 @@
 eprv2packages <- c("tidyverse", "tidymodels", "tidyterra", 
                  "patchwork", "remotes", "kableExtra", "Hmisc",
                  "sp", "spdep", "sf","raster", "mapview","tmap", 
-                 "MuMIn", "AICcmodavg", "mgcv",
+                 "MuMIn", "AICcmodavg", "mgcv", "detectseparation",
+                 "logistf",
                  "landscapemetrics", "siland", "CooccurrenceAffinity", 
                  "rnaturalearth", "rnaturalearthdata")
 install.packages(eprv2packages)
