@@ -299,16 +299,18 @@ Figura&nbsp;3.1: Fluxo metodológico para análise multiescalar. O processo inic
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Data Manipulation &amp; Grammar</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Analytical Models</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(detectseparation)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(logistf)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Analytical Models</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co"># Para comparação de modelos</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cooccur) </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CooccurrenceAffinity)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(detectseparation)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(logistf)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(overlap)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="dados" class="level3" data-number="3.2.2">
@@ -1061,11 +1063,48 @@ Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem co
 <h3 data-number="3.4.3" class="anchored" data-anchor-id="rumo-ao-desenho-quase-experimental"><span class="header-section-number">3.4.3</span> Rumo ao Desenho Quase-Experimental</h3>
 <p>Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o “quase-experimento” aproveita variações existentes.</p>
 <p>A. Amostragem Estratificada por Gradiente de Recurso.<br>
-Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).</p>
+Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a “Escala de Efeito” muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação). Isso é, na prática, um exemplo perfeito de interação estatística no sentido do Quadro da Seção 3.4 (o efeito de cachorros sobre gatos muda conforme o grupo de oferta de recurso).</p>
 <p>B. Aproveitamento de “Experimentos Naturais” (BACI - Before-After-Control-Impact).<br>
 O campus passa por mudanças cíclicas que podem ser tratadas como tratamentos experimentais. Período de Férias vs.&nbsp;Período Letivo, onde a drástica redução na produção de resíduos e na circulação de pessoas no RU durante as férias é um “experimento de remoção de recurso”. Se a segregação entre cães e gatos aumentar durante as férias (quando há menos comida), vocês provam que o recurso humano é o mediador da paz (coexistência) entre as espécies. Comparar Amostragem Estratificada por Gradiente de Recurso nas epocas diferentes.</p>
 <p>C. Mapeamento de Pontos de Alimentação como Covariável.<br>
-Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem.</p>
+Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem. Testa se um tipo de covariável ambiental (distância a recurso) explica melhor a ocorrência de uma única espécie do que outro (pland). É uma pergunta legítima, e pertence mais à Seção 2 (paisagem) ou como refinamento do modelo de escala de efeito.</p>
+<p>D. Sobreposição e Evitação Temporal de Atividade<br>
+Os itens A, B e C testam se cães e gatos respondem a um recurso compartilhado (oferta de comida, período do ano) — mas nenhum deles usa a informação mais fina que uma armadilha fotográfica já registra: o <strong>horário exato</strong> de cada detecção. Enquanto a presença/ausência agregada ao longo de sete meses só permite falar em associação estatística (Seção 3.4), o horário de cada evento permite perguntar algo mais próximo de uma interação ecológica de verdade: será que, no mesmo local, cães e gatos evitam ativamente estar ativos na mesma hora do dia?</p>
+<p>Duas vantagens tornam esse teste particularmente viável no Campus Marco Zero. Primeiro, o campus está sobre a linha do Equador — a duração do dia varia pouco ao longo do ano, o que reduz um viés conhecido do método (misturar dados de diferentes épocas do ano, quando o horário do nascer/pôr do sol muda). Segundo, o dado necessário já existe: a maioria dos softwares de armadilha fotográfica exporta um registro com uma linha por evento de foto/vídeo, incluindo data e hora.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ATENÇÃO: isto usa um arquivo diferente do já utilizado no capítulo.</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisa de uma linha por EVENTO de detecção, com plot_id, especie e data_hora</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (não a matriz de presença-ausência resumida por ponto).</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>deteccoes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/registros_brutos_armadilhas.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_hora =</span> <span class="fu">ymd_hms</span>(data_hora),</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Converte o horário do dia para radianos (0 a 2*pi), formato exigido</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pelo pacote overlap para dados de atividade circular.</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hora_rad =</span> (<span class="fu">hour</span>(data_hora) <span class="sc">+</span> <span class="fu">minute</span>(data_hora) <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">/</span> <span class="dv">24</span> <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> pi</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>tempo_calu <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"calu"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>tempo_feca <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"feca"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="co"># A escolha do estimador de sobreposição depende do tamanho da menor amostra: use `Dhat1` se a menor amostra tiver menos de ~50–75 registros</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(tempo_calu); <span class="fu">length</span>(tempo_feca)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimativa do coeficiente de sobreposição (Delta varia de 0 a 1;</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 = atividade idêntica; 0 = nenhuma sobreposição de horário)</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>delta_obs <span class="ot">&lt;-</span> <span class="fu">overlapEst</span>(tempo_calu, tempo_feca, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>delta_obs</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualização das curvas de atividade diária e da área de sobreposição</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="fu">overlapPlot</span>(tempo_calu, tempo_feca,</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">xlab =</span> <span class="st">"Hora do dia"</span>, <span class="at">ylab =</span> <span class="st">"Densidade de atividade"</span>)</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Cães"</span>, <span class="st">"Gatos"</span>), <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>))</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a><span class="co">#O intervalo de confiança vem de um bootstrap suavizado (o próprio pacote recomenda ao menos 1000 reamostragens):</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>boots <span class="ot">&lt;-</span> <span class="fu">bootstrap</span>(tempo_calu, tempo_feca, <span class="at">nb =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a><span class="fu">bootCI</span>(delta_obs, boots)  <span class="co"># use a coluna "basic0" como IC de 95%</span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a><span class="co">#Um Δ baixo (pouca sobreposição, IC não cruzando um valor de referência de sobreposição alta) é consistente com partição temporal de nicho — cada espécie evita a hora de pico da outra. Um Δ alto é consistente com uso independente ou atração ao mesmo horário (por exemplo, ambas atraídas pelo horário de descarte de lixo do RU). **Isso ainda não prova mecanismo**: sobreposição/divergência de horário pode refletir tanto interação direta quanto resposta compartilhada a um mesmo pulso de recurso não medido — a mesma ressalva do Quadro da Seção 3.4 continua valendo, só que agora com uma evidência temporal mais fina do que a presença/ausência agregada.</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="conclusão" class="level2" data-number="3.5">
