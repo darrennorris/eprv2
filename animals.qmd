@@ -47,6 +47,7 @@ library(spdep)
 # 2. Data Manipulation & Grammar
 library(tidyverse)
 library(broom)
+library(lubridate)
 
 # 3. Analytical Models
 library(MuMIn) # Para comparação de modelos
@@ -54,6 +55,7 @@ library(cooccur)
 library(CooccurrenceAffinity)
 library(detectseparation)
 library(logistf)
+library(overlap)
 
 # 4. Cartography & Visualization
 library(patchwork)   # Para organizar gráficos
@@ -402,9 +404,8 @@ resultados_modelos |>
 
 Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
 
-
-
 ## Associação estatística, interação estatística e interação ecológica
+
 Em estudos de ecologia da paisagem que usam dados de presença-ausência (por exemplo, registros de armadilhas fotográficas), é comum perguntar se a ocorrência de uma espécie está relacionada à ocorrência de outra. Um modelo de regressão pode até detectar essa relação — mas o nome que damos a esse resultado importa. É fácil escrever "interação entre as espécies" quando, na verdade, o que foi testado foi apenas uma **associação estatística condicionada**. O quadro a seguir separa três conceitos que costumam ser confundidos.
 
 ::: {.callout-note appearance="default" icon="false"}
@@ -420,7 +421,7 @@ O erro mais comum: um modelo do tipo *ocorrência da espécie A \~ presença da 
 :::
 
 | Conceito | O que mede | Teste típico | O que permite concluir | O que falta para concluir mais que isso |
-|----|----|----|----|----|
+|---------------|---------------|---------------|---------------|---------------|
 | Associação estatística | Covariação entre duas variáveis | Correlação; modelos probabilísticos de coocorrência | "A e B ocorrem juntas mais/menos do que o esperado ao acaso" | Nada por si só — não implica causa nem mecanismo |
 | Interação estatística (efeito de modificação) | Se o efeito de X1 sobre Y muda conforme o nível de X2 | Termo de produto num GLM/GLMM (`Y ~ X1 * X2`) | "O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos" | Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão |
 | Interação ecológica (biótica) | Processo causal direto entre organismos | Nenhum teste estatístico isolado comprova isso | "A afeta B (ou vice-versa) por um mecanismo biológico" | Manipulação experimental, observação direta, dieta/comportamento, ou desenho longitudinal fino |
@@ -527,8 +528,8 @@ O termo `paisagem:ambiente` no modelo é a evidência de interação estatístic
 - Ao escrever Métodos e Resultados, prefira nomear o que o modelo realmente testa: "associação condicionada pela paisagem", em vez de "interação entre as espécies", a menos que haja evidência adicional de mecanismo.
 :::
 
-
 #### Associação condicional ecologica
+
 Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (@fig-scale-effect) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação 'indivíduo-paisagem' e passamos a analisar a 'interação biótica multiescalar'. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.
 
 Para gerar a análise de associação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de 'empacotar' os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:
@@ -600,22 +601,20 @@ Você pode estar pensando: "Tanto código e análise para descobrir que a relaç
 Portanto, o "não" da estatística redireciona seu olhar: o questão não é como os animais interagem, mas sim como a paisagem urbana e ações antropicos está facilitando a presença de ambos de forma indiscriminada. Entender que o processo é **independente da escala** nos poupa de tentar resolver um problema biológico quando o desafio é, na verdade, o planejamento do ambiente.
 :::
 
-
 ### Evitando viés estatisticas de pequena amostra
 
-O problema, em uma frase
-Com N=17 e (para cão) só 3 ausências, a máxima verossimilhança comum (glm()) pode "explodir" o coeficiente para valores absurdos (log-odds de 10,8 ≈ razão de chances de 49.000) porque, perto da separação completa dos dados, a curva de verossimilhança fica quase plana no infinito — o algoritmo empurra a estimativa cada vez mais longe sem nunca convergir de verdade. Firth's correction resolve exatamente isso.
+O problema, em uma frase Com N=17 e (para cão) só 3 ausências, a máxima verossimilhança comum (glm()) pode "explodir" o coeficiente para valores absurdos (log-odds de 10,8 ≈ razão de chances de 49.000) porque, perto da separação completa dos dados, a curva de verossimilhança fica quase plana no infinito — o algoritmo empurra a estimativa cada vez mais longe sem nunca convergir de verdade. Firth's correction resolve exatamente isso.
 
 #### O que o Firth faz
+
 É uma regressão logística de verossimilhança penalizada: em vez de maximizar a log-verossimilhança comum, adiciona-se um termo de penalização equivalente a um prior de Jeffreys (proporcional à raiz quadrada do determinante da matriz de informação de Fisher) antes de maximizar. Na prática isso:
 
-Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes).
-Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é "encolhido" (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver.
-Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.
+Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes). Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é "encolhido" (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver. Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.
 
 É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (Heinze & Schemper, 2002, Statistics in Medicine).
 
 #### Como identificar quais modelos precisam disso
+
 Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):
 
 ```{r}
@@ -631,7 +630,6 @@ summary(fit)
 # e a erros-padrão MUITO maiores que os próprios coeficientes
 ```
 
-
 Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:
 
 ```{r}
@@ -643,7 +641,6 @@ Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:
 glm(cao ~ iguana + cpland, data = dados, family = binomial,
     method = "detect_separation")
 ```
-
 
 Como implementar com logistf.
 
@@ -682,8 +679,6 @@ for (amb in ambientes) {
 }
 ```
 
-
-
 Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:
 
 ```{r}
@@ -698,16 +693,11 @@ aic  <- extractAIC(fit_firth)[2]
 aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
 ```
 
-
 Cuidado de comparabilidade: se só alguns dos 45 modelos forem trocados para Firth (os que mostrarem separação) e os demais continuarem em glm(), o AICc deixa de ser diretamente comparável entre eles, porque a função de verossimilhança maximizada não é a mesma. O mais defensável é: (a) rodar Firth em todos os modelos da mesma família de comparação, ou (b) reportar os dois ajustes lado a lado só nas células problemáticas, deixando explícito no texto qual critério foi usado em cada caso.
 
 #### Como interpretar o resultado
 
-Coeficiente penalizado menor que o MLE original → confirma que o valor de 10,8 log-odds era, ao menos em parte, artefato numérico de separação, não um efeito biológico real dessa magnitude. Esperem uma redução, às vezes substancial.
-IC ainda excluindo zero após Firth → evidência de associação mais robusta, porque já não depende de um ajuste instável; pode ser reportado com mais confiança.
-IC passando a incluir zero após Firth → o "efeito significativo" original era majoritariamente artefato da separação; a célula deve ser reclassificada como não significativa no texto.
-O p-valor de logistf vem de um teste de razão de verossimilhanças penalizadas, não de Wald — é o valor correto a reportar junto com o coeficiente Firth, não o p de Wald do summary() padrão.
-Firth reduz o viés numérico, mas não aumenta o poder estatístico nem resolve o problema de fundo do N pequeno — com 17 pontos, mesmo um efeito real tende a vir acompanhado de incerteza considerável. A leitura ecológica ainda deve ser cautelosa, exatamente como vocês já fizeram na Discussão ao tratar Cães×Iguanas como resposta compartilhada à paisagem.
+Coeficiente penalizado menor que o MLE original → confirma que o valor de 10,8 log-odds era, ao menos em parte, artefato numérico de separação, não um efeito biológico real dessa magnitude. Esperem uma redução, às vezes substancial. IC ainda excluindo zero após Firth → evidência de associação mais robusta, porque já não depende de um ajuste instável; pode ser reportado com mais confiança. IC passando a incluir zero após Firth → o "efeito significativo" original era majoritariamente artefato da separação; a célula deve ser reclassificada como não significativa no texto. O p-valor de logistf vem de um teste de razão de verossimilhanças penalizadas, não de Wald — é o valor correto a reportar junto com o coeficiente Firth, não o p de Wald do summary() padrão. Firth reduz o viés numérico, mas não aumenta o poder estatístico nem resolve o problema de fundo do N pequeno — com 17 pontos, mesmo um efeito real tende a vir acompanhado de incerteza considerável. A leitura ecológica ainda deve ser cautelosa, exatamente como vocês já fizeram na Discussão ao tratar Cães×Iguanas como resposta compartilhada à paisagem.
 
 O ideal é reportar rapidamente em Métodos que modelos com sinais de separação (SE desproporcional, glm() com warning) foram reajustados com regressão logística de Firth (logistf, R), citando Firth (1993) e Heinze & Schemper (2002), e nos Resultados mostrar o antes/depois pelo menos para a célula mais extrema (Cerrado Antrópico, 100 m).
 
@@ -716,13 +706,57 @@ O ideal é reportar rapidamente em Métodos que modelos com sinais de separaçã
 Para sair de uma análise puramente descritiva e caminhar para uma inferência causal mais robusta, podemos implementar um desenho quase-experimental com os dados. Um experimento verdadeiro (sortear onde haverá cães ou humanos) é impossível, mas o "quase-experimento" aproveita variações existentes.
 
 A. Amostragem Estratificada por Gradiente de Recurso.\
-Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a "Escala de Efeito" muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação).
+Implementem um desenho de Contraste de Tratamentos com dois grupos. Grupo Tratamento (Alta Oferta): pontos num raio de 50m do RU, lixeiras centrais e pontos de alimentação. Grupo Controle (Baixa Oferta): pontos de vegetação de cerrado remanescente ou mais distante pontos de alimentação. Comparem se a "Escala de Efeito" muda entre esses dois grupos. A hipótese é que, em áreas de alta oferta, a coocorrência é positiva (agregação), e em áreas de baixa oferta, a competição aparece (segregação). Isso é, na prática, um exemplo perfeito de interação estatística no sentido do Quadro da Seção 3.4 (o efeito de cachorros sobre gatos muda conforme o grupo de oferta de recurso).
 
 B. Aproveitamento de "Experimentos Naturais" (BACI - Before-After-Control-Impact).\
 O campus passa por mudanças cíclicas que podem ser tratadas como tratamentos experimentais. Período de Férias vs. Período Letivo, onde a drástica redução na produção de resíduos e na circulação de pessoas no RU durante as férias é um "experimento de remoção de recurso". Se a segregação entre cães e gatos aumentar durante as férias (quando há menos comida), vocês provam que o recurso humano é o mediador da paz (coexistência) entre as espécies. Comparar Amostragem Estratificada por Gradiente de Recurso nas epocas diferentes.
 
 C. Mapeamento de Pontos de Alimentação como Covariável.\
-Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem.
+Adicionem uma camada de distância euclidiana até o ponto de recurso mais próximo no modelo (RU, lixeiras centrais e pontos de alimentação). No código R, em vez de usar apenas metricas da paisagem, usem dist_recurso. Dica Teórica: Se o AICc do modelo com dist_recurso for menor que o de pland, vocês demonstram que a ecologia das espécies domésticas na UNIFAP é guiada por pontos focais de energia e não apenas pela estrutura física da paisagem. Testa se um tipo de covariável ambiental (distância a recurso) explica melhor a ocorrência de uma única espécie do que outro (pland). É uma pergunta legítima, e pertence mais à Seção 2 (paisagem) ou como refinamento do modelo de escala de efeito.
+
+D. Sobreposição e Evitação Temporal de Atividade\
+Os itens A, B e C testam se cães e gatos respondem a um recurso compartilhado (oferta de comida, período do ano) — mas nenhum deles usa a informação mais fina que uma armadilha fotográfica já registra: o **horário exato** de cada detecção. Enquanto a presença/ausência agregada ao longo de sete meses só permite falar em associação estatística (Seção 3.4), o horário de cada evento permite perguntar algo mais próximo de uma interação ecológica de verdade: será que, no mesmo local, cães e gatos evitam ativamente estar ativos na mesma hora do dia?
+
+Duas vantagens tornam esse teste particularmente viável no Campus Marco Zero. Primeiro, o campus está sobre a linha do Equador — a duração do dia varia pouco ao longo do ano, o que reduz um viés conhecido do método (misturar dados de diferentes épocas do ano, quando o horário do nascer/pôr do sol muda). Segundo, o dado necessário já existe: a maioria dos softwares de armadilha fotográfica exporta um registro com uma linha por evento de foto/vídeo, incluindo data e hora.
+
+```{r}
+#| label: preparar-deteccoes
+#| eval: false
+
+# ATENÇÃO: isto usa um arquivo diferente do já utilizado no capítulo.
+# Precisa de uma linha por EVENTO de detecção, com plot_id, especie e data_hora
+# (não a matriz de presença-ausência resumida por ponto).
+deteccoes <- read_csv("data/registros_brutos_armadilhas.csv") |>
+  mutate(
+    data_hora = ymd_hms(data_hora),
+    # Converte o horário do dia para radianos (0 a 2*pi), formato exigido
+    # pelo pacote overlap para dados de atividade circular.
+    hora_rad = (hour(data_hora) + minute(data_hora) / 60) / 24 * 2 * pi
+  )
+
+tempo_calu <- deteccoes |> filter(especie == "calu") |> pull(hora_rad)
+tempo_feca <- deteccoes |> filter(especie == "feca") |> pull(hora_rad)
+
+# A escolha do estimador de sobreposição depende do tamanho da menor amostra: use `Dhat1` se a menor amostra tiver menos de ~50–75 registros
+length(tempo_calu); length(tempo_feca)
+
+# Estimativa do coeficiente de sobreposição (Delta varia de 0 a 1;
+# 1 = atividade idêntica; 0 = nenhuma sobreposição de horário)
+delta_obs <- overlapEst(tempo_calu, tempo_feca, type = "Dhat1")
+delta_obs
+
+# Visualização das curvas de atividade diária e da área de sobreposição
+overlapPlot(tempo_calu, tempo_feca,
+            xlab = "Hora do dia", ylab = "Densidade de atividade")
+legend("topleft", legend = c("Cães", "Gatos"), lty = 1, col = c("black", "blue"))
+
+#O intervalo de confiança vem de um bootstrap suavizado (o próprio pacote recomenda ao menos 1000 reamostragens):
+boots <- bootstrap(tempo_calu, tempo_feca, nb = 1000, type = "Dhat1")
+bootCI(delta_obs, boots)  # use a coluna "basic0" como IC de 95%
+
+#Um Δ baixo (pouca sobreposição, IC não cruzando um valor de referência de sobreposição alta) é consistente com partição temporal de nicho — cada espécie evita a hora de pico da outra. Um Δ alto é consistente com uso independente ou atração ao mesmo horário (por exemplo, ambas atraídas pelo horário de descarte de lixo do RU). **Isso ainda não prova mecanismo**: sobreposição/divergência de horário pode refletir tanto interação direta quanto resposta compartilhada a um mesmo pulso de recurso não medido — a mesma ressalva do Quadro da Seção 3.4 continua valendo, só que agora com uma evidência temporal mais fina do que a presença/ausência agregada.
+
+```
 
 ## Conclusão
 

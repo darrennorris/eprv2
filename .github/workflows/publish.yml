@@ -26,6 +26,7 @@ jobs:
             any::knitr
             any::rmarkdown
             any::tidyverse
+            any::lubridate
             any::broom
             any::terra
             any::sf
@@ -36,6 +37,7 @@ jobs:
             any::AICcmodavg
             any::MuMIn
             any::logistf
+            any::overlap
             any::detectseparation
             any::CooccurrenceAffinity
             any::patchwork

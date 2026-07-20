@@ -1,9 +1,10 @@
 # pacotes para o livro
 eprv2packages <- c("tidyverse", "tidymodels", "tidyterra", 
+                   "lubridate",
                  "patchwork", "remotes", "kableExtra", "Hmisc",
                  "sp", "spdep", "sf","raster", "mapview","tmap", 
                  "MuMIn", "AICcmodavg", "mgcv", "detectseparation",
-                 "logistf",
+                 "logistf", "overlap",
                  "landscapemetrics", "siland", "CooccurrenceAffinity", 
                  "rnaturalearth", "rnaturalearthdata")
 install.packages(eprv2packages)
