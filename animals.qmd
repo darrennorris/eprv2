@@ -791,7 +791,7 @@ Você notará que no centro do gráfico as bandas tendem a ser mais estreitas, m
 ::: callout-tip
 ## Dica do Ecólogo: Por que um resultado 'não significativo' é valioso?
 
-Você pode estar pensando: "Tanto código e análise para descobrir que não ha uma associação forte entre cães e gatos?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
+Você pode estar pensando: "Tanto código e análise para descobrir que não ha uma associação forte entre a presença de cães e gatos?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
 
 1.  **A Independência das Espécies:** O fato de a coocorrência ser aleatória em raios de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.
 
