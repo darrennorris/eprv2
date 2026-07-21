@@ -417,9 +417,9 @@ resultados_modelos |>
   theme(legend.position = "none")
 ```
 
-Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
+Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m). Lembre-se de que o AIC/AICc compara modelos, mas, não diz se o melhor modelo é valido ou se as tendências são relevantes.
 
-A avaliação da escala de efeito revela respostas ecológicas fortemente contrastantes entre as espécies quando aplicamos o princípio da parcimônia à seleção de modelos. Para os cães, a inclusão da proporção de uso humano na paisagem (métrica PLAND) gera modelos com desempenho expressivamente superior ao modelo nulo (intercept-only) em todas as escalas avaliadas, garantindo um ganho informacional autêntico ($\Delta AICc \gg 2$). Esse poder explicativo atinge seu pico preditivo nas microescalas (12,5 m a 50 m), confirmando que a ocorrência de cães é fortemente estruturada pela infraestrutura antrópica imediata. Em franca oposição, a modelagem para os gatos demonstra que a variável de paisagem não agrega poder explicativo válido. Nas escalas de 12,5 m a 50 m, a inclusão da métrica resulta em valores de AICc piores do que o modelo nulo, indicando que a complexidade adicionada prejudica a estimativa. Mesmo na escala de 100 m, onde se observa a melhor performance para a espécie, a diferença em relação ao modelo nulo não atinge o limiar mínimo exigido ($\Delta AICc > 2$) para justificar o parâmetro adicional. Conclui-se, portanto, que enquanto a distribuição dos cães reflete ativamente a configuração espacial da área construída, a ocorrência de gatos é estatisticamente indistinguível de um padrão de prevalência constante (acaso), sugerindo que outros mecanismos orientam a sua ocupação no campus.
+A avaliação da escala de efeito revela respostas ecológicas contrastantes entre as espécies quando aplicamos o princípio da parcimônia à seleção de modelos (@fig-scale-effect). Para os cães, a inclusão da proporção de uso humano na paisagem (métrica PLAND) gera modelos com desempenho superior ao modelo nulo (intercept-only) em todas as escalas avaliadas, garantindo um ganho informacional autêntico ($\Delta AICc \gg 2$). Esse poder explicativo atinge seu pico preditivo nas microescalas (12,5 m a 50 m), confirmando que a ocorrência de cães é associada com a infraestrutura antrópica imediata. Em contraste, a modelagem para os gatos demonstra que a variável de paisagem não agrega poder explicativo/informação válido. Nas escalas de 12,5 m a 50 m, a inclusão da métrica resulta em valores de AICc piores do que o modelo nulo, indicando que a complexidade adicionada prejudica a estimativa. Mesmo na escala de 100 m, onde se observa a melhor performance para a espécie, a diferença em relação ao modelo nulo não atinge o limiar mínimo exigido ($\Delta AICc > 2$) para justificar o parâmetro adicional. Conclui-se, portanto, que enquanto a distribuição dos cães reflete a configuração espacial da área construída, a ocorrência de gatos é estatisticamente indistinguível de um padrão de prevalência constante (acaso), sugerindo que outros mecanismos orientam a sua ocupação no campus.
 
 ## Associação estatística, interação estatística e interação ecológica
 
@@ -590,7 +590,7 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
   theme_light(base_size = 12)
 ```
 
-Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a interação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
+Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a associação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
 
 Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental
 
@@ -601,8 +601,6 @@ Ao interpretarmos os resultados de coocorrência, devemos olhar para dois proces
   Enquanto o "uso humano" (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas "onde há prédios", eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.
 
 #### Interação estatistica
-
-O pacote logistf é incrivelmente robusto para resolver problemas de pequenas amostras, mas sua função predict() pode ser um pouco "teimosa" quando alimentada com dados novos. Para contornar isso de forma elegante, usaremos álgebra de matrizes nativa do R dentro do nosso fluxo purrr::map. É um truque avançado, mas o código resultante fica limpo e instrutivo.
 
 Diagnóstico de Microescalas: Por que os modelos de interação colapsam?
 
@@ -649,18 +647,20 @@ print(grafico_diagnostico)
 
 A @fig-diag-int ilustra a dependência de escala na ecologia urbana e suas consequências para a modelagem preditiva. Note como, nos painéis de 12,5m, 25m e até 50m, todos os pontos referentes aos locais onde os cães não foram registrados ("Ausente") estão cravados exatamente na linha basal de 0% de Uso Humano. Nessas escalas, o boxplot se achata formando apenas uma linha horizontal, evidenciando uma total ausência de heterogenidade.
 
-- **A Consequência Estatística (Separação Completa):** \
+- **A Consequência Estatística (Separação Completa):**\
   Quando um modelo logístico (como o glm()) tenta calcular a probabilidade de ocorrência com base nestes dados, ele detecta que a ausência de cães é perfeitamente separada pelo valor nulo da métrica de paisagem. Sem uma sobreposição mínima ou variabilidade (pontos intermediários), o algoritmo não consegue calcular a inclinação da reta logística. Esta ausência de variabilidade é a responsável direta por fazer a matriz de informação colapsar, disparando erros de processamento (como o LAPACK failed relatado nas análises do R) ou gerando coeficientes com erros-padrão que tendem ao infinito. Nestes cenários, a aplicação de correções como a regressão logística penalizada (Firth) torna-se não apenas recomendada, mas estritamente necessária para obter estimativas finitas.
 
-- **A Realidade Ecológica por Trás do Gráfico:** \
+- **A Realidade Ecológica por Trás do Gráfico:**\
   Do ponto de vista ecológico, este gráfico atesta a teoria fundamentada no Capítulo 2: em microescalas (12,5m e 25m), a paisagem capturada pelo raio de amostragem é, em grande parte, monótona e homogênea. O círculo de amostragem tende a cair inteiramente dentro de uma "mancha pura". Ou seja, as câmeras que não registraram cães estavam em pontos onde a influência física humana era inexistente no raio avaliado.
 
-- **A Solução Multiescalar:** \
+- **A Solução Multiescalar:**\
   O cenário só se estabiliza ao observarmos o painel de 100 metros. É nesta escala espacial que a categoria "Ausente (0)" finalmente ganha dispersão, abrigando registros em pontos com proporções variando de 0% a mais de 25% de infraestrutura. Ao expandirmos o raio para 100 metros, a janela de observação torna-se suficientemente ampla para interceptar as zonas de transição entre o remanescente natural e a matriz urbana construída. É essa introdução crucial de variabilidade que alimenta a matemática do modelo, permitindo-nos testar hipóteses sobre interações bióticas multiescalares com real robustez científica.
+
+O pacote logistf é robusto para resolver problemas de pequenas amostras, mas sua função predict() pode ser um pouco "teimosa" quando alimentada com dados novos. Para contornar isso de forma elegante, usaremos álgebra de matrizes nativa do R dentro do nosso fluxo purrr::map. É um truque avançado, mas o código resultante fica limpo e instrutivo.
 
 Abaixo, apresento o fluxo completo para testar, prever e plotar a interação multiescalar.
 
-I. O Script: Split-Apply-Combine com Interação e Firth Neste bloco, vamos criar um "cenário artificial" (expand_grid) e empurrá-lo para dentro dos nossos modelos por meio do pacote purrr.
+O Script use Split-Apply-Combine com Interação e Firth. Neste bloco, vamos criar um "cenário artificial" (expand_grid) e empurrá-lo para dentro dos nossos modelos por meio do pacote purrr.
 
 ```{r}
 #| label: effect-int
@@ -791,7 +791,7 @@ Você notará que no centro do gráfico as bandas tendem a ser mais estreitas, m
 ::: callout-tip
 ## Dica do Ecólogo: Por que um resultado 'não significativo' é valioso?
 
-Você pode estar pensando: "Tanto código e análise para descobrir que a relação entre cães e gatos é aleatória?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
+Você pode estar pensando: "Tanto código e análise para descobrir que não ha uma associação forte entre cães e gatos?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
 
 1.  **A Independência das Espécies:** O fato de a coocorrência ser aleatória em raios de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.
 
