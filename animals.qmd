@@ -364,16 +364,21 @@ resultados_modelos <- df_longo |>
   group_by(especie, escala_buffer) |>
   nest() |> # Cria uma "gaveta" (list-column) para cada combinação
   mutate(
-    # Aplicamos o GLM dentro de cada gaveta
-    modelo = map(data, ~glm(presenca ~ pland_humano, data = .x, family = binomial)),
-    # Usamos o broom::glance para extrair estatísticas básicas
-    resumo = map(modelo, glance),
-    # Adicionamos o AICc manualmente usando o MuMIn
-    aicc = map_dbl(modelo, MuMIn::AICc)
+    # Aplicamos o GLM com a preditora de paisagem
+    modelo = map(data, ~ glm(presenca ~ pland_humano, data = .x, family = binomial)),
+    # Aplicamos o GLM nulo (Intercept Only)
+    modelo_nulo = map(data, ~ glm(presenca ~ 1, data = .x, family = binomial)),
+    
+    # Usamos o broom::glance para extrair estatísticas básicas do modelo da paisagem
+    resumo = map(modelo, broom::glance),
+    
+    # Adicionamos o AICc manualmente usando o MuMIn para ambos os modelos
+    aicc = map_dbl(modelo, MuMIn::AICc),
+    aicc_nulo = map_dbl(modelo_nulo, MuMIn::AICc)
   ) |>
   unnest(resumo) |> # Transforma as estatísticas do broom em colunas
   group_by(especie) |>
-  mutate(limiar = min(aicc) + 2) |> 
+  mutate(limiar = min(aicc) + 2) |>
   ungroup()
 
 ```
@@ -388,21 +393,33 @@ Agora comparação dos resultados.
 #| fig-width: 9
 #| fig-asp: 0.5
 
-resultados_modelos |> 
+resultados_modelos |>
   mutate(especie = ifelse(especie == "calu", "Cães", "Gatos")) |>
   ggplot(aes(x = escala_buffer, y = aicc)) +
-  geom_line(aes(color = especie), linewidth = 1.8) + 
+  # Curva de AICc dos modelos multiescalares
+  geom_line(aes(color = especie), linewidth = 1.8) +
   geom_point(aes(fill = especie), size = 6, shape = 21) +
-  geom_hline(aes(yintercept = limiar), linetype = "dashed") + 
+  # Linha horizontal do Limiar (melhor modelo + 2 de diferença)
+  geom_hline(aes(yintercept = limiar), linetype = "dashed") +
+  # LINHA: Referência do Modelo Nulo (Intercept-only)
+  geom_hline(aes(yintercept = aicc_nulo, color = especie), linetype = "dotted", linewidth = 1.2) +
+  
   scale_color_manual(values = c("Cães" = "#0072B2", "Gatos" = "#D55E00")) +
   scale_fill_manual(values = c("Cães" = "#0072B2", "Gatos" = "#D55E00")) +
   facet_wrap(~ especie, scales = "free_y") +
-  labs(title = "Escala de Efeito", x = "Raio (m)", y = "AICc") +
-  theme_bw() + 
+  labs(
+    title = "Escala de Efeito",
+    subtitle = "Linha tracejada: limiar (ΔAICc < 2) | Linha pontilhada: Modelo Nulo (Intercept only)",
+    x = "Raio (m)", 
+    y = "AICc"
+  ) +
+  theme_bw() +
   theme(legend.position = "none")
 ```
 
 Observa-se na @fig-scale-effect que a ocorrência de cães é melhor explicada por processos locais (12.5 a 50 m), enquanto a ocorrência de gatos responde de forma mais forte à paisagem em uma escala mais ampla (100 m). Lembre-se de que o AIC compara modelos, não diz se o melhor modelo é valido ou se as tendências são relevantes.
+
+A avaliação da escala de efeito revela respostas ecológicas fortemente contrastantes entre as espécies quando aplicamos o princípio da parcimônia à seleção de modelos. Para os cães, a inclusão da proporção de uso humano na paisagem (métrica PLAND) gera modelos com desempenho expressivamente superior ao modelo nulo (intercept-only) em todas as escalas avaliadas, garantindo um ganho informacional autêntico ($\Delta AICc \gg 2$). Esse poder explicativo atinge seu pico preditivo nas microescalas (12,5 m a 50 m), confirmando que a ocorrência de cães é fortemente estruturada pela infraestrutura antrópica imediata. Em franca oposição, a modelagem para os gatos demonstra que a variável de paisagem não agrega poder explicativo válido. Nas escalas de 12,5 m a 50 m, a inclusão da métrica resulta em valores de AICc piores do que o modelo nulo, indicando que a complexidade adicionada prejudica a estimativa. Mesmo na escala de 100 m, onde se observa a melhor performance para a espécie, a diferença em relação ao modelo nulo não atinge o limiar mínimo exigido ($\Delta AICc > 2$) para justificar o parâmetro adicional. Conclui-se, portanto, que enquanto a distribuição dos cães reflete ativamente a configuração espacial da área construída, a ocorrência de gatos é estatisticamente indistinguível de um padrão de prevalência constante (acaso), sugerindo que outros mecanismos orientam a sua ocupação no campus.
 
 ## Associação estatística, interação estatística e interação ecológica
 
