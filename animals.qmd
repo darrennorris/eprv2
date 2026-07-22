@@ -674,22 +674,75 @@ Sempre produz estimativas finitas, mesmo sob separação completa ou quase-compl
 
 Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):
 
-```{r} #| label: glm-sep #| message: false #| warning: false #| eval: false  # Sinais de separação num modelo já ajustado com glm() fit <- glm(cao ~ iguana + cpland, data = dados, family = binomial) summary(fit) # Atenção a: warning "fitted probabilities numerically 0 or 1 occurred" # e a erros-padrão MUITO maiores que os próprios coeficientes}
+```{r} 
+#| label: glm-sep 
+#| message: false 
+#| warning: false 
+#| eval: false  
+
+# Sinais de separação num modelo já ajustado com glm() 
+fit <- glm(cao ~ iguana + cpland, data = dados, family = binomial) 
+summary(fit) 
+# Atenção a: warning "fitted probabilities numerically 0 or 1 occurred" 
+# e a erros-padrão MUITO maiores que os próprios coeficientes}
 ```
 
 Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:
 
-```{r} #| label: glm-sep-detectseparation #| message: false #| warning: false #| eval: false  glm(cao ~ iguana + cpland, data = dados, family = binomial,     method = "detect_separation")}
+```{r} 
+#| label: glm-sep-detectseparation 
+#| message: false 
+#| warning: false 
+#| eval: false  
+
+glm(cao ~ iguana + cpland, data = dados, family = binomial, 
+    method = "detect_separation")
 ```
 
 Como implementar com logistf.
 
-```{r} #| label: glm-sep-logistf #| message: false #| warning: false #| eval: false  # Comparação lado a lado com o glm() original fit_glm   <- glm(cao ~ iguana + cpland, data = dados, family = binomial) fit_firth <- logistf(cao ~ iguana + cpland, data = dados, pl = TRUE)  # pl=TRUE = IC de perfil (default)  summary(fit_firth)  # Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de  # forma sistemática: rambientes <- c("uso_humano", "cerrado_antropico", "campo_sujo") escalas   <- c(25, 50, 100, 200, 400) resultados <- data.frame()  for (amb in ambientes) {   for (esc in escalas) {     var_cpland <- paste0("cpland_", amb, "_", esc)     formula_i  <- as.formula(paste("cao ~ iguana +", var_cpland))     fit <- logistf(formula_i, data = dados, pl = TRUE)      resultados <- rbind(resultados, data.frame(       ambiente = amb, escala = esc,       coef     = coef(fit)["iguana"],       ic_lower = fit$ci.lower["iguana"],       ic_upper = fit$ci.upper["iguana"],       p_valor  = fit$prob["iguana"]     ))   } }
+```{r} 
+#| label: glm-sep-logistf 
+#| message: false 
+#| warning: false
+#| eval: false  
+
+# Comparação lado a lado com o glm() original 
+fit_glm   <- glm(cao ~ iguana + cpland, data = dados, family = binomial) 
+fit_firth <- logistf(cao ~ iguana + cpland, data = dados, pl = TRUE)  # pl=TRUE = IC de perfil (default)  
+summary(fit_firth)  
+
+# Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de  
+# forma sistemática: 
+ambientes <- c("uso_humano", "cerrado_antropico", "campo_sujo") 
+escalas   <- c(25, 50, 100, 200, 400) 
+resultados <- data.frame()  
+for (amb in ambientes) {   for (esc in escalas) {
+  var_cpland <- paste0("cpland_", amb, "_", esc)     
+  formula_i  <- as.formula(paste("cao ~ iguana +", var_cpland))     
+  fit <- logistf(formula_i, data = dados, pl = TRUE)      
+  resultados <- rbind(resultados, data.frame(ambiente = amb, 
+                                             escala = esc, 
+                                             coef = coef(fit)["iguana"], 
+                                             ic_lower = fit$ci.lower["iguana"], 
+                                             ic_upper = fit$ci.upper["iguana"], 
+                                             p_valor  = fit$prob["iguana"]     ))   
+} 
+  }
 ```
 
 Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:
 
-```{r} #| label: glm-sep-aicc #| message: false #| warning: false #| eval: false  rn    <- nobs(fit_firth) k    <- length(coef(fit_firth)) aic  <- extractAIC(fit_firth)[2] aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)}
+```{r} 
+#| label: glm-sep-aicc 
+#| message: false
+#| warning: false
+#| eval: false 
+ 
+n <- nobs(fit_firth) 
+k <- length(coef(fit_firth))
+aic <- extractAIC(fit_firth)[2]
+aicc <- aic + (2 * k * (k + 1)) / (n - k - 1)
 ```
 
 Cuidado de comparabilidade: se só alguns dos 45 modelos forem trocados para Firth (os que mostrarem separação) e os demais continuarem em glm(), o AICc deixa de ser diretamente comparável entre eles, porque a função de verossimilhança maximizada não é a mesma. O mais defensável é: (a) rodar Firth em todos os modelos da mesma família de comparação, ou (b) reportar os dois ajustes lado a lado só nas células problemáticas, deixando explícito no texto qual critério foi usado em cada caso.
