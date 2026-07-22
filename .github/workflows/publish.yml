@@ -41,6 +41,7 @@ jobs:
             any::detectseparation
             any::CooccurrenceAffinity
             any::patchwork
+            any::modelsummary
             any::mapview
             any::rnaturalearth
             any::rnaturalearthdata

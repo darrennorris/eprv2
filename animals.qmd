@@ -57,8 +57,9 @@ library(detectseparation)
 library(logistf)
 library(overlap)
 
-# 4. Cartography & Visualization
+# 4. Visualization
 library(patchwork)   # Para organizar gráficos
+library(modelsummary)
 ```
 
 ### Dados
@@ -494,6 +495,28 @@ modelo_condicionado <- glm(especie_A ~ especie_B + cpland, data = dados, family 
 
 summary(modelo_ingenuo)$coefficients
 summary(modelo_condicionado)$coefficients
+
+
+# Colocando os modelos em uma lista nomeada
+lista_modelos <- list(
+  "Modelo Ingênuo" = modelo_ingenuo,
+  "Modelo Condicionado" = modelo_condicionado
+)
+
+# Gerando a tabela comparativa
+modelsummary(
+  lista_modelos,
+  estimate  = "{estimate}",          # Exibe o coeficiente principal
+  statistic = c("SE: {std.error}", "p: {p.value}"), # Exibe Erro Padrão e p-valor embaixo
+  stars = TRUE,                      # Adiciona os asteriscos de significância (*, **, ***)
+  fmt = 3,                           # Arredonda para 3 casas decimais
+  coef_rename = c(
+    "(Intercept)" = "Intercepto",
+    "especie_B" = "Ocorrência da Espécie B",
+    "cpland" = "Uso Humano (CPLAND %)"
+  ),
+  title = "Comparação Estatística: O Efeito do Confundimento Espacial"
+)
 ```
 
 No modelo ingênuo, `especie_B` tende a aparecer como preditor positivo e significativo de `especie_A` — puro efeito do confundimento pela paisagem compartilhada. No modelo condicionado, ao controlar por `cpland`, o coeficiente de `especie_B` tende a encolher em direção a zero, porque no processo gerador dos dados as duas espécies nunca tiveram relação direta. **Isso é exatamente o que uma associação condicionada consegue mostrar: reduz, mas não elimina, a possibilidade de confundimento** — e mesmo o resultado do modelo condicionado continua sendo uma associação estatística, não uma prova de interação ecológica.

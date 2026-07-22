@@ -492,7 +492,7 @@ As métricas de configuração (como Área Média da Mancha - AREA_MN, Índice d
 
 ### 📌 Resumo Prático para a Planilha de Dados {.unnumbered}
 
-| Tipo de Métrica | Exemplos | Se a classe NÃO existe na paisagem... |
+| Tipo de Métrica | Exemplos | Se a classe NÃO existe na paisagem/raio de amostragem... |
 |:-----------------------|:-----------------------|:-----------------------|
 | **Métrica de Composição** | PLAND, CPLAND, CA (Área Total) | **Preencha com `0`** |
 | **Métrica de Configuração** | AREA_MN, SHAPE_MN, ENN, ED | **Deixe vazio, use `NA` (ou `NaN`)** |
