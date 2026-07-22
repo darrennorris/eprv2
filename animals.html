@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-514c3c5c645fecdfd9acb6a6b9a944a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-82cb5808e81da3454e8042d903791e03.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -771,7 +771,8 @@ Figura&nbsp;3.4: Identificação da escala de efeito para a ocorrência de cães
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Associação estatística.</strong> Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.</p>
+<p><strong>Correlação estatística.</strong> A Correlação é uma medida estritamente matemática que quantifica a força e a direção de uma relação (geralmente linear ou monotônica) entre variáveis quantitativas (contínuas ou ordinais). Exemplo: a relação entre a quantidade de chuva (mm) e a cobertura vegetal (%).</p>
+<p><strong>Associação estatística.</strong> A Associação é o termo guarda-chuva para qualquer dependência estatística. Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.</p>
 <p><strong>Interação estatística</strong> tem um significado técnico específico dentro de um modelo de regressão: ocorre quando o efeito de uma variável preditora sobre a resposta muda conforme o nível de outra preditora (modificação de efeito). Formalmente, é um termo de produto no modelo (<code>resposta ~ x1 * x2</code>), testado por um coeficiente próprio. Isso é uma propriedade da forma do modelo — não tem relação direta com “duas espécies interagindo entre si”.</p>
 <p><strong>Interação ecológica (biótica)</strong> — competição, predação, facilitação, mutualismo, parasitismo — descreve um processo causal direto entre organismos. Para sustentar essa afirmação é preciso evidência além da co-ocorrência: manipulação experimental, observação comportamental, análise de dieta, ou dados finos o bastante para separar “quem responde à paisagem” de “quem responde ao outro organismo”.</p>
 <p>O erro mais comum: um modelo do tipo <em>ocorrência da espécie A ~ presença da espécie B + métrica de paisagem C</em> testa uma <strong>associação estatística condicionada por métrica C</strong>, não uma interação ecológica e nem uma interação estatística no sentido técnico acima. Se A e B respondem, cada uma de forma independente, à mesma variável C, o modelo pode acusar uma “associação positiva” entre A e B sem que exista qualquer relação biológica direta — um caso clássico de confundimento por variável compartilhada.</p>
@@ -796,20 +797,27 @@ Figura&nbsp;3.4: Identificação da escala de efeito para a ocorrência de cães
 </thead>
 <tbody>
 <tr class="odd">
+<td>Correlação estatística</td>
+<td>O grau e a direção da dependência matemática (linear ou monotônica) entre duas variáveis contínuas ou ordinais.</td>
+<td>Coeficientes de correlação (Pearson, Spearman, Kendall).</td>
+<td>À medida que a métrica X aumenta, a variável Y aumenta (ou diminui) proporcionalmente.</td>
+<td>Não implica causa. Falha em capturar relações complexas e não lineares, e não se aplica adequadamente a dados binários puros.</td>
+</tr>
+<tr class="even">
 <td>Associação estatística</td>
 <td>Covariação entre duas variáveis</td>
-<td>Correlação; modelos probabilísticos de coocorrência</td>
+<td>Modelos probabilísticos de coocorrência, Qui-quadrado; GLM simples.</td>
 <td>“A e B ocorrem juntas mais/menos do que o esperado ao acaso”</td>
 <td>Nada por si só — não implica causa nem mecanismo</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Interação estatística (efeito de modificação)</td>
 <td>Se o efeito de X1 sobre Y muda conforme o nível de X2</td>
 <td>Termo de produto num GLM/GLMM (<code>Y ~ X1 * X2</code>)</td>
 <td>“O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos”</td>
 <td>Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Interação ecológica (biótica)</td>
 <td>Processo causal direto entre organismos</td>
 <td>Nenhum teste estatístico isolado comprova isso</td>
