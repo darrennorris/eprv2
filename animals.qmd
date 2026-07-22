@@ -423,10 +423,10 @@ A avaliação da escala de efeito revela respostas ecológicas contrastantes ent
 
 ## Associação estatística, interação estatística e interação ecológica
 
-Em estudos de ecologia da paisagem que usam dados de presença-ausência (por exemplo, registros de armadilhas fotográficas), é comum perguntar se a ocorrência de uma espécie está relacionada à ocorrência de outra. Um modelo de regressão pode até detectar essa relação — mas o nome que damos a esse resultado importa. É fácil escrever "interação entre as espécies" quando, na verdade, o que foi testado foi apenas uma **associação estatística condicionada**. O quadro a seguir separa três conceitos que costumam ser confundidos.
+Em estudos de ecologia da paisagem que usam dados de presença-ausência (por exemplo, registros de armadilhas fotográficas), é comum perguntar se a ocorrência de uma espécie está relacionada à ocorrência de outra. Um modelo de regressão pode até detectar essa relação — mas o nome que damos a esse resultado importa. É fácil escrever "interação entre as espécies" quando, na verdade, o que foi testado foi apenas uma **associação estatística condicionada**. O quadro a seguir separa conceitos que costumam ser confundidos.
 
 ::: {.callout-note appearance="default" icon="false"}
-## Quadro — Três conceitos que não são sinônimos {.unnumbered}
+## Quadro — Conceitos que não são sinônimos {.unnumbered}
 
 **Correlação estatística.** A Correlação é uma medida estritamente matemática que quantifica a força e a direção de uma relação (geralmente linear ou monotônica) entre variáveis quantitativas (contínuas ou ordinais). Exemplo: a relação entre a quantidade de chuva (mm) e a cobertura vegetal (%).
 
@@ -441,7 +441,7 @@ O erro mais comum: um modelo do tipo *ocorrência da espécie A \~ presença da 
 
 | Conceito | O que mede | Teste típico | O que permite concluir | O que falta para concluir mais que isso |
 |---------------|---------------|---------------|---------------|---------------|
-| Correlação estatística | O grau e a direção da dependência matemática (linear ou monotônica) entre duas variáveis contínuas ou ordinais. | Coeficientes de correlação (Pearson, Spearman, Kendall). | À medida que a métrica X aumenta, a variável Y aumenta (ou diminui) proporcionalmente. | Não implica causa. Falha em capturar relações complexas e não lineares, e não se aplica adequadamente a dados binários puros. |
+| Correlação estatística | O grau e a direção da dependência matemática (linear ou monotônica) entre duas variáveis contínuas ou ordinais. | Coeficientes de correlação (Pearson, Spearman, Kendall). | À medida que a métrica X aumenta, a variável Y aumenta (ou diminui) proporcionalmente. | Não implica causa. Falha em capturar relações complexas e não lineares. |
 | Associação estatística | Covariação entre duas variáveis | Modelos probabilísticos de coocorrência, Qui-quadrado; GLM simples. | "A e B ocorrem juntas mais/menos do que o esperado ao acaso" | Nada por si só — não implica causa nem mecanismo |
 | Interação estatística (efeito de modificação) | Se o efeito de X1 sobre Y muda conforme o nível de X2 | Termo de produto num GLM/GLMM (`Y ~ X1 * X2`) | "O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos" | Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão |
 | Interação ecológica (biótica) | Processo causal direto entre organismos | Nenhum teste estatístico isolado comprova isso | "A afeta B (ou vice-versa) por um mecanismo biológico" | Manipulação experimental, observação direta, dieta/comportamento, ou desenho longitudinal fino |
