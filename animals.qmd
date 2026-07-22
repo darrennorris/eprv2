@@ -428,7 +428,9 @@ Em estudos de ecologia da paisagem que usam dados de presença-ausência (por ex
 ::: {.callout-note appearance="default" icon="false"}
 ## Quadro — Três conceitos que não são sinônimos {.unnumbered}
 
-**Associação estatística.** Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.
+**Correlação estatística.** A Correlação é uma medida estritamente matemática que quantifica a força e a direção de uma relação (geralmente linear ou monotônica) entre variáveis quantitativas (contínuas ou ordinais). Exemplo: a relação entre a quantidade de chuva (mm) e a cobertura vegetal (%).
+
+**Associação estatística.** A Associação é o termo guarda-chuva para qualquer dependência estatística. Duas variáveis covariam: tendem a ocorrer juntas (ou a se excluir) mais do que o esperado ao acaso. Não diz nada sobre causa. Duas espécies podem estar associadas porque uma afeta a outra, porque ambas respondem à mesma característica da paisagem, ou por acaso amostral.
 
 **Interação estatística** tem um significado técnico específico dentro de um modelo de regressão: ocorre quando o efeito de uma variável preditora sobre a resposta muda conforme o nível de outra preditora (modificação de efeito). Formalmente, é um termo de produto no modelo (`resposta ~ x1 * x2`), testado por um coeficiente próprio. Isso é uma propriedade da forma do modelo — não tem relação direta com "duas espécies interagindo entre si".
 
@@ -439,7 +441,8 @@ O erro mais comum: um modelo do tipo *ocorrência da espécie A \~ presença da 
 
 | Conceito | O que mede | Teste típico | O que permite concluir | O que falta para concluir mais que isso |
 |---------------|---------------|---------------|---------------|---------------|
-| Associação estatística | Covariação entre duas variáveis | Correlação; modelos probabilísticos de coocorrência | "A e B ocorrem juntas mais/menos do que o esperado ao acaso" | Nada por si só — não implica causa nem mecanismo |
+| Correlação estatística | O grau e a direção da dependência matemática (linear ou monotônica) entre duas variáveis contínuas ou ordinais. | Coeficientes de correlação (Pearson, Spearman, Kendall). | À medida que a métrica X aumenta, a variável Y aumenta (ou diminui) proporcionalmente. | Não implica causa. Falha em capturar relações complexas e não lineares, e não se aplica adequadamente a dados binários puros. |
+| Associação estatística | Covariação entre duas variáveis | Modelos probabilísticos de coocorrência, Qui-quadrado; GLM simples. | "A e B ocorrem juntas mais/menos do que o esperado ao acaso" | Nada por si só — não implica causa nem mecanismo |
 | Interação estatística (efeito de modificação) | Se o efeito de X1 sobre Y muda conforme o nível de X2 | Termo de produto num GLM/GLMM (`Y ~ X1 * X2`) | "O efeito da paisagem sobre a ocorrência difere entre ambientes/grupos" | Réplicas suficientes em cada combinação de níveis para estimar o termo com precisão |
 | Interação ecológica (biótica) | Processo causal direto entre organismos | Nenhum teste estatístico isolado comprova isso | "A afeta B (ou vice-versa) por um mecanismo biológico" | Manipulação experimental, observação direta, dieta/comportamento, ou desenho longitudinal fino |
 
@@ -674,7 +677,7 @@ Sempre produz estimativas finitas, mesmo sob separação completa ou quase-compl
 
 Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):
 
-```{r} 
+```{r}
 #| label: glm-sep 
 #| message: false 
 #| warning: false 
@@ -689,7 +692,7 @@ summary(fit)
 
 Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:
 
-```{r} 
+```{r}
 #| label: glm-sep-detectseparation 
 #| message: false 
 #| warning: false 
@@ -701,7 +704,7 @@ glm(cao ~ iguana + cpland, data = dados, family = binomial,
 
 Como implementar com logistf.
 
-```{r} 
+```{r}
 #| label: glm-sep-logistf 
 #| message: false 
 #| warning: false
@@ -733,7 +736,7 @@ for (amb in ambientes) {   for (esc in escalas) {
 
 Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:
 
-```{r} 
+```{r}
 #| label: glm-sep-aicc 
 #| message: false
 #| warning: false
