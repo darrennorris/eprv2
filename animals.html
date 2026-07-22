@@ -338,8 +338,9 @@ Figura&nbsp;3.1: Fluxo metodológico para análise multiescalar. O processo inic
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(logistf)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(overlap)</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Cartography &amp; Visualization</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Visualization</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># Para organizar gráficos</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="dados" class="level3" data-number="3.2.2">
@@ -890,6 +891,156 @@ especie_B    1.1592369  0.3075838  3.768849 0.0001640022</code></pre>
 especie_B   -0.22559513  0.4220502 -0.534522 5.929804e-01
 cpland       0.06983353  0.0101294  6.894140 5.419149e-12</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Colocando os modelos em uma lista nomeada</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>lista_modelos <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Modelo Ingênuo"</span> <span class="ot">=</span> modelo_ingenuo,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Modelo Condicionado"</span> <span class="ot">=</span> modelo_condicionado</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gerando a tabela comparativa</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  lista_modelos,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate}"</span>,          <span class="co"># Exibe o coeficiente principal</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="fu">c</span>(<span class="st">"SE: {std.error}"</span>, <span class="st">"p: {p.value}"</span>), <span class="co"># Exibe Erro Padrão e p-valor embaixo</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,                      <span class="co"># Adiciona os asteriscos de significância (*, **, ***)</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,                           <span class="co"># Arredonda para 3 casas decimais</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_rename =</span> <span class="fu">c</span>(</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"(Intercept)"</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>,</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"especie_B"</span> <span class="ot">=</span> <span class="st">"Ocorrência da Espécie B"</span>,</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cpland"</span> <span class="ot">=</span> <span class="st">"Uso Humano (CPLAND %)"</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Comparação Estatística: O Efeito do Confundimento Espacial"</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_5rvyrj04aj196zmxn3sm = TinyTable.createTableFunctions("tinytable_5rvyrj04aj196zmxn3sm");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '14', j: 2 }, { i: '14', j: 3 } ], css_id: 'tinytable_css_9ny97v6gjw991emy158m',}, 
+          { positions: [ { i: '9', j: 2 }, { i: '9', j: 3 } ], css_id: 'tinytable_css_oz263n32a9sm4nvoa9eu',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_yw4mok4b1h3m70aaeeee',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_9g72dr58wix0rt3pa4zi',}, 
+          { positions: [ { i: '14', j: 1 } ], css_id: 'tinytable_css_f6zboqcj9tb76eimy563',}, 
+          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_70f1dbp778w21086csjd',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 } ], css_id: 'tinytable_css_ntmvgpmpz7ez2wprpgm9',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_aw2wtx1jdo6yulflswu7',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_5rvyrj04aj196zmxn3sm.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_9ny97v6gjw991emy158m, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_9ny97v6gjw991emy158m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_oz263n32a9sm4nvoa9eu, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_oz263n32a9sm4nvoa9eu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_yw4mok4b1h3m70aaeeee, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_yw4mok4b1h3m70aaeeee { text-align: center }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_9g72dr58wix0rt3pa4zi, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_9g72dr58wix0rt3pa4zi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_f6zboqcj9tb76eimy563, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_f6zboqcj9tb76eimy563 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_70f1dbp778w21086csjd, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_70f1dbp778w21086csjd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_ntmvgpmpz7ez2wprpgm9, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_ntmvgpmpz7ez2wprpgm9 { text-align: left }
+    #tinytable_5rvyrj04aj196zmxn3sm td.tinytable_css_aw2wtx1jdo6yulflswu7, #tinytable_5rvyrj04aj196zmxn3sm th.tinytable_css_aw2wtx1jdo6yulflswu7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_5rvyrj04aj196zmxn3sm" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Comparação Estatística: O Efeito do Confundimento Espacial</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Modelo Ingênuo</th>
+                <th scope="col" data-row="0" data-col="3">Modelo Condicionado</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Intercepto</td>
+                  <td data-row="1" data-col="2">-0.754</td>
+                  <td data-row="1" data-col="3">-3.402</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">SE: 0.248</td>
+                  <td data-row="2" data-col="3">SE: 0.494</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1"></td>
+                  <td data-row="3" data-col="2">p: 0.002</td>
+                  <td data-row="3" data-col="3">p: &lt;0.001</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">Ocorrência da Espécie B</td>
+                  <td data-row="4" data-col="2">1.159</td>
+                  <td data-row="4" data-col="3">-0.226</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1"></td>
+                  <td data-row="5" data-col="2">SE: 0.308</td>
+                  <td data-row="5" data-col="3">SE: 0.422</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">p: &lt;0.001</td>
+                  <td data-row="6" data-col="3">p: 0.593</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Uso Humano (CPLAND %)</td>
+                  <td data-row="7" data-col="2"></td>
+                  <td data-row="7" data-col="3">0.070</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2"></td>
+                  <td data-row="8" data-col="3">SE: 0.010</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3">p: &lt;0.001</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">Num.Obs.</td>
+                  <td data-row="10" data-col="2">200</td>
+                  <td data-row="10" data-col="3">200</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">AIC</td>
+                  <td data-row="11" data-col="2">266.3</td>
+                  <td data-row="11" data-col="3">186.6</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">BIC</td>
+                  <td data-row="12" data-col="2">272.9</td>
+                  <td data-row="12" data-col="3">196.4</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">Log.Lik.</td>
+                  <td data-row="13" data-col="2">-131.142</td>
+                  <td data-row="13" data-col="3">-90.276</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">RMSE</td>
+                  <td data-row="14" data-col="2">0.48</td>
+                  <td data-row="14" data-col="3">0.39</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
 </div>
 <p>No modelo ingênuo, <code>especie_B</code> tende a aparecer como preditor positivo e significativo de <code>especie_A</code> — puro efeito do confundimento pela paisagem compartilhada. No modelo condicionado, ao controlar por <code>cpland</code>, o coeficiente de <code>especie_B</code> tende a encolher em direção a zero, porque no processo gerador dos dados as duas espécies nunca tiveram relação direta. <strong>Isso é exatamente o que uma associação condicionada consegue mostrar: reduz, mas não elimina, a possibilidade de confundimento</strong> — e mesmo o resultado do modelo condicionado continua sendo uma associação estatística, não uma prova de interação ecológica.</p>
 </section>
@@ -897,23 +1048,23 @@ cpland       0.06983353  0.0101294  6.894140 5.419149e-12</code></pre>
 <h4 data-number="3.4.1.2" class="anchored" data-anchor-id="como-é-uma-interação-estatística-de-verdade"><span class="header-section-number">3.4.1.2</span> Como é uma interação estatística de verdade</h4>
 <p>Agora simulamos um caso em que o efeito da paisagem sobre a ocorrência <strong>realmente muda</strong> conforme o tipo de ambiente — uma interação estatística no sentido técnico.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>paisagem <span class="ot">&lt;-</span> <span class="fu">runif</span>(n2, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>ambiente <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Cerrado Antrópico"</span>, <span class="st">"Uso Humano"</span>), <span class="at">each =</span> n2 <span class="sc">/</span> <span class="dv">2</span>)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># O efeito de "paisagem" sobre a ocorrência muda de acordo com o ambiente:</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forte e positivo em Cerrado Antrópico; fraco/neutro em Uso Humano.</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>logit <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ambiente <span class="sc">==</span> <span class="st">"Cerrado Antrópico"</span>,</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> paisagem,</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.005</span> <span class="sc">*</span> paisagem)</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>ocorrencia <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n2, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(logit))</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>dados2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(paisagem, ambiente, ocorrencia)</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>modelo_interacao <span class="ot">&lt;-</span> <span class="fu">glm</span>(ocorrencia <span class="sc">~</span> paisagem <span class="sc">*</span> ambiente, <span class="at">data =</span> dados2, <span class="at">family =</span> binomial)</span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_interacao)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>paisagem <span class="ot">&lt;-</span> <span class="fu">runif</span>(n2, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>ambiente <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Cerrado Antrópico"</span>, <span class="st">"Uso Humano"</span>), <span class="at">each =</span> n2 <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># O efeito de "paisagem" sobre a ocorrência muda de acordo com o ambiente:</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forte e positivo em Cerrado Antrópico; fraco/neutro em Uso Humano.</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>logit <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ambiente <span class="sc">==</span> <span class="st">"Cerrado Antrópico"</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> paisagem,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.005</span> <span class="sc">*</span> paisagem)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>ocorrencia <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n2, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(logit))</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>dados2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(paisagem, ambiente, ocorrencia)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>modelo_interacao <span class="ot">&lt;-</span> <span class="fu">glm</span>(ocorrencia <span class="sc">~</span> paisagem <span class="sc">*</span> ambiente, <span class="at">data =</span> dados2, <span class="at">family =</span> binomial)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_interacao)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                               Estimate Std. Error   z value     Pr(&gt;|z|)
 (Intercept)                 -4.87573636 0.99103884 -4.919824 8.662220e-07
@@ -923,13 +1074,13 @@ paisagem:ambienteUso Humano -0.09001296 0.02019400 -4.457411 8.295539e-06</code>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dados2<span class="sc">$</span>prob_prevista <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_interacao, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dados2, <span class="fu">aes</span>(<span class="at">x =</span> paisagem, <span class="at">y =</span> prob_prevista, <span class="at">color =</span> ambiente)) <span class="sc">+</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Métrica de paisagem (CPLAND, %)"</span>,</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Probabilidade prevista de ocorrência"</span>,</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Ambiente"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dados2<span class="sc">$</span>prob_prevista <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_interacao, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dados2, <span class="fu">aes</span>(<span class="at">x =</span> paisagem, <span class="at">y =</span> prob_prevista, <span class="at">color =</span> ambiente)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Métrica de paisagem (CPLAND, %)"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Probabilidade prevista de ocorrência"</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Ambiente"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-interacao-real" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -968,37 +1119,37 @@ Figura&nbsp;3.6: Interação estatística real: a inclinação da curva muda con
 <p>Uma vez identificada a escala de efeito — ou seja, a distância na qual cães e gatos melhor respondem à pressão urbana (<a href="#fig-scale-effect" class="quarto-xref">Figura&nbsp;<span>3.4</span></a>) — torna-se fundamental questionar se essa distribuição é moldada exclusivamente pelo ambiente físico ou se as espécies influenciam diretamente a presença uma da outra. Na ecologia de paisagens urbanas, o habitat pode ser favorável, mas a presença de um potencial competidor ou predador pode atuar como um filtro adicional para a ocorrência de uma espécie. Para investigar isso, deixamos de olhar apenas para a relação ‘indivíduo-paisagem’ e passamos a analisar a ‘interação biótica multiescalar’. No proximo bloco de codigo, exploramos se a presença de cães exerce algum efeito de atração ou repulsa sobre a ocorrência de gatos em cada um dos raios estudados, permitindo-nos entender se a coexistência no Campus Marco Zero é ditada por comportamentos de exclusão ou se ambos estão apenas respondendo de forma independente aos recursos oferecidos pela matriz antrópica.</p>
 <p>Para gerar a análise de associação multiescalar, seguimos três etapas principais no R. Primeiro, unificamos em um único banco de dados os registros de presença de cães e gatos com as métricas de paisagem calculadas para cada escala. Em seguida, aplicamos um Modelo Linear Generalizado (GLM) para cada um dos raios de monitoramento. Diferente dos modelos anteriores, aqui a presença do gato é a variável resposta, enquanto a presença do cão e a porcentagem de uso humano entram como variáveis explicativas. Abaixo, utilizamos a lógica de ‘empacotar’ os dados por escala (função nest) e aplicar o modelo de forma automatizada (função map). O objetivo é extrair o coeficiente de inclinação (log-odds) que indica a força da relação entre as duas espécies. Se o intervalo de confiança desse coeficiente cruzar a linha do zero, concluiremos que a presença de uma espécie não dita a ocorrência da outra naquela escala específica. O código a seguir demonstra como organizar esses modelos e preparar os dados para a visualização final:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Associação Biótica: Cães vs Gatos"</span>,</span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
-<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparação: Unindo dados bióticos (cães e gatos) com a paisagem</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df_cooc_pre <span class="ot">&lt;-</span> especies <span class="sc">|&gt;</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(plot_id, calu, feca) <span class="sc">|&gt;</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_pland_humano, <span class="at">by =</span> <span class="st">"plot_id"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Modelagem com Intervalos de Confiança de 95%</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>cooc_robusto <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span> </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span> </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">glm</span>(feca <span class="sc">~</span> calu <span class="sc">+</span> pland_humano, <span class="at">data =</span> .x, <span class="at">family =</span> binomial)),</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># conf.int = TRUE calcula automaticamente os limites inferior e superior</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coefs =</span> <span class="fu">map</span>(modelo, <span class="sc">~</span><span class="fu">tidy</span>(.x, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>))</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span> </span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"calu"</span>)</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Visualização </span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cooc_robusto, <span class="fu">aes</span>(<span class="at">x =</span> escala_buffer, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_errorbar desenha os ICs de 95% robustos</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), </span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Associação Biótica: Cães vs Gatos"</span>,</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Intervalos de Confiança (IC) de 95% calculados via verossimilhança"</span>,</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Escala de Buffer (m)"</span>,</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Efeito da Presença de Cães (Log-odds)"</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-effect-co" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1025,39 +1176,39 @@ Enquanto o “uso humano” (PLAND) atua como um filtro macro (definindo quem co
 <h4 data-number="3.4.1.4" class="anchored" data-anchor-id="interação-estatistica"><span class="header-section-number">3.4.1.4</span> Interação estatistica</h4>
 <p>Diagnóstico de Microescalas: Por que os modelos de interação colapsam?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparar os dados para o gráfico</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformamos 'calu' em fator para que o ggplot entenda como categoria no eixo X</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>df_plot_diagnostico <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Status_Cao =</span> <span class="fu">factor</span>(calu, </span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ausente (0)"</span>, <span class="st">"Presente (1)"</span>))</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar o gráfico</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>grafico_diagnostico <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_plot_diagnostico, </span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">aes</span>(<span class="at">x =</span> Status_Cao, <span class="at">y =</span> pland_humano, <span class="at">color =</span> Status_Cao)) <span class="sc">+</span></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># O boxplot mostra a mediana e a dispersão. Ocultamos os outliers padrão para não duplicar pontos</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># O jitter espalha levemente os 17 pontos para evitar que fiquem sobrepostos</span></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dividir o gráfico pelas escalas de buffer</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> escala_buffer, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Ausente (0)"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Presente (1)"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Diagnóstico de Microescalas"</span>,</span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Dispersão do Uso Humano (PLAND) em relação à Presença/Ausência de Cães"</span>,</span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="st">"Ocorrência de Cães ("</span> <span class="sc">*</span> <span class="fu">italic</span>(<span class="st">"Canis familiaris"</span>) <span class="sc">*</span> <span class="st">")"</span>),</span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Uso Humano na Paisagem (%)"</span></span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="co"># Oculta legenda, pois o eixo X já explica as cores</span></span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_diagnostico)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Preparar os dados para o gráfico</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformamos 'calu' em fator para que o ggplot entenda como categoria no eixo X</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>df_plot_diagnostico <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Status_Cao =</span> <span class="fu">factor</span>(calu, </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ausente (0)"</span>, <span class="st">"Presente (1)"</span>))</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar o gráfico</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>grafico_diagnostico <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_plot_diagnostico, </span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">aes</span>(<span class="at">x =</span> Status_Cao, <span class="at">y =</span> pland_humano, <span class="at">color =</span> Status_Cao)) <span class="sc">+</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># O boxplot mostra a mediana e a dispersão. Ocultamos os outliers padrão para não duplicar pontos</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># O jitter espalha levemente os 17 pontos para evitar que fiquem sobrepostos</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dividir o gráfico pelas escalas de buffer</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> escala_buffer, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Ausente (0)"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Presente (1)"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Diagnóstico de Microescalas"</span>,</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Dispersão do Uso Humano (PLAND) em relação à Presença/Ausência de Cães"</span>,</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="st">"Ocorrência de Cães ("</span> <span class="sc">*</span> <span class="fu">italic</span>(<span class="st">"Canis familiaris"</span>) <span class="sc">*</span> <span class="st">")"</span>),</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Uso Humano na Paisagem (%)"</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="co"># Oculta legenda, pois o eixo X já explica as cores</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_diagnostico)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-diag-int" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1096,48 +1247,48 @@ O cenário só se estabiliza ao observarmos o painel de 100 metros. É nesta esc
 <h4 data-number="3.4.2.2" class="anchored" data-anchor-id="como-identificar-quais-modelos-precisam-disso"><span class="header-section-number">3.4.2.2</span> Como identificar quais modelos precisam disso</h4>
 <p>Antes de trocar tudo por Firth, vale rodar um diagnóstico rápido nos modelos atuais (glm()):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sinais de separação num modelo já ajustado com glm() </span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial) </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit) </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Atenção a: warning "fitted probabilities numerically 0 or 1 occurred" </span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># e a erros-padrão MUITO maiores que os próprios coeficientes}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sinais de separação num modelo já ajustado com glm() </span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial) </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit) </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Atenção a: warning "fitted probabilities numerically 0 or 1 occurred" </span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># e a erros-padrão MUITO maiores que os próprios coeficientes}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Ou, de forma mais formal, o pacote detectseparation testa isso diretamente:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial, </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"detect_separation"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"detect_separation"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Como implementar com logistf.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparação lado a lado com o glm() original </span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fit_glm   <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial) </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>fit_firth <span class="ot">&lt;-</span> <span class="fu">logistf</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)  <span class="co"># pl=TRUE = IC de perfil (default)  </span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_firth)  </span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de  </span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co"># forma sistemática: </span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>ambientes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"uso_humano"</span>, <span class="st">"cerrado_antropico"</span>, <span class="st">"campo_sujo"</span>) </span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>escalas   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">400</span>) </span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>resultados <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()  </span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (amb <span class="cf">in</span> ambientes) {   <span class="cf">for</span> (esc <span class="cf">in</span> escalas) {</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  var_cpland <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"cpland_"</span>, amb, <span class="st">"_"</span>, esc)     </span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  formula_i  <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"cao ~ iguana +"</span>, var_cpland))     </span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">logistf</span>(formula_i, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)      </span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  resultados <span class="ot">&lt;-</span> <span class="fu">rbind</span>(resultados, <span class="fu">data.frame</span>(<span class="at">ambiente =</span> amb, </span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">escala =</span> esc, </span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">coef =</span> <span class="fu">coef</span>(fit)[<span class="st">"iguana"</span>], </span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ic_lower =</span> fit<span class="sc">$</span>ci.lower[<span class="st">"iguana"</span>], </span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ic_upper =</span> fit<span class="sc">$</span>ci.upper[<span class="st">"iguana"</span>], </span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">p_valor  =</span> fit<span class="sc">$</span>prob[<span class="st">"iguana"</span>]     ))   </span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>} </span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparação lado a lado com o glm() original </span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>fit_glm   <span class="ot">&lt;-</span> <span class="fu">glm</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">family =</span> binomial) </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>fit_firth <span class="ot">&lt;-</span> <span class="fu">logistf</span>(cao <span class="sc">~</span> iguana <span class="sc">+</span> cpland, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)  <span class="co"># pl=TRUE = IC de perfil (default)  </span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_firth)  </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Para reproduzir os 45 modelos (3 pares × 3 ambientes × 5 escalas) de  </span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># forma sistemática: </span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>ambientes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"uso_humano"</span>, <span class="st">"cerrado_antropico"</span>, <span class="st">"campo_sujo"</span>) </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>escalas   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">400</span>) </span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>resultados <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()  </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (amb <span class="cf">in</span> ambientes) {   <span class="cf">for</span> (esc <span class="cf">in</span> escalas) {</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  var_cpland <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"cpland_"</span>, amb, <span class="st">"_"</span>, esc)     </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  formula_i  <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"cao ~ iguana +"</span>, var_cpland))     </span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">logistf</span>(formula_i, <span class="at">data =</span> dados, <span class="at">pl =</span> <span class="cn">TRUE</span>)      </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  resultados <span class="ot">&lt;-</span> <span class="fu">rbind</span>(resultados, <span class="fu">data.frame</span>(<span class="at">ambiente =</span> amb, </span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">escala =</span> esc, </span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">coef =</span> <span class="fu">coef</span>(fit)[<span class="st">"iguana"</span>], </span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ic_lower =</span> fit<span class="sc">$</span>ci.lower[<span class="st">"iguana"</span>], </span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">ic_upper =</span> fit<span class="sc">$</span>ci.upper[<span class="st">"iguana"</span>], </span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">p_valor  =</span> fit<span class="sc">$</span>prob[<span class="st">"iguana"</span>]     ))   </span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Para manter a lógica de seleção por AICc que vocês já usam em outras etapas, logistf tem método extractAIC(); para a versão corrigida de pequena amostra (AICc), calculem manualmente:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nobs</span>(fit_firth) </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(fit_firth))</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>aic <span class="ot">&lt;-</span> <span class="fu">extractAIC</span>(fit_firth)[<span class="dv">2</span>]</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>aicc <span class="ot">&lt;-</span> aic <span class="sc">+</span> (<span class="dv">2</span> <span class="sc">*</span> k <span class="sc">*</span> (k <span class="sc">+</span> <span class="dv">1</span>)) <span class="sc">/</span> (n <span class="sc">-</span> k <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nobs</span>(fit_firth) </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(fit_firth))</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>aic <span class="ot">&lt;-</span> <span class="fu">extractAIC</span>(fit_firth)[<span class="dv">2</span>]</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>aicc <span class="ot">&lt;-</span> aic <span class="sc">+</span> (<span class="dv">2</span> <span class="sc">*</span> k <span class="sc">*</span> (k <span class="sc">+</span> <span class="dv">1</span>)) <span class="sc">/</span> (n <span class="sc">-</span> k <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Cuidado de comparabilidade: se só alguns dos 45 modelos forem trocados para Firth (os que mostrarem separação) e os demais continuarem em glm(), o AICc deixa de ser diretamente comparável entre eles, porque a função de verossimilhança maximizada não é a mesma. O mais defensável é: (a) rodar Firth em todos os modelos da mesma família de comparação, ou (b) reportar os dois ajustes lado a lado só nas células problemáticas, deixando explícito no texto qual critério foi usado em cada caso.</p>
 </section>
@@ -1147,102 +1298,102 @@ O cenário só se estabiliza ao observarmos o painel de 100 metros. É nesta esc
 <p>O ideal é reportar rapidamente em Métodos que modelos com sinais de separação (SE desproporcional, glm() com warning) foram reajustados com regressão logística de Firth (logistf, R), citando Firth (1993) e Heinze &amp; Schemper (2002), e nos Resultados mostrar o antes/depois pelo menos para a célula mais extrema (Cerrado Antrópico, 100 m). O pacote logistf é robusto para resolver problemas de pequenas amostras, mas sua função predict() pode ser um pouco “teimosa” quando alimentada com dados novos. Para contornar isso de forma elegante, usaremos álgebra de matrizes nativa do R dentro do nosso fluxo purrr::map. É um truque avançado, mas o código resultante fica limpo e instrutivo.</p>
 <p>Abaixo, apresento o fluxo completo para testar, prever e plotar a interação multiescalar. O Script use Split-Apply-Combine com Interação e Firth. Neste bloco, vamos criar um “cenário artificial” (expand_grid) e empurrá-lo para dentro dos nossos modelos por meio do pacote purrr.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Definir o Grid de Predição (O "Cenário Experimental")</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos ver como a probabilidade muda do 0% ao 100% de uso humano,</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># comparando explicitamente locais COM e SEM cães.</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>cenario_novo <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_humano =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">length.out =</span> <span class="dv">50</span>),</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">calu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="co"># 0 = Cão Ausente, 1 = Cão Presente</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar uma função "segura" para o logistf</span></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Se a matemática falhar (erro LAPACK), retorna NULL em vez de parar o script</span></span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>safe_logistf <span class="ot">&lt;-</span> <span class="fu">possibly</span>(</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="cf">function</span>(df) <span class="fu">logistf</span>(feca <span class="sc">~</span> calu <span class="sc">*</span> pland_humano, <span class="at">data =</span> df, <span class="at">pl =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">otherwise =</span> <span class="cn">NULL</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Fluxo Split-Apply-Combine</span></span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>interacao_multiescalar <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span></span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># APPLY 1: Ajustar o modelo com a função segura</span></span>
-<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, safe_logistf)</span>
-<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># FILTRO VITAL: Remove as escalas onde a matemática colapsou (como 12.5m)</span></span>
-<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Isso impede que o erro LAPACK quebre a próxima etapa!</span></span>
-<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">map_lgl</span>(modelo, is.null)) <span class="sc">|&gt;</span></span>
-<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># APPLY 2: Extrair as predições de forma robusta apenas para os modelos que sobreviveram</span></span>
-<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">predicoes =</span> <span class="fu">map</span>(modelo, <span class="cf">function</span>(mod) {</span>
-<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>      df_pred <span class="ot">&lt;-</span> cenario_novo</span>
-<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>      matriz_modelo <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> calu <span class="sc">*</span> pland_humano, <span class="at">data =</span> df_pred)</span>
-<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.1 Estimativa central (log-odds)</span></span>
-<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>      log_odds <span class="ot">&lt;-</span> matriz_modelo <span class="sc">%*%</span> <span class="fu">coef</span>(mod)</span>
-<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.2 Extrair matriz de variância-covariância e calcular Erro Padrão (SE)</span></span>
-<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a>      vcov_mat <span class="ot">&lt;-</span> <span class="fu">vcov</span>(mod)</span>
-<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Truque de álgebra: calcula a variância pontual para cada linha de predição</span></span>
-<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>      var_log_odds <span class="ot">&lt;-</span> <span class="fu">rowSums</span>((matriz_modelo <span class="sc">%*%</span> vcov_mat) <span class="sc">*</span> matriz_modelo)</span>
-<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a>      se_log_odds <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_log_odds)</span>
-<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.3 Intervalos de confiança de 95% na escala log-odds (Z = 1.96)</span></span>
-<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a>      lower_log_odds <span class="ot">&lt;-</span> log_odds <span class="sc">-</span> (<span class="fl">1.96</span> <span class="sc">*</span> se_log_odds)</span>
-<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>      upper_log_odds <span class="ot">&lt;-</span> log_odds <span class="sc">+</span> (<span class="fl">1.96</span> <span class="sc">*</span> se_log_odds)</span>
-<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.4 Converter tudo de volta para a escala probabilística (0 a 1)</span></span>
-<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>prob_gato <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(log_odds))</span>
-<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>ci_inferior <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(lower_log_odds))</span>
-<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>ci_superior <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(upper_log_odds))</span>
-<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(df_pred)</span>
-<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a>  <span class="co"># COMBINE: Descartamos os modelos brutos e expandimos apenas as predições</span></span>
-<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(escala_buffer, predicoes) <span class="sc">|&gt;</span></span>
-<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(predicoes) <span class="sc">|&gt;</span></span>
-<span id="cb43-58"><a href="#cb43-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb43-59"><a href="#cb43-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">Status_Cao =</span> <span class="fu">factor</span>(calu, </span>
-<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
-<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span>, <span class="st">"Cães Presentes"</span>))</span>
-<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Definir o Grid de Predição (O "Cenário Experimental")</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos ver como a probabilidade muda do 0% ao 100% de uso humano,</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># comparando explicitamente locais COM e SEM cães.</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>cenario_novo <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_humano =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">length.out =</span> <span class="dv">50</span>),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">calu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="co"># 0 = Cão Ausente, 1 = Cão Presente</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar uma função "segura" para o logistf</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Se a matemática falhar (erro LAPACK), retorna NULL em vez de parar o script</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>safe_logistf <span class="ot">&lt;-</span> <span class="fu">possibly</span>(</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="cf">function</span>(df) <span class="fu">logistf</span>(feca <span class="sc">~</span> calu <span class="sc">*</span> pland_humano, <span class="at">data =</span> df, <span class="at">pl =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">otherwise =</span> <span class="cn">NULL</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Fluxo Split-Apply-Combine</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>interacao_multiescalar <span class="ot">&lt;-</span> df_cooc_pre <span class="sc">|&gt;</span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(escala_buffer) <span class="sc">|&gt;</span></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># APPLY 1: Ajustar o modelo com a função segura</span></span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> <span class="fu">map</span>(data, safe_logistf)</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># FILTRO VITAL: Remove as escalas onde a matemática colapsou (como 12.5m)</span></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Isso impede que o erro LAPACK quebre a próxima etapa!</span></span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">map_lgl</span>(modelo, is.null)) <span class="sc">|&gt;</span></span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># APPLY 2: Extrair as predições de forma robusta apenas para os modelos que sobreviveram</span></span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">predicoes =</span> <span class="fu">map</span>(modelo, <span class="cf">function</span>(mod) {</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>      df_pred <span class="ot">&lt;-</span> cenario_novo</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>      matriz_modelo <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> calu <span class="sc">*</span> pland_humano, <span class="at">data =</span> df_pred)</span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.1 Estimativa central (log-odds)</span></span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>      log_odds <span class="ot">&lt;-</span> matriz_modelo <span class="sc">%*%</span> <span class="fu">coef</span>(mod)</span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.2 Extrair matriz de variância-covariância e calcular Erro Padrão (SE)</span></span>
+<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a>      vcov_mat <span class="ot">&lt;-</span> <span class="fu">vcov</span>(mod)</span>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Truque de álgebra: calcula a variância pontual para cada linha de predição</span></span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a>      var_log_odds <span class="ot">&lt;-</span> <span class="fu">rowSums</span>((matriz_modelo <span class="sc">%*%</span> vcov_mat) <span class="sc">*</span> matriz_modelo)</span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>      se_log_odds <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_log_odds)</span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.3 Intervalos de confiança de 95% na escala log-odds (Z = 1.96)</span></span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>      lower_log_odds <span class="ot">&lt;-</span> log_odds <span class="sc">-</span> (<span class="fl">1.96</span> <span class="sc">*</span> se_log_odds)</span>
+<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a>      upper_log_odds <span class="ot">&lt;-</span> log_odds <span class="sc">+</span> (<span class="fl">1.96</span> <span class="sc">*</span> se_log_odds)</span>
+<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 2.4 Converter tudo de volta para a escala probabilística (0 a 1)</span></span>
+<span id="cb44-48"><a href="#cb44-48" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>prob_gato <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(log_odds))</span>
+<span id="cb44-49"><a href="#cb44-49" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>ci_inferior <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(lower_log_odds))</span>
+<span id="cb44-50"><a href="#cb44-50" aria-hidden="true" tabindex="-1"></a>      df_pred<span class="sc">$</span>ci_superior <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">as.numeric</span>(upper_log_odds))</span>
+<span id="cb44-51"><a href="#cb44-51" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb44-52"><a href="#cb44-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(df_pred)</span>
+<span id="cb44-53"><a href="#cb44-53" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb44-54"><a href="#cb44-54" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-55"><a href="#cb44-55" aria-hidden="true" tabindex="-1"></a>  <span class="co"># COMBINE: Descartamos os modelos brutos e expandimos apenas as predições</span></span>
+<span id="cb44-56"><a href="#cb44-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(escala_buffer, predicoes) <span class="sc">|&gt;</span></span>
+<span id="cb44-57"><a href="#cb44-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(predicoes) <span class="sc">|&gt;</span></span>
+<span id="cb44-58"><a href="#cb44-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-59"><a href="#cb44-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">Status_Cao =</span> <span class="fu">factor</span>(calu, </span>
+<span id="cb44-60"><a href="#cb44-60" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb44-61"><a href="#cb44-61" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span>, <span class="st">"Cães Presentes"</span>))</span>
+<span id="cb44-62"><a href="#cb44-62" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Plotar.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Plotar as Curvas de Interação</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>grafico_interacao <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(interacao_multiescalar, </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">x =</span> pland_humano, <span class="at">y =</span> prob_gato, <span class="at">color =</span> Status_Cao)) <span class="sc">+</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Adicionamos a "sombra" do Intervalo de Confiança ANTES da linha principal</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci_inferior, <span class="at">ymax =</span> ci_superior, <span class="at">fill =</span> Status_Cao), </span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Linhas de predição centrais</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Definimos as cores. Precisamos parear 'color' e 'fill' para unificar a legenda</span></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Cães Presentes"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Cães Presentes"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4. Painéis por escala</span></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> escala_buffer, <span class="at">labeller =</span> label_both, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Garantir que o eixo Y fique limitado ao limite biológico da probabilidade (0 a 1)</span></span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efeito Modificador: Cães, Gatos e Paisagem"</span>,</span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Predições logísticas (Firth) com Intervalo de Confiança de 95% (Wald)"</span>,</span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Proporção de Uso Humano na Paisagem (%)"</span>,</span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Probabilidade Prevista de Ocorrência (Gatos)"</span>,</span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Cenário Biótico:"</span>,</span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Cenário Biótico:"</span> <span class="co"># Funde a legenda do fill (IC) com a color (linha)</span></span>
-<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>)</span>
-<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_interacao)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Plotar as Curvas de Interação</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>grafico_interacao <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(interacao_multiescalar, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">x =</span> pland_humano, <span class="at">y =</span> prob_gato, <span class="at">color =</span> Status_Cao)) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Adicionamos a "sombra" do Intervalo de Confiança ANTES da linha principal</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci_inferior, <span class="at">ymax =</span> ci_superior, <span class="at">fill =</span> Status_Cao), </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Linhas de predição centrais</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Definimos as cores. Precisamos parear 'color' e 'fill' para unificar a legenda</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Cães Presentes"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Cães Ausentes"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>, <span class="st">"Cães Presentes"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>)) <span class="sc">+</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4. Painéis por escala</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> escala_buffer, <span class="at">labeller =</span> label_both, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Garantir que o eixo Y fique limitado ao limite biológico da probabilidade (0 a 1)</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efeito Modificador: Cães, Gatos e Paisagem"</span>,</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Predições logísticas (Firth) com Intervalo de Confiança de 95% (Wald)"</span>,</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Proporção de Uso Humano na Paisagem (%)"</span>,</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Probabilidade Prevista de Ocorrência (Gatos)"</span>,</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Cenário Biótico:"</span>,</span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Cenário Biótico:"</span> <span class="co"># Funde a legenda do fill (IC) com a color (linha)</span></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>)</span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico_interacao)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-effect-int" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1305,76 +1456,76 @@ Adicionem uma camada de distância euclidiana até o ponto de recurso mais próx
 Os itens A, B e C testam se cães e gatos respondem a um recurso compartilhado (oferta de comida, período do ano) — mas nenhum deles usa a informação mais fina que uma armadilha fotográfica já registra: o <strong>horário exato</strong> de cada detecção. Enquanto a presença/ausência agregada ao longo de sete meses só permite falar em associação estatística (Seção 3.4), o horário de cada evento permite perguntar algo mais próximo de uma interação ecológica de verdade: será que, no mesmo local, cães e gatos evitam ativamente estar ativos na mesma hora do dia?</p>
 <p>Duas vantagens tornam esse teste particularmente viável no Campus Marco Zero. Primeiro, o campus está sobre a linha do Equador — a duração do dia varia pouco ao longo do ano, o que reduz um viés conhecido do método (misturar dados de diferentes épocas do ano, quando o horário do nascer/pôr do sol muda). Segundo, o dado necessário já existe: a maioria dos softwares de armadilha fotográfica exporta um registro com uma linha por evento de foto/vídeo, incluindo data e hora.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ATENÇÃO: isto usa um arquivo diferente do já utilizado no capítulo.</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisa de uma linha por EVENTO de detecção, com plot_id, especie e data_hora</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (não a matriz de presença-ausência resumida por ponto).</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>deteccoes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/registros_brutos_armadilhas.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_hora =</span> <span class="fu">ymd_hms</span>(data_hora),</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Converte o horário do dia para radianos (0 a 2*pi), formato exigido</span></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pelo pacote overlap para dados de atividade circular.</span></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hora_rad =</span> (<span class="fu">hour</span>(data_hora) <span class="sc">+</span> <span class="fu">minute</span>(data_hora) <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">/</span> <span class="dv">24</span> <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> pi</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>tempo_calu <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"calu"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>tempo_feca <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"feca"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co"># A escolha do estimador de sobreposição depende do tamanho da menor amostra: use `Dhat1` se a menor amostra tiver menos de ~50–75 registros</span></span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(tempo_calu); <span class="fu">length</span>(tempo_feca)</span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimativa do coeficiente de sobreposição (Delta varia de 0 a 1;</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 = atividade idêntica; 0 = nenhuma sobreposição de horário)</span></span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>delta_obs <span class="ot">&lt;-</span> <span class="fu">overlapEst</span>(tempo_calu, tempo_feca, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>delta_obs</span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualização das curvas de atividade diária e da área de sobreposição</span></span>
-<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a><span class="fu">overlapPlot</span>(tempo_calu, tempo_feca,</span>
-<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">xlab =</span> <span class="st">"Hora do dia"</span>, <span class="at">ylab =</span> <span class="st">"Densidade de atividade"</span>)</span>
-<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Cães"</span>, <span class="st">"Gatos"</span>), <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>))</span>
-<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a><span class="co">#O intervalo de confiança vem de um bootstrap suavizado (o próprio pacote recomenda ao menos 1000 reamostragens):</span></span>
-<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a>boots <span class="ot">&lt;-</span> <span class="fu">bootstrap</span>(tempo_calu, tempo_feca, <span class="at">nb =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
-<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a><span class="fu">bootCI</span>(delta_obs, boots)  <span class="co"># use a coluna "basic0" como IC de 95%</span></span>
-<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a><span class="co">#Um Δ baixo (pouca sobreposição, IC não cruzando um valor de referência de sobreposição alta) é consistente com partição temporal de nicho — cada espécie evita a hora de pico da outra. Um Δ alto é consistente com uso independente ou atração ao mesmo horário (por exemplo, ambas atraídas pelo horário de descarte de lixo do RU). **Isso ainda não prova mecanismo**: sobreposição/divergência de horário pode refletir tanto interação direta quanto resposta compartilhada a um mesmo pulso de recurso não medido — a mesma ressalva do Quadro da Seção 3.4 continua valendo, só que agora com uma evidência temporal mais fina do que a presença/ausência agregada.</span></span>
-<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a><span class="co"># *Extensão — evitação de curto prazo no mesmo ponto:* para ir além da sobreposição populacional de horário e testar evitação local, compare o tempo decorrido entre uma detecção de cão e a detecção seguinte de gato na **mesma câmera** com o que se esperaria ao acaso, embaralhando os rótulos de espécie (mantendo os horários fixos) centenas de vezes para construir uma distribuição nula:</span></span>
-<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a>calcular_gap_medio <span class="ot">&lt;-</span> <span class="cf">function</span>(dados_ponto, <span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>) {</span>
-<span id="cb45-36"><a href="#cb45-36" aria-hidden="true" tabindex="-1"></a>  dados_ponto <span class="sc">|&gt;</span></span>
-<span id="cb45-37"><a href="#cb45-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(data_hora) <span class="sc">|&gt;</span></span>
-<span id="cb45-38"><a href="#cb45-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb45-39"><a href="#cb45-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Marca o horário só nas linhas da espécie de referência (ex.: calu);</span></span>
-<span id="cb45-40"><a href="#cb45-40" aria-hidden="true" tabindex="-1"></a>      <span class="co"># NA em todas as outras linhas — inclusive nas da própria espécie foco.</span></span>
-<span id="cb45-41"><a href="#cb45-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">hora_referencia =</span> <span class="fu">if_else</span>(especie <span class="sc">==</span> especie_referencia, data_hora, <span class="fu">as.POSIXct</span>(<span class="cn">NA</span>))</span>
-<span id="cb45-42"><a href="#cb45-42" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb45-43"><a href="#cb45-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "Carrega para frente" o último horário conhecido da referência: assim,</span></span>
-<span id="cb45-44"><a href="#cb45-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cada linha da espécie foco enxerga a detecção de referência mais recente</span></span>
-<span id="cb45-45"><a href="#cb45-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># que a precede — mesmo que existam outras detecções (de qualquer espécie)</span></span>
-<span id="cb45-46"><a href="#cb45-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># no meio. Corrige o problema do lag(), que só captura o caso em que a</span></span>
-<span id="cb45-47"><a href="#cb45-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># referência é literalmente a linha imediatamente anterior.</span></span>
-<span id="cb45-48"><a href="#cb45-48" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">fill</span>(hora_referencia, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb45-49"><a href="#cb45-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(especie <span class="sc">==</span> especie_foco, <span class="sc">!</span><span class="fu">is.na</span>(hora_referencia)) <span class="sc">|&gt;</span></span>
-<span id="cb45-50"><a href="#cb45-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">horas_desde_referencia =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(data_hora, hora_referencia, <span class="at">units =</span> <span class="st">"hours"</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb45-51"><a href="#cb45-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">gap_medio =</span> <span class="fu">mean</span>(horas_desde_referencia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb45-52"><a href="#cb45-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(gap_medio)</span>
-<span id="cb45-53"><a href="#cb45-53" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb45-54"><a href="#cb45-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-55"><a href="#cb45-55" aria-hidden="true" tabindex="-1"></a>dados_ponto <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(plot_id <span class="sc">==</span> <span class="st">"LO_01_0000"</span>)  <span class="co"># repita por câmera</span></span>
-<span id="cb45-56"><a href="#cb45-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-57"><a href="#cb45-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Tempo médio, para os gatos, desde a detecção de cão mais recente naquele ponto</span></span>
-<span id="cb45-58"><a href="#cb45-58" aria-hidden="true" tabindex="-1"></a>gap_observado <span class="ot">&lt;-</span> <span class="fu">calcular_gap_medio</span>(dados_ponto, <span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>)</span>
-<span id="cb45-59"><a href="#cb45-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-60"><a href="#cb45-60" aria-hidden="true" tabindex="-1"></a><span class="co"># O mesmo teste no sentido inverso (tempo dos cães desde o gato mais recente)</span></span>
-<span id="cb45-61"><a href="#cb45-61" aria-hidden="true" tabindex="-1"></a><span class="co"># usa a mesma função só trocando os argumentos:</span></span>
-<span id="cb45-62"><a href="#cb45-62" aria-hidden="true" tabindex="-1"></a><span class="co"># calcular_gap_medio(dados_ponto, especie_foco = "calu", especie_referencia = "feca")</span></span>
-<span id="cb45-63"><a href="#cb45-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-64"><a href="#cb45-64" aria-hidden="true" tabindex="-1"></a>gaps_nulos <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">999</span>, {</span>
-<span id="cb45-65"><a href="#cb45-65" aria-hidden="true" tabindex="-1"></a>  dados_ponto <span class="sc">|&gt;</span></span>
-<span id="cb45-66"><a href="#cb45-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">especie =</span> <span class="fu">sample</span>(especie)) <span class="sc">|&gt;</span>  <span class="co"># embaralha só os rótulos, horários fixos</span></span>
-<span id="cb45-67"><a href="#cb45-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calcular_gap_medio</span>(<span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>)</span>
-<span id="cb45-68"><a href="#cb45-68" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb45-69"><a href="#cb45-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-70"><a href="#cb45-70" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(gaps_nulos <span class="sc">&gt;=</span> gap_observado, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># "p-valor" empírico</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ATENÇÃO: isto usa um arquivo diferente do já utilizado no capítulo.</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisa de uma linha por EVENTO de detecção, com plot_id, especie e data_hora</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (não a matriz de presença-ausência resumida por ponto).</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>deteccoes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/registros_brutos_armadilhas.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_hora =</span> <span class="fu">ymd_hms</span>(data_hora),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Converte o horário do dia para radianos (0 a 2*pi), formato exigido</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pelo pacote overlap para dados de atividade circular.</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hora_rad =</span> (<span class="fu">hour</span>(data_hora) <span class="sc">+</span> <span class="fu">minute</span>(data_hora) <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">/</span> <span class="dv">24</span> <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> pi</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>tempo_calu <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"calu"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>tempo_feca <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">"feca"</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(hora_rad)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co"># A escolha do estimador de sobreposição depende do tamanho da menor amostra: use `Dhat1` se a menor amostra tiver menos de ~50–75 registros</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(tempo_calu); <span class="fu">length</span>(tempo_feca)</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimativa do coeficiente de sobreposição (Delta varia de 0 a 1;</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 = atividade idêntica; 0 = nenhuma sobreposição de horário)</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>delta_obs <span class="ot">&lt;-</span> <span class="fu">overlapEst</span>(tempo_calu, tempo_feca, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>delta_obs</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualização das curvas de atividade diária e da área de sobreposição</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="fu">overlapPlot</span>(tempo_calu, tempo_feca,</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">xlab =</span> <span class="st">"Hora do dia"</span>, <span class="at">ylab =</span> <span class="st">"Densidade de atividade"</span>)</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Cães"</span>, <span class="st">"Gatos"</span>), <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>))</span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="co">#O intervalo de confiança vem de um bootstrap suavizado (o próprio pacote recomenda ao menos 1000 reamostragens):</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>boots <span class="ot">&lt;-</span> <span class="fu">bootstrap</span>(tempo_calu, tempo_feca, <span class="at">nb =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"Dhat1"</span>)</span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="fu">bootCI</span>(delta_obs, boots)  <span class="co"># use a coluna "basic0" como IC de 95%</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a><span class="co">#Um Δ baixo (pouca sobreposição, IC não cruzando um valor de referência de sobreposição alta) é consistente com partição temporal de nicho — cada espécie evita a hora de pico da outra. Um Δ alto é consistente com uso independente ou atração ao mesmo horário (por exemplo, ambas atraídas pelo horário de descarte de lixo do RU). **Isso ainda não prova mecanismo**: sobreposição/divergência de horário pode refletir tanto interação direta quanto resposta compartilhada a um mesmo pulso de recurso não medido — a mesma ressalva do Quadro da Seção 3.4 continua valendo, só que agora com uma evidência temporal mais fina do que a presença/ausência agregada.</span></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a><span class="co"># *Extensão — evitação de curto prazo no mesmo ponto:* para ir além da sobreposição populacional de horário e testar evitação local, compare o tempo decorrido entre uma detecção de cão e a detecção seguinte de gato na **mesma câmera** com o que se esperaria ao acaso, embaralhando os rótulos de espécie (mantendo os horários fixos) centenas de vezes para construir uma distribuição nula:</span></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>calcular_gap_medio <span class="ot">&lt;-</span> <span class="cf">function</span>(dados_ponto, <span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>) {</span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>  dados_ponto <span class="sc">|&gt;</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(data_hora) <span class="sc">|&gt;</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Marca o horário só nas linhas da espécie de referência (ex.: calu);</span></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>      <span class="co"># NA em todas as outras linhas — inclusive nas da própria espécie foco.</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">hora_referencia =</span> <span class="fu">if_else</span>(especie <span class="sc">==</span> especie_referencia, data_hora, <span class="fu">as.POSIXct</span>(<span class="cn">NA</span>))</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "Carrega para frente" o último horário conhecido da referência: assim,</span></span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cada linha da espécie foco enxerga a detecção de referência mais recente</span></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># que a precede — mesmo que existam outras detecções (de qualquer espécie)</span></span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># no meio. Corrige o problema do lag(), que só captura o caso em que a</span></span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># referência é literalmente a linha imediatamente anterior.</span></span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">fill</span>(hora_referencia, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-49"><a href="#cb46-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(especie <span class="sc">==</span> especie_foco, <span class="sc">!</span><span class="fu">is.na</span>(hora_referencia)) <span class="sc">|&gt;</span></span>
+<span id="cb46-50"><a href="#cb46-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">horas_desde_referencia =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(data_hora, hora_referencia, <span class="at">units =</span> <span class="st">"hours"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb46-51"><a href="#cb46-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">gap_medio =</span> <span class="fu">mean</span>(horas_desde_referencia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb46-52"><a href="#cb46-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(gap_medio)</span>
+<span id="cb46-53"><a href="#cb46-53" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-54"><a href="#cb46-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-55"><a href="#cb46-55" aria-hidden="true" tabindex="-1"></a>dados_ponto <span class="ot">&lt;-</span> deteccoes <span class="sc">|&gt;</span> <span class="fu">filter</span>(plot_id <span class="sc">==</span> <span class="st">"LO_01_0000"</span>)  <span class="co"># repita por câmera</span></span>
+<span id="cb46-56"><a href="#cb46-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-57"><a href="#cb46-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Tempo médio, para os gatos, desde a detecção de cão mais recente naquele ponto</span></span>
+<span id="cb46-58"><a href="#cb46-58" aria-hidden="true" tabindex="-1"></a>gap_observado <span class="ot">&lt;-</span> <span class="fu">calcular_gap_medio</span>(dados_ponto, <span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>)</span>
+<span id="cb46-59"><a href="#cb46-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-60"><a href="#cb46-60" aria-hidden="true" tabindex="-1"></a><span class="co"># O mesmo teste no sentido inverso (tempo dos cães desde o gato mais recente)</span></span>
+<span id="cb46-61"><a href="#cb46-61" aria-hidden="true" tabindex="-1"></a><span class="co"># usa a mesma função só trocando os argumentos:</span></span>
+<span id="cb46-62"><a href="#cb46-62" aria-hidden="true" tabindex="-1"></a><span class="co"># calcular_gap_medio(dados_ponto, especie_foco = "calu", especie_referencia = "feca")</span></span>
+<span id="cb46-63"><a href="#cb46-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-64"><a href="#cb46-64" aria-hidden="true" tabindex="-1"></a>gaps_nulos <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">999</span>, {</span>
+<span id="cb46-65"><a href="#cb46-65" aria-hidden="true" tabindex="-1"></a>  dados_ponto <span class="sc">|&gt;</span></span>
+<span id="cb46-66"><a href="#cb46-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">especie =</span> <span class="fu">sample</span>(especie)) <span class="sc">|&gt;</span>  <span class="co"># embaralha só os rótulos, horários fixos</span></span>
+<span id="cb46-67"><a href="#cb46-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calcular_gap_medio</span>(<span class="at">especie_foco =</span> <span class="st">"feca"</span>, <span class="at">especie_referencia =</span> <span class="st">"calu"</span>)</span>
+<span id="cb46-68"><a href="#cb46-68" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb46-69"><a href="#cb46-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-70"><a href="#cb46-70" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(gaps_nulos <span class="sc">&gt;=</span> gap_observado, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># "p-valor" empírico</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="conclusão" class="level2" data-number="3.6">
