@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-82cb5808e81da3454e8042d903791e03.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-514c3c5c645fecdfd9acb6a6b9a944a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -346,10 +346,32 @@ Figura&nbsp;3.1: Fluxo metodológico para análise multiescalar. O processo inic
 </section>
 <section id="dados" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="dados"><span class="header-section-number">3.2.2</span> Dados</h3>
+<p>Para contextualizar o esforço amostral, os dados bióticos derivam de um monitoramento sistemático com armadilhas fotográficas realizado no Campus Marco Zero. O delineamento consistiu em 17 estações de amostragem espacialmente independentes, distribuídas ao longo de uma grade regular, que registraram a fauna de forma contínua entre agosto de 2025 e março de 2026.</p>
+<p>As armadilhas fotográficas são câmeras autônomas equipadas com sensores de infravermelho passivo que disparam automaticamente ao detectar o calor e o movimento de um animal (ou seja uma forma de <strong>sensoriamento remoto</strong>). Esta tecnologia consolidou-se como um método não invasivo e altamente eficiente para o monitoramento contínuo da fauna, permitindo a construção de matrizes padronizadas de presença e ausência (ou detecção/não detecção) operando 24 horas por dia (<span class="citation" data-cites="burton2015">Burton et al. (<a href="references.html#ref-burton2015" role="doc-biblioref">2015</a>)</span>, <span class="citation" data-cites="li2023">Li et al. (<a href="references.html#ref-li2023" role="doc-biblioref">2023</a>)</span>).</p>
+<p>Na ecologia de paisagens, a relevância das armadilhas fotográficas vai muito além do simples registro de espécies: elas atuam como sensores georreferenciados que ancoram processos biológicos a coordenadas precisas no espaço. Ao distribuir as estações de amostragem ao longo de gradientes ambientais — como transições entre remanescentes naturais e matrizes urbanas —, o ecólogo consegue vincular a ocorrência local da fauna à estrutura da paisagem ao redor de cada ponto. É exatamente essa união metodológica que permite extrair métricas de composição e configuração em diferentes raios (escala de efeito) e modelar matematicamente como a fragmentação, a perda de habitat ou a infraestrutura antrópica determinam a distribuição, atividade e a coocorrência das espécies no território (<span class="citation" data-cites="burton2015">Burton et al. (<a href="references.html#ref-burton2015" role="doc-biblioref">2015</a>)</span>, <span class="citation" data-cites="li2023">Li et al. (<a href="references.html#ref-li2023" role="doc-biblioref">2023</a>)</span>, <span class="citation" data-cites="rodas-trejo2025">Rodas-Trejo et al. (<a href="references.html#ref-rodas-trejo2025" role="doc-biblioref">2025</a>)</span>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Armadilhas Fotográficas como Sensoriamento Remoto Terrestre
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Na ecologia espacial, é comum associarmos o termo “sensoriamento remoto” exclusivamente a satélites e drones. No entanto, do ponto de vista conceitual (a aquisição de dados sem contato físico direto com o alvo), as <strong>armadilhas fotográficas operam exatamente como sensores remotos</strong>, mas com uma perspectiva e escala complementares.</p>
+<p>A modelagem multiescalar moderna depende da integração dessas duas frentes tecnológicas:</p>
+<ul>
+<li><strong>Sensoriamento Orbital (O Palco):</strong> Satélites capturam a paisagem de cima para baixo (visão nadiral) em macroescala. Eles produzem matrizes contínuas de dados (pixels) que nos permitem classificar o uso do solo e quantificar a estrutura física do habitat, como fizemos no Capítulo 2 ao calcular as proporções de cobertura e métricas de configuração.</li>
+<li><strong>Sensoriamento Proximal (Os Atores):</strong> As armadilhas fotográficas capturam o ambiente horizontalmente, no nível do solo. Elas operam em microescala e geram dados baseados em eventos discretos (disparos infravermelhos). Sua força não está em mapear a estrutura estática do território, mas em registrar a dinâmica biológica: a presença, a identidade e o padrão de atividade da fauna interagindo com o habitat.</li>
+</ul>
+<p>A essência das análises multiescalares deste capítulo nasce da sobreposição dessas duas escalas de observação. Utilizamos o sensor terrestre para identificar <em>quem</em> está usando o espaço e cruzamos essa coordenada com o sensor orbital para entender <em>como</em> a paisagem está estruturada ao redor desse evento.</p>
+</div>
+</div>
 <p>Aqui usamos as métricas calculadas anteriormente no <a href="https://darrennorris.github.io/eprv2/map.html">Capitlo 2</a>. Tambem incluimos dados de Presença-ausência de espécies na planilha de dados <a href="https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&amp;ouid=113037231579524180689&amp;rtpof=true&amp;sd=true">ep_species_pa.xlsx</a> : <a href="https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&amp;ouid=113037231579524180689&amp;rtpof=true&amp;sd=true" class="uri">https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&amp;ouid=113037231579524180689&amp;rtpof=true&amp;sd=true</a> .</p>
 <p>A planilha tem os registros de presença-ausência em cada ponto de: <em>Aramides cajaneus</em>, <em>Tigrisoma lineatum</em>, <em>Iguana iguana</em>, <em>Didelphis marsupialis</em>, <em>Nasua nasua</em>, <em>Felis catus</em>, <em>Canis lupus familiaris</em>, <em>Homo sapiens</em> e veículos.</p>
-<p>Imagens disponíveis no Projeto iNaturalist:&nbsp; <a href="https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero">Biodiversidade do Campus Marco Zero</a></p>
-<p><a href="https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero" class="uri">https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero</a></p>
+<p>(Nota: As imagens que validam essas detecções estão disponíveis publicamente no Projeto iNaturalist: <a href="https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero">Biodiversidade do Campus Marco Zero</a></p>
+<p><a href="https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero" class="uri">https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero</a> )</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ler o arquivo com metricas</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>metricas <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/tabela_metricas_final.csv"</span>)</span>
@@ -1542,6 +1564,9 @@ Bivand, Roger S., Edzer Pebesma, e Virgilio Gómez-Rubio. 2013. <em>Applied Spat
 <div id="ref-blanchet2020" class="csl-entry" role="listitem">
 Blanchet, F. Guillaume, Kevin Cazelles, e Dominique Gravel. 2020. <span>“Co<span>-</span>Occurrence Is Not Evidence of Ecological Interactions”</span>. <em>Ecology Letters</em> 23 (7): 1050–63. <a href="https://doi.org/10.1111/ele.13525">https://doi.org/10.1111/ele.13525</a>.
 </div>
+<div id="ref-burton2015" class="csl-entry" role="listitem">
+Burton, A. Cole, Eric Neilson, Dario Moreira, et al. 2015. <span>“REVIEW: Wildlife Camera Trapping: A Review and Recommendations for Linking Surveys to Ecological Processes”</span>. <em>Journal of Applied Ecology</em> 52 (3): 675–85. <a href="https://doi.org/10.1111/1365-2664.12432">https://doi.org/10.1111/1365-2664.12432</a>.
+</div>
 <div id="ref-carroll2000" class="csl-entry" role="listitem">
 Carroll, Steven S., e David L. Pearson. 2000. <span>“Detecting and Modeling Spatial and Temporal Dependence in Conservation Biology”</span>. <em>Conservation Biology</em> 14 (6): 1893–97. <a href="https://doi.org/10.1111/j.1523-1739.2000.99432.x">https://doi.org/10.1111/j.1523-1739.2000.99432.x</a>.
 </div>
@@ -1560,8 +1585,14 @@ Heinze, Georg, e Michael Schemper. 2002. <span>“A Solution to the Problem of S
 <div id="ref-jackson2012" class="csl-entry" role="listitem">
 Jackson, Heather Bird, e Lenore Fahrig. 2012. <span>“What Size Is a Biologically Relevant Landscape?”</span> <em>Landscape Ecology</em> 27 (7): 929–41. <a href="https://doi.org/10.1007/s10980-012-9757-9">https://doi.org/10.1007/s10980-012-9757-9</a>.
 </div>
+<div id="ref-li2023" class="csl-entry" role="listitem">
+Li, Zhilin, Xiaoyi Shi, Jiayu Lu, et al. 2023. <span>“Assessing Mammal Population Densities in Response to Urbanization Using Camera Trap Distance Sampling”</span>. <em>Ecology and Evolution</em> 13 (10). <a href="https://doi.org/10.1002/ece3.10634">https://doi.org/10.1002/ece3.10634</a>.
+</div>
 <div id="ref-miguet2016determines" class="csl-entry" role="listitem">
 Miguet, Paul, Heather B Jackson, Nathan D Jackson, Amanda E Martin, e Lenore Fahrig. 2016. <span>“What determines the spatial extent of landscape effects on species?”</span> <em>Landscape ecology</em> 31: 1177–94. <a href="https://doi.org/10.1007/s10980-015-0314-1">https://doi.org/10.1007/s10980-015-0314-1</a>.
+</div>
+<div id="ref-rodas-trejo2025" class="csl-entry" role="listitem">
+Rodas-Trejo, Jenner, Sergio López, Cesar Tejeda Cruz, Jaime R. Rau, e Carlos Tejeda Cruz. 2025. <span>“Effects of Landscape Attributes on Medium- and Large Terrestrial Non-Volant Mammals: A Systematic Review of Camera Trap Studies (2010<span></span>2023)”</span>. <em>Discover Animals</em> 2 (1). <a href="https://doi.org/10.1007/s44338-025-00090-x">https://doi.org/10.1007/s44338-025-00090-x</a>.
 </div>
 <div id="ref-veech2012" class="csl-entry" role="listitem">
 Veech, Joseph A. 2012. <span>“A Probabilistic Model for Analysing Species Co<span>-</span>Occurrence”</span>. <em>Global Ecology and Biogeography</em> 22 (2): 252–60. <a href="https://doi.org/10.1111/j.1466-8238.2012.00789.x">https://doi.org/10.1111/j.1466-8238.2012.00789.x</a>.
