@@ -65,13 +65,32 @@ library(sjPlot)
 
 ### Dados
 
+Para contextualizar o esforço amostral, os dados bióticos derivam de um monitoramento sistemático com armadilhas fotográficas realizado no Campus Marco Zero. O delineamento consistiu em 17 estações de amostragem espacialmente independentes, distribuídas ao longo de uma grade regular, que registraram a fauna de forma contínua entre agosto de 2025 e março de 2026.
+
+As armadilhas fotográficas são câmeras autônomas equipadas com sensores de infravermelho passivo que disparam automaticamente ao detectar o calor e o movimento de um animal (ou seja uma forma de **sensoriamento remoto**). Esta tecnologia consolidou-se como um método não invasivo e altamente eficiente para o monitoramento contínuo da fauna, permitindo a construção de matrizes padronizadas de presença e ausência (ou detecção/não detecção) operando 24 horas por dia (@burton2015, @li2023).
+
+Na ecologia de paisagens, a relevância das armadilhas fotográficas vai muito além do simples registro de espécies: elas atuam como sensores georreferenciados que ancoram processos biológicos a coordenadas precisas no espaço. Ao distribuir as estações de amostragem ao longo de gradientes ambientais — como transições entre remanescentes naturais e matrizes urbanas —, o ecólogo consegue vincular a ocorrência local da fauna à estrutura da paisagem ao redor de cada ponto. É exatamente essa união metodológica que permite extrair métricas de composição e configuração em diferentes raios (escala de efeito) e modelar matematicamente como a fragmentação, a perda de habitat ou a infraestrutura antrópica determinam a distribuição, atividade e a coocorrência das espécies no território (@burton2015, @li2023, @rodas-trejo2025).
+
+::: {.callout-note}
+## Armadilhas Fotográficas como Sensoriamento Remoto Terrestre
+
+Na ecologia espacial, é comum associarmos o termo "sensoriamento remoto" exclusivamente a satélites e drones. No entanto, do ponto de vista conceitual (a aquisição de dados sem contato físico direto com o alvo), as **armadilhas fotográficas operam exatamente como sensores remotos**, mas com uma perspectiva e escala complementares.
+
+A modelagem multiescalar moderna depende da integração dessas duas frentes tecnológicas:
+
+*   **Sensoriamento Orbital (O Palco):** Satélites capturam a paisagem de cima para baixo (visão nadiral) em macroescala. Eles produzem matrizes contínuas de dados (pixels) que nos permitem classificar o uso do solo e quantificar a estrutura física do habitat, como fizemos no Capítulo 2 ao calcular as proporções de cobertura e métricas de configuração.
+*   **Sensoriamento Proximal (Os Atores):** As armadilhas fotográficas capturam o ambiente horizontalmente, no nível do solo. Elas operam em microescala e geram dados baseados em eventos discretos (disparos infravermelhos). Sua força não está em mapear a estrutura estática do território, mas em registrar a dinâmica biológica: a presença, a identidade e o padrão de atividade da fauna interagindo com o habitat.
+
+A essência das análises multiescalares deste capítulo nasce da sobreposição dessas duas escalas de observação. Utilizamos o sensor terrestre para identificar *quem* está usando o espaço e cruzamos essa coordenada com o sensor orbital para entender *como* a paisagem está estruturada ao redor desse evento.
+:::
+
 Aqui usamos as métricas calculadas anteriormente no [Capitlo 2](https://darrennorris.github.io/eprv2/map.html). Tambem incluimos dados de Presença-ausência de espécies na planilha de dados [ep_species_pa.xlsx](https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&ouid=113037231579524180689&rtpof=true&sd=true) : <https://docs.google.com/spreadsheets/d/11Y8e4_GmCZxVzCv-8Nl98b7tqIPtnGaS/edit?usp=sharing&ouid=113037231579524180689&rtpof=true&sd=true> .
 
 A planilha tem os registros de presença-ausência em cada ponto de: *Aramides cajaneus*, *Tigrisoma lineatum*, *Iguana iguana*, *Didelphis marsupialis*, *Nasua nasua*, *Felis catus*, *Canis lupus familiaris*, *Homo sapiens* e veículos.
 
-Imagens disponíveis no Projeto iNaturalist:  [Biodiversidade do Campus Marco Zero](https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero)
+(Nota: As imagens que validam essas detecções estão disponíveis publicamente no Projeto iNaturalist: [Biodiversidade do Campus Marco Zero](https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero)
 
-<https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero>
+<https://www.inaturalist.org/projects/biodiversidade-do-campus-marco-zero> )
 
 ```{r}
 #| label: dados-animais
