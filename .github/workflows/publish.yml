@@ -42,6 +42,7 @@ jobs:
             any::CooccurrenceAffinity
             any::patchwork
             any::modelsummary
+            any::sjPlot
             any::mapview
             any::rnaturalearth
             any::rnaturalearthdata

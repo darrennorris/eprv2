@@ -1,6 +1,6 @@
 # pacotes para o livro
 eprv2packages <- c("tidyverse", "tidymodels", "tidyterra", 
-                   "lubridate", "modelsummary",
+                   "lubridate", "modelsummary", "sjPlot",
                  "patchwork", "remotes", "kableExtra", "Hmisc",
                  "sp", "spdep", "sf","raster", "mapview","tmap", 
                  "MuMIn", "AICcmodavg", "mgcv", "detectseparation",

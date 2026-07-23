@@ -60,6 +60,7 @@ library(overlap)
 # 4. Visualization
 library(patchwork)   # Para organizar gráficos
 library(modelsummary)
+library(sjPlot)
 ```
 
 ### Dados
@@ -508,7 +509,6 @@ modelsummary(
   lista_modelos,
   estimate  = "{estimate}",          # Exibe o coeficiente principal
   statistic = c("SE: {std.error}", "p: {p.value}"), # Exibe Erro Padrão e p-valor embaixo
-  stars = TRUE,                      # Adiciona os asteriscos de significância (*, **, ***)
   fmt = 3,                           # Arredonda para 3 casas decimais
   coef_rename = c(
     "(Intercept)" = "Intercepto",
