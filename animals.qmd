@@ -618,10 +618,10 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
 
 Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, com o tamanho amostral atual, não há evidência estatística de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico permite levantar a hipótese de que outros fatores não capturados pela métrica de cobertura (como, potencialmente, a distribuição de pontos de alimentação) possam exercer influência na coocorrência espacial. O fato de a associação ser nula sugere que ambas as espécies podem estar respondendo de forma independente ao ambiente do campus. Ao interpretarmos os resultados de coocorrência, devemos considerar processos que operam simultaneamente no campus:
 
-- Atração Comum: \
+- Atração Comum:\
   A ausência de segregação espacial (intervalos cruzando o zero) sugere que os recursos antrópicos existentes no campus (comida/abrigo) não promovem uma exclusão competitiva severa que seja detectável nesta escala. Em ecologia urbana, o recurso (por exemplo comida) frequentemente "força" a sobreposição de nicho espacial, mesmo entre predadores e competidores.
 
-- Filtragem Ambiental: \
+- Filtragem Ambiental:\
   Enquanto o "uso humano" (PLAND) atua como um filtro macro, os intervalos de confiança largos indicam que a ocorrência pode ser guiada por características em microescala não totalmente capturadas pela métrica física de uso do solo. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.
 
 #### Interação estatistica
@@ -672,7 +672,7 @@ print(grafico_diagnostico)
 A @fig-diag-int ilustra a dependência de escala na ecologia urbana e suas consequências para a modelagem preditiva. Note como, nos painéis de 12,5m, 25m e até 50m, todos os pontos referentes aos locais onde os cães não foram registrados ("Ausente") estão cravados exatamente na linha basal de 0% de Uso Humano. Nessas escalas, o boxplot se achata formando apenas uma linha horizontal, evidenciando uma total ausência de heterogenidade.
 
 - **A Consequência Estatística (Separação Completa):**\
-  Quando um modelo logístico (como o glm()) tenta calcular a probabilidade de ocorrência com base nestes dados, ele detecta que a ausência de cães é perfeitamente separada pelo valor nulo da métrica de paisagem. Sem uma sobreposição mínima ou variabilidade (pontos intermediários), o algoritmo não consegue calcular a inclinação da reta logística. Esta ausência de variabilidade é a responsável direta por fazer a matriz de informação colapsar, disparando erros de processamento (como o LAPACK failed relatado nas análises do R) ou gerando coeficientes com erros-padrão que tendem ao infinito. Nestes cenários, a aplicação de correções como a regressão logística penalizada (Firth) torna-se não apenas recomendada, mas estritamente necessária para obter estimativas finitas.
+  Quando um modelo logístico (como o glm()) tenta calcular a probabilidade de ocorrência com base nestes dados, ele detecta que a ausência de cães é perfeitamente separada pelo valor nulo da métrica de paisagem. Sem uma sobreposição mínima ou variabilidade (pontos intermediários), o algoritmo não consegue calcular a inclinação da reta logística. Esta ausência de variabilidade é a responsável direta por fazer a matriz de informação colapsar, disparando erros de processamento (como o LAPACK failed relatado nas análises do R) ou gerando coeficientes com erros-padrão que tendem ao infinito. Nestes cenários, a aplicação de correções como a regressão logística penalizada (@firth1993) torna-se não apenas recomendada, mas estritamente necessária para obter estimativas finitas.
 
 - **A Realidade Ecológica por Trás do Gráfico:**\
   Do ponto de vista ecológico, este gráfico atesta a teoria fundamentada no Capítulo 2: em microescalas (12,5m e 25m), a paisagem capturada pelo raio de amostragem é, em grande parte, monótona e homogênea. O círculo de amostragem tende a cair inteiramente dentro de uma "mancha pura". Ou seja, as câmeras que não registraram cães estavam em pontos onde a influência física humana era inexistente no raio avaliado.
@@ -692,7 +692,7 @@ O problema, em uma frase: com N=17 e (para cão) só 3 ausências, a máxima ver
 
 Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes). Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é "encolhido" (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver. Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.
 
-É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (Heinze & Schemper, 2002, Statistics in Medicine).
+É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (@heinze2002).
 
 #### Como identificar quais modelos precisam disso
 
