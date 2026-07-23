@@ -616,15 +616,13 @@ ggplot(cooc_robusto, aes(x = escala_buffer, y = estimate)) +
   theme_light(base_size = 12)
 ```
 
-Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, estatisticamente, não há evidência de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico sugere que outras fatores (como a oferta de comida) é uma força mais poderosa na coocorrência do que a competição direta entre as duas espécies. O fato de a associação ser nula sugere que ambas as espécies podem estar respondendo de forma independente aos recursos oferecidos pelo campus (comida, abrigo em prédios), onde a disponibilidade de recursos no habitat é o fator principal que dita onde os animais estão, e não a presença um do outro.
+Em todas as escalas testadas (12,5m a 100m), os intervalos de confiança de 95% (barras roxas) cruzam a linha do zero (@fig-effect-co). Isso indica que, com o tamanho amostral atual, não há evidência estatística de uma associação forte (atração ou repulsão) entre cães e gatos no Campus Marco Zero. O gráfico permite levantar a hipótese de que outros fatores não capturados pela métrica de cobertura (como, potencialmente, a distribuição de pontos de alimentação) possam exercer influência na coocorrência espacial. O fato de a associação ser nula sugere que ambas as espécies podem estar respondendo de forma independente ao ambiente do campus. Ao interpretarmos os resultados de coocorrência, devemos considerar processos que operam simultaneamente no campus:
 
-Ao interpretarmos os resultados de coocorrência, devemos olhar para dois processos que operam simultaneamente no campus Hotspots de Recursos e Filtragem Ambiental
+- Atração Comum: \
+  A ausência de segregação espacial (intervalos cruzando o zero) sugere que os recursos antrópicos existentes no campus (comida/abrigo) não promovem uma exclusão competitiva severa que seja detectável nesta escala. Em ecologia urbana, o recurso (por exemplo comida) frequentemente "força" a sobreposição de nicho espacial, mesmo entre predadores e competidores.
 
-- Hotspots de Recursos (Atração Comum):\
-  A ausência de segregação (intervalos cruzando o zero) sugere que a distribuição de recursos antrópicos (pontos de alimentação voluntária, lixeiras abertas e o entorno do Restaurante Universitário - RU) exerce uma força de atração superior à força de repulsão entre as espécies. Em ecologia urbana, o recurso (comida) frequentemente "força" a sobreposição de nicho espacial, mesmo entre predadores e competidores.
-
-- Filtragem Ambiental vs. Seleção de Micro-habitat:\
-  Enquanto o "uso humano" (PLAND) atua como um filtro macro (definindo quem consegue viver no campus), a localização fina dos indivíduos é ditada pela oferta de subsídios energéticos. Cães e gatos na UNIFAP não estão apenas "onde há prédios", eles estão onde há energia disponível. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.
+- Filtragem Ambiental: \
+  Enquanto o "uso humano" (PLAND) atua como um filtro macro, os intervalos de confiança largos indicam que a ocorrência pode ser guiada por características em microescala não totalmente capturadas pela métrica física de uso do solo. Se os intervalos de confiança são largos, isso indica que essa oferta de recursos é heterogênea e não foi totalmente capturada apenas pela métrica de cobertura do solo.
 
 #### Interação estatistica
 
@@ -910,15 +908,15 @@ Você notará que no centro do gráfico as bandas tendem a ser mais estreitas, m
 ::: callout-tip
 ## Dica do Ecólogo: Por que um resultado 'não significativo' é valioso?
 
-Você pode estar pensando: "Tanto código e análise para descobrir que não ha uma associação forte entre a presença de cães e gatos?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por dois motivos principais:
+Você pode estar pensando: "Tanto código e análise para descobrir que não ha uma associação forte entre a presença de cães e gatos?". Na ciência aplicada, encontrar um **resultado não significativo** em múltiplas escalas é uma descoberta valiosa por varios motivos principais:
 
-1.  **A Independência das Espécies:** O fato de a coocorrência ser aleatória em raios de 12,5m até 100m sugere que a presença de uma espécie não é o fator que limita a outra no Campus. Isso indica que não há uma exclusão competitiva forte ou segregação espacial ativa.
+1.  **A Independência das Espécies:** O fato de a coocorrência ser estatisticamente aleatória em raios de 12,5m até 100m indica que a presença de uma espécie não atua como um fator limitante absoluto para a outra nos locais amostrados. Isso não exclui interações diretas, mas mostra que não há uma segregação espacial excludente.
 
-2.  **A Força da Matriz Urbana:** Quando a estatística aponta para a aleatoriedade biótica em várias escalas, ela está, na verdade, destacando que o **ambiente (a matriz urbana)** é uma força muito mais poderosa. Em vez de as espécies "negociarem" o espaço entre si, ambas estão respondendo de forma individual aos subsídios humanos (lixo, oferta de comida e abrigo).
+2.  **A Força da Matriz Urbana:** Quando a estatística aponta para a aleatoriedade biótica em várias escalas, ela destaca o peso do filtro ambiental. Em vez de as espécies segregarem o espaço de forma detectável, ambas demonstram capacidade de utilizar a matriz urbana simultaneamente.
 
-3.  **Saturação da Paisagem:** Em ecologia, quando duas espécies generalistas apresentam alta prevalência e coocorrência aleatória em múltiplas escalas, isso sugere que a paisagem está **saturada**. Não há barreiras ambientais ou bióticas eficazes que limitem a ocupação de cães ou gatos no campus. Ambos utilizam a matriz urbana de forma tão eficiente que a presença de um não interfere na "liberdade" de ocupação do outro.
+3.  **Flexibilidade de Uso do Espaço:** Duas espécies generalistas apresentarem alta prevalência e coocorrência aleatória sugere que o ambiente construído não apresenta barreiras físicas intransponíveis para nenhuma das duas. A presença de um predador ou competidor não restringe espacialmente a ocupação do outro, evidenciando uma tolerância viabilizada pelo ambiente.
 
-4.  **Necessidade de Gestão Proativa e Integrada:** O fato de operarem de forma independente e generalizada significa que ações isoladas (focadas em apenas uma espécie ou em pontos específicos) serão paliativas. Como não há segregação, uma **gestão proativa** é mandatória.
+4.  **Necessidade de Gestão Proativa e Integrada:** O fato de operarem sem segregação espacial clara significa que o planejamento de fauna precisa ser sistêmico. Ações de gestão focadas em apenas uma espécie podem ser ineficazes, pois o ambiente suporta o trânsito livre de ambas. Como não há segregação, uma **gestão proativa** é mandatória.
 
 5.  **O Valor da Evidência Multiescalar:** Confirmar que essa independência se mantém em raios de 12,5m até 100m prova que o coocorrência não é um artefato de amostragem local, mas uma característica estrutural do Campus Marco Zero. Para o gestor ambiental, isso fornece o embasamento científico para tratar a fauna doméstica não como casos isolados, mas como um componente onipresente da paisagem que exige manejo do ambiente como um todo, e não apenas o controle individual de animais.
 
@@ -1024,7 +1022,7 @@ mean(gaps_nulos >= gap_observado, na.rm = TRUE)  # "p-valor" empírico
 
 Ao longo das análises, não confiamos em apenas uma fonte, mas sim, um conjunto de evidencias cientificas. Usamos o pacote cooccur para testar interações bióticas, o landscapemetrics para quantificar a estrutura da paisagem e modelos lineares generalizados (GLM) para avaliar a escala de efeito. Por que isso é importante?
 
-Rigor contra o subjetivismo: O que parece óbvio ao olhar para o mapa (ex: 'tem cachorros perto dos gatos') só se torna evidência científica quando resiste a testes estatísticos de diferentes naturezas. Alem disso, conclusões baseadas em múltiplas análises protegem o gestor ambiental. Se você precisar propor uma política de getão de fauna doméstica, terá em mãos não apenas um 'acho que', mas um corpo de evidências cientificas robustas que mostra exatamente em qual escala o problema ocorre e quais fatores (bióticos ou abióticos) são irrelevantes.
+Rigor contra o subjetivismo: O que parece óbvio ao olhar para o mapa (ex: 'tem cachorros perto dos gatos') só se torna evidência científica quando resiste a testes estatísticos de diferentes naturezas. Alem disso, conclusões baseadas em múltiplas análises protegem o gestor ambiental. Se você precisar propor uma política de getão de fauna doméstica, terá em mãos não apenas um 'acho que', mas um corpo de evidências cientificas robustas que mostra exatamente em qual escala o problema ocorre e o grau de (in)dependência espacial entre as espécies.
 
 Embora a ocorrência (presença-ausência) não mostre segregação, uma análise nova usando abundância relativa (frequência de fotos) poderia revelar padrões diferentes, como uma maior concentração de ambas as espécies em torno de "ilhas de recursos" (ex: Restaurante Universitário).
 
