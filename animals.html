@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-514c3c5c645fecdfd9acb6a6b9a944a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-82cb5808e81da3454e8042d903791e03.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -1224,7 +1224,7 @@ Figura&nbsp;3.8: Diagnóstico visual da dispersão da métrica de Uso Humano (PL
 <p>A <a href="#fig-diag-int" class="quarto-xref">Figura&nbsp;<span>3.8</span></a> ilustra a dependência de escala na ecologia urbana e suas consequências para a modelagem preditiva. Note como, nos painéis de 12,5m, 25m e até 50m, todos os pontos referentes aos locais onde os cães não foram registrados (“Ausente”) estão cravados exatamente na linha basal de 0% de Uso Humano. Nessas escalas, o boxplot se achata formando apenas uma linha horizontal, evidenciando uma total ausência de heterogenidade.</p>
 <ul>
 <li><p><strong>A Consequência Estatística (Separação Completa):</strong><br>
-Quando um modelo logístico (como o glm()) tenta calcular a probabilidade de ocorrência com base nestes dados, ele detecta que a ausência de cães é perfeitamente separada pelo valor nulo da métrica de paisagem. Sem uma sobreposição mínima ou variabilidade (pontos intermediários), o algoritmo não consegue calcular a inclinação da reta logística. Esta ausência de variabilidade é a responsável direta por fazer a matriz de informação colapsar, disparando erros de processamento (como o LAPACK failed relatado nas análises do R) ou gerando coeficientes com erros-padrão que tendem ao infinito. Nestes cenários, a aplicação de correções como a regressão logística penalizada (Firth) torna-se não apenas recomendada, mas estritamente necessária para obter estimativas finitas.</p></li>
+Quando um modelo logístico (como o glm()) tenta calcular a probabilidade de ocorrência com base nestes dados, ele detecta que a ausência de cães é perfeitamente separada pelo valor nulo da métrica de paisagem. Sem uma sobreposição mínima ou variabilidade (pontos intermediários), o algoritmo não consegue calcular a inclinação da reta logística. Esta ausência de variabilidade é a responsável direta por fazer a matriz de informação colapsar, disparando erros de processamento (como o LAPACK failed relatado nas análises do R) ou gerando coeficientes com erros-padrão que tendem ao infinito. Nestes cenários, a aplicação de correções como a regressão logística penalizada (<span class="citation" data-cites="firth1993">FIRTH (<a href="references.html#ref-firth1993" role="doc-biblioref">1993</a>)</span>) torna-se não apenas recomendada, mas estritamente necessária para obter estimativas finitas.</p></li>
 <li><p><strong>A Realidade Ecológica por Trás do Gráfico:</strong><br>
 Do ponto de vista ecológico, este gráfico atesta a teoria fundamentada no Capítulo 2: em microescalas (12,5m e 25m), a paisagem capturada pelo raio de amostragem é, em grande parte, monótona e homogênea. O círculo de amostragem tende a cair inteiramente dentro de uma “mancha pura”. Ou seja, as câmeras que não registraram cães estavam em pontos onde a influência física humana era inexistente no raio avaliado.</p></li>
 <li><p><strong>A Solução Multiescalar:</strong><br>
@@ -1240,7 +1240,7 @@ O cenário só se estabiliza ao observarmos o painel de 100 metros. É nesta esc
 <h4 data-number="3.4.2.1" class="anchored" data-anchor-id="o-que-o-firth-faz"><span class="header-section-number">3.4.2.1</span> O que o Firth faz</h4>
 <p>É uma regressão logística de verossimilhança penalizada: em vez de maximizar a log-verossimilhança comum, adiciona-se um termo de penalização equivalente a um prior de Jeffreys (proporcional à raiz quadrada do determinante da matriz de informação de Fisher) antes de maximizar. Na prática isso:</p>
 <p>Sempre produz estimativas finitas, mesmo sob separação completa ou quase-completa (quando glm() diverge ou retorna coeficientes/erros-padrão enormes). Reduz o viés de pequena amostra da estimativa (viés de ordem O(1/n) em vez de O(1/√n) do MLE comum) — o coeficiente é “encolhido” (shrunk) em direção a zero, mais forte quanto mais próximo da separação o modelo estiver. Substitui o intervalo de confiança de Wald (que também fica absurdo perto da separação) por um intervalo de perfil da verossimilhança penalizada, tipicamente assimétrico e muito mais estável.</p>
-<p>É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (Heinze &amp; Schemper, 2002, Statistics in Medicine).</p>
+<p>É o método padrão recomendado justamente para o cenário de vocês: eventos raros/desbalanceados em amostra pequena (<span class="citation" data-cites="heinze2002">Heinze e Schemper (<a href="references.html#ref-heinze2002" role="doc-biblioref">2002</a>)</span>).</p>
 </section>
 <section id="como-identificar-quais-modelos-precisam-disso" class="level4" data-number="3.4.2.2">
 <h4 data-number="3.4.2.2" class="anchored" data-anchor-id="como-identificar-quais-modelos-precisam-disso"><span class="header-section-number">3.4.2.2</span> Como identificar quais modelos precisam disso</h4>
@@ -1539,8 +1539,14 @@ Os itens A, B e C testam se cães e gatos respondem a um recurso compartilhado (
 <div id="ref-carroll2000" class="csl-entry" role="listitem">
 Carroll, Steven S., e David L. Pearson. 2000. <span>“Detecting and Modeling Spatial and Temporal Dependence in Conservation Biology”</span>. <em>Conservation Biology</em> 14 (6): 1893–97. <a href="https://doi.org/10.1111/j.1523-1739.2000.99432.x">https://doi.org/10.1111/j.1523-1739.2000.99432.x</a>.
 </div>
+<div id="ref-firth1993" class="csl-entry" role="listitem">
+FIRTH, DAVID. 1993. <span>“Bias Reduction of Maximum Likelihood Estimates”</span>. <em>Biometrika</em> 80 (1): 27–38. <a href="https://doi.org/10.1093/biomet/80.1.27">https://doi.org/10.1093/biomet/80.1.27</a>.
+</div>
 <div id="ref-fletcher2018" class="csl-entry" role="listitem">
 Fletcher, R., e M.-J. Fortin. 2018. <em><span>Spatial ecology and conservation modeling: applications with r</span></em>. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-030-01989-1">https://doi.org/10.1007/978-3-030-01989-1</a>.
+</div>
+<div id="ref-heinze2002" class="csl-entry" role="listitem">
+Heinze, Georg, e Michael Schemper. 2002. <span>“A Solution to the Problem of Separation in Logistic Regression”</span>. <em>Statistics in Medicine</em> 21 (16): 2409–19. <a href="https://doi.org/10.1002/sim.1047">https://doi.org/10.1002/sim.1047</a>.
 </div>
 </div>
 </section>
